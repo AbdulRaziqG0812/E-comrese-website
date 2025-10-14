@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Edit Perfume</title>
+<title>Add Perfume</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
@@ -46,6 +46,7 @@
     to { opacity: 1; transform: translateY(0); }
   }
 
+  /* Title */
   h2 {
     text-align: center;
     color: #00c6ff;
@@ -60,6 +61,7 @@
     gap: 10px;
   }
 
+  /* Form layout */
   form {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -75,7 +77,7 @@
   }
 
   input, textarea, select {
-    width: 100%;
+    width: 350px;
     padding: 10px 12px;
     border-radius: 8px;
     border: 1px solid rgba(255,255,255,0.18);
@@ -91,38 +93,23 @@
     box-shadow: 0 0 6px rgba(0,198,255,0.4);
   }
 
+  input:hover, textarea:hover, select:hover {
+    background: rgba(255,255,255,0.12);
+  }
+
   textarea {
     resize: none;
     height: 90px;
   }
 
-  .current-image {
-    grid-column: span 2;
-    text-align: center;
-    margin-top: 10px;
-  }
-
-  .current-image img {
-    width: 100px;
-    height: 100px;
-    border-radius: 10px;
-    object-fit: cover;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.3);
-  }
-
-  .current-image p {
-    margin-bottom: 10px;
-    color: #ffcc00;
-    font-weight: 500;
-  }
-
+  /* Buttons Row */
   .btn-group {
     grid-column: span 2;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 15px;
-    margin-top: 15px;
+    margin-top: 10px;
   }
 
   .btn-submit, .btn-back {
@@ -134,6 +121,7 @@
     font-size: 15px;
     font-weight: 600;
     text-transform: uppercase;
+    letter-spacing: 0.5px;
     transition: 0.3s;
     cursor: pointer;
   }
@@ -161,70 +149,94 @@
     transform: translateY(-2px);
   }
 
+  /* Responsive */
   @media (max-width: 600px) {
     form {
       grid-template-columns: 1fr;
     }
     .btn-group {
+      grid-column: span 1;
       flex-direction: column;
+    }
+    .btn-submit, .btn-back {
+      max-width: 100%;
+      width: 100%;
     }
   }
 </style>
 </head>
 
 <body>
+  <!-- Flash Messages -->
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert" style="position: fixed; top: 20px; right: 20px; background: rgba(0,0,0,0.7); color: #00ff00; padding: 12px 18px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 1000;">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <!-- Perfume Form -->
   <div class="form-container">
-    <h2><i class="fa-solid fa-pen-to-square"></i> Edit Perfume</h2>
+    <h2><i class="fa-solid fa-spray-can-sparkles"></i> Add New Perfume</h2>
 
     <form method="POST" enctype="multipart/form-data">
       <div>
         <label for="name"><i class="fa-solid fa-font"></i> Perfume Name</label>
-        <input type="text" name="name" id="name" value="{{ perfume.name }}" required>
+        <input type="text" name="name" id="name" placeholder="Enter Perfume Name" required>
       </div>
 
       <div>
         <label for="price"><i class="fa-solid fa-tag"></i> Regular Price</label>
-        <input type="number" step="0.01" name="price" id="price" value="{{ perfume.price }}" required>
+        <input type="number" step="0.01" name="price" id="price" placeholder="Enter Regular Price" required>
       </div>
 
       <div>
         <label for="sale_price"><i class="fa-solid fa-dollar-sign"></i> Sale Price</label>
-        <input type="number" step="0.01" name="sale_price" id="sale_price" value="{{ perfume.sale_price }}">
+        <input type="number" step="0.01" name="sale_price" id="sale_price" placeholder="Enter Sale Price">
       </div>
 
       <div>
         <label for="stock"><i class="fa-solid fa-boxes-stacked"></i> Stock Quantity</label>
-        <input type="number" name="stock" id="stock" value="{{ perfume.stock }}" required>
+        <input type="number" name="stock" id="stock" placeholder="Enter Stock Quantity" required>
       </div>
 
+      <!-- 🧩 New Category Field -->
       <div>
         <label for="category"><i class="fa-solid fa-venus-mars"></i> Category</label>
         <select name="category" id="category" required>
-          <option value="Men" {% if perfume.category == 'Men' %}selected{% endif %}>Men & Women</option>
-          <option value="Men" {% if perfume.category == 'Men' %}selected{% endif %}>Men</option>
-          <option value="Women" {% if perfume.category == 'Women' %}selected{% endif %}>Women</option>
+          <option value="" disabled selected>Select Category</option>
+          <option value="Men & Women">Men & Women</option>
+          <option value="Men">Men</option>
+          <option value="Women">Women</option>
         </select>
       </div>
 
       <div style="grid-column: span 2;">
         <label for="description"><i class="fa-solid fa-align-left"></i> Description</label>
-        <textarea name="description" id="description" required>{{ perfume.description }}</textarea>
-      </div>
-
-      <div class="current-image">
-        <p>Current Image:</p>
-        <img src="{{ url_for('static', filename='uploads/' + perfume.image) }}" alt="{{ perfume.name }}">
+        <textarea name="description" id="description" placeholder="Enter Description" required></textarea>
       </div>
 
       <div style="grid-column: span 2;">
-        <label for="image"><i class="fa-solid fa-image"></i> Upload New Image (optional)</label>
-        <input type="file" name="image" id="image" accept="image/*">
+        <label for="image"><i class="fa-solid fa-image"></i> Perfume Image</label>
+        <input type="file" name="image" id="image" accept="image/*" required>
       </div>
 
       <div class="btn-group">
-        <button type="submit" class="btn-submit"><i class="fa-solid fa-save"></i> Update Perfume</button>
+        <button type="submit" class="btn-submit"><i class="fa-solid fa-upload"></i> Upload Perfume</button>
+        <a href="/dashboard" class="btn-back"><i class="fa-solid fa-arrow-left"></i> Back to List</a>
       </div>
     </form>
   </div>
+
+  <!-- Auto-dismiss alerts -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const alerts = document.querySelectorAll('.alert');
+      alerts.forEach(alert => setTimeout(() => alert.remove(), 3000));
+    });
+  </script>
 </body>
 </html>

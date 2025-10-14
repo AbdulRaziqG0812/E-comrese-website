@@ -1,8 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
-import os, time
+import os, time, random, string, json
 from werkzeug.utils import secure_filename
 import mysql.connector
-import random, string
 
 app = Flask(__name__)
 app.secret_key = "112233"
@@ -46,11 +45,37 @@ def remove_file(filepath):
 # -----------------------------
 # Routes
 # -----------------------------
+
+# Root route redirects to dashboard
 @app.route('/')
 def home():
-    return redirect(url_for('admin'))
+    return redirect(url_for('dashboard'))
 
-@app.route('/admin')
+
+# Dashboard Route
+@app.route('/dashboard')
+def dashboard():
+    conn = get_db()
+    cursor = conn.cursor()
+    
+    # Total perfumes
+    cursor.execute("SELECT COUNT(*) FROM perfumes")
+    total_perfumes = cursor.fetchone()[0]
+    
+    # Total orders
+    cursor.execute("SELECT COUNT(*) FROM orders")
+    total_orders = cursor.fetchone()[0]
+    
+    cursor.close()
+    conn.close()
+    
+    return render_template('admin/dashboard.html', total_perfumes=total_perfumes, total_orders=total_orders)
+
+
+# -----------------------------
+# Admin Panel - Perfumes
+# -----------------------------
+@app.route('/admin/admin')
 def admin():
     conn = get_db()
     cursor = conn.cursor(dictionary=True)
@@ -58,9 +83,9 @@ def admin():
     perfumes = cursor.fetchall()
     cursor.close()
     conn.close()
-    return render_template('admin.html', perfumes=perfumes)
+    return render_template('admin/admin.html', perfumes=perfumes)
 
-@app.route('/perfume', methods=['GET', 'POST'])
+@app.route('/admin/perfume', methods=['GET', 'POST'])
 def perfume():
     if request.method == 'POST':
         name = request.form.get('name', '').strip()
@@ -108,9 +133,9 @@ def perfume():
         flash("✅ Perfume added successfully!")
         return redirect(url_for('admin'))
 
-    return render_template('perfume.html')
+    return render_template('admin/perfume.html')
 
-@app.route('/edit_perfume/<int:id>', methods=['GET','POST'])
+@app.route('/admin/edit_perfume/<int:id>', methods=['GET','POST'])
 def edit_perfume(id):
     conn = get_db()
     cursor = conn.cursor(dictionary=True)
@@ -168,7 +193,7 @@ def edit_perfume(id):
         flash("✏️ Perfume updated successfully!")
         return redirect(url_for('admin'))
 
-    return render_template('edit_perfume.html', perfume=perfume)
+    return render_template('admin/edit_perfume.html', perfume=perfume)
 
 @app.route('/delete/<int:id>')
 def delete_perfume(id):
@@ -186,6 +211,58 @@ def delete_perfume(id):
     cursor.close()
     conn.close()
     return redirect(url_for('admin'))
+
+# -----------------------------
+# Admin Orders Route
+# -----------------------------
+@app.route('/admin/orders')
+def admin_orders():
+    conn = get_db()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM orders ORDER BY created_at DESC")
+    orders = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return render_template('admin/orders.html', orders=orders)
+
+# -----------------------------
+# User Checkout Route
+# -----------------------------
+@app.route('/checkout', methods=['GET', 'POST'])
+def checkout():
+    if request.method == 'POST':
+        name = request.form.get('name')
+        email = request.form.get('email')
+        phone = request.form.get('phone')
+        city = request.form.get('city')
+        country = request.form.get('country')
+        postal = request.form.get('postal')
+        address = request.form.get('address')
+        payment_method = "Cash on Delivery"
+
+        items_json = request.form.get('items')
+        try:
+            items = json.loads(items_json)
+        except:
+            items = []
+
+        total = sum([item['price']*item['quantity'] for item in items])
+
+        conn = get_db()
+        cursor = conn.cursor()
+        cursor.execute(
+            "INSERT INTO orders (user_name, email, phone, city, country, postal, address, items, total, payment_method) "
+            "VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
+            (name, email, phone, city, country, postal, address, json.dumps(items), total, payment_method)
+        )
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+        flash("✅ Order placed successfully! Admin will process it soon.")
+        return redirect(url_for('home'))
+
+    return render_template('user/checkout.html')
 
 # -----------------------------
 if __name__ == '__main__':
