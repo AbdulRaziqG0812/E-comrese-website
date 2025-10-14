@@ -149,6 +149,26 @@
       transition: 0.2s; 
     }
 
+    /* 📊 Totals Section */
+    .totals {
+      margin-top: 25px;
+      padding: 18px;
+      border-radius: 12px;
+      background: rgba(0,0,0,0.3);
+      backdrop-filter: blur(10px);
+      text-align: center;
+      color: #ffcc00;
+      font-size: 16px;
+      font-weight: 600;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+    }
+
+    .totals span {
+      margin: 0 18px;
+      color: #fff;
+      font-weight: 700;
+    }
+
     /* 📄 Pagination */
     #pagination {
       display: flex;
@@ -201,12 +221,13 @@
 
   <!-- 💎 Perfume Table -->
   <div class="table-container">
-    <table class="paginated-table">
+    <table class="paginated-table" id="perfumeTable">
       <thead>
         <tr>
           <th>ID</th>
           <th>Image</th>
           <th>Name</th>
+          <th>Category</th>
           <th>Price</th>
           <th>Sale</th>
           <th>Stock</th>
@@ -217,11 +238,12 @@
         {% for p in perfumes %}
         <tr>
           <td>{{ p.id }}</td>
-          <td><img src="{{ url_for('static', filename='uploads/' ~ p.image) }}" alt="{{ p.name }}"></td>
+          <td><img src="{{ url_for('static', filename=p.image) }}" alt="{{ p.name }}"></td>
           <td>{{ p.name }}</td>
-          <td>Rs {{ p.price }}</td>
-          <td>Rs {{ p.sale_price }}</td>
-          <td>{{ p.stock }}</td>
+          <td>{{ p.category }}</td>
+          <td class="price">{{ p.price }}</td>
+          <td class="sale">{{ p.sale_price }}</td>
+          <td class="stock">{{ p.stock }}</td>
           <td>
             <a href="{{ url_for('edit_perfume', id=p.id) }}" class="btn btn-edit"><i class="fa fa-pen"></i></a>
             <a href="{{ url_for('delete_perfume', id=p.id) }}" class="btn btn-delete" onclick="return confirm('Are you sure?')"><i class="fa fa-trash"></i></a>
@@ -229,11 +251,17 @@
         </tr>
         {% else %}
         <tr>
-          <td colspan="7" style="padding:18px;color:#ffcc00;">No perfumes found.</td>
+          <td colspan="8" style="padding:18px;color:#ffcc00;">No perfumes found.</td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
+  </div>
+
+  <!-- 📊 Totals Section -->
+  <div class="totals">
+    Total Regular Price: <span id="totalPrice">0</span> |
+    Total Sale Price: <span id="totalSale">0</span> |
   </div>
 
   <!-- 📄 Pagination -->
@@ -248,9 +276,25 @@
       const text = row.textContent.toLowerCase();
       row.style.display = text.includes(filter) ? '' : 'none';
     });
+    calculateTotals();
   });
 
-  // 📄 Smart Pagination (shows limited page numbers with next/prev)
+  // 📊 Totals Calculation
+  function calculateTotals() {
+    let totalPrice = 0, totalSale = 0, totalStock = 0;
+    document.querySelectorAll('.paginated-table tbody tr').forEach(row => {
+      if (row.style.display !== 'none') {
+        const price = parseFloat(row.querySelector('.price')?.textContent || 0);
+        const sale = parseFloat(row.querySelector('.sale')?.textContent || 0);
+        totalPrice += price;
+        totalSale += sale;
+      }
+    });
+    document.getElementById('totalPrice').textContent = "Rs " + totalPrice.toFixed(2);
+    document.getElementById('totalSale').textContent = "Rs " + totalSale.toFixed(2);
+  }
+
+  // 📄 Smart Pagination
   document.addEventListener("DOMContentLoaded", function () {
     const rowsPerPage = 15;
     const table = document.querySelector(".paginated-table");
@@ -267,6 +311,7 @@
       const end = start + rowsPerPage;
       rows.forEach((r, i) => r.style.display = (i >= start && i < end) ? "" : "none");
       updatePagination();
+      calculateTotals();
     }
 
     function updatePagination() {
@@ -274,7 +319,6 @@
       const maxVisible = 5;
       let startPage = Math.max(1, currentPage - Math.floor(maxVisible / 2));
       let endPage = Math.min(totalPages, startPage + maxVisible - 1);
-
       if (endPage - startPage + 1 < maxVisible)
         startPage = Math.max(1, endPage - maxVisible + 1);
 

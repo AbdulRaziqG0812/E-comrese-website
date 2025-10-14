@@ -76,7 +76,7 @@
     margin-bottom: 6px;
   }
 
-  input, textarea {
+  input, textarea, select {
     width: 350px;
     padding: 10px 12px;
     border-radius: 8px;
@@ -88,12 +88,12 @@
     transition: 0.3s;
   }
 
-  input:focus, textarea:focus {
+  input:focus, textarea:focus, select:focus {
     border-color: #00c6ff;
     box-shadow: 0 0 6px rgba(0,198,255,0.4);
   }
 
-  input:hover, textarea:hover {
+  input:hover, textarea:hover, select:hover {
     background: rgba(255,255,255,0.12);
   }
 
@@ -148,6 +148,7 @@
     background: rgba(255,255,255,0.2);
     transform: translateY(-2px);
   }
+
   /* Responsive */
   @media (max-width: 600px) {
     form {
@@ -162,8 +163,6 @@
       width: 100%;
     }
   }
-  
-
 </style>
 </head>
 
@@ -178,6 +177,7 @@
       {% endfor %}
     {% endif %}
   {% endwith %}
+
   <!-- Perfume Form -->
   <div class="form-container">
     <h2><i class="fa-solid fa-spray-can-sparkles"></i> Add New Perfume</h2>
@@ -203,6 +203,17 @@
         <input type="number" name="stock" id="stock" placeholder="Enter Stock Quantity" required>
       </div>
 
+      <!-- 🧩 New Category Field -->
+      <div>
+        <label for="category"><i class="fa-solid fa-venus-mars"></i> Category</label>
+        <select name="category" id="category" required>
+          <option value="" disabled selected>Select Category</option>
+          <option value="Men">Men & Women</option>
+          <option value="Men">Men</option>
+          <option value="Women">Women</option>
+        </select>
+      </div>
+
       <div style="grid-column: span 2;">
         <label for="description"><i class="fa-solid fa-align-left"></i> Description</label>
         <textarea name="description" id="description" placeholder="Enter Description" required></textarea>
@@ -210,7 +221,7 @@
 
       <div style="grid-column: span 2;">
         <label for="image"><i class="fa-solid fa-image"></i> Perfume Image</label>
-        <input type="file" name="image" id="image" accept="image/*">
+        <input type="file" name="image" id="image" accept="image/*" required>
       </div>
 
       <div class="btn-group">
@@ -219,13 +230,13 @@
       </div>
     </form>
   </div>
-  
-  <!-- Auto-dismiss alerts -->
-  <script> document.addEventListener("DOMContentLoaded", () => { 
-    const alerts = document.querySelectorAll('.alert'); 
-    alerts.forEach(alert => setTimeout(() => alert.remove(), 3000)); 
-    }); 
-  </script>
 
+  <!-- Auto-dismiss alerts -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const alerts = document.querySelectorAll('.alert');
+      alerts.forEach(alert => setTimeout(() => alert.remove(), 3000));
+    });
+  </script>
 </body>
 </html>

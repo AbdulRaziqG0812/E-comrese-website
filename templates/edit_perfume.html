@@ -46,7 +46,6 @@
     to { opacity: 1; transform: translateY(0); }
   }
 
-  /* Title */
   h2 {
     text-align: center;
     color: #00c6ff;
@@ -61,7 +60,6 @@
     gap: 10px;
   }
 
-  /* Form layout */
   form {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -76,8 +74,8 @@
     margin-bottom: 6px;
   }
 
-  input, textarea {
-    width: 350px;
+  input, textarea, select {
+    width: 100%;
     padding: 10px 12px;
     border-radius: 8px;
     border: 1px solid rgba(255,255,255,0.18);
@@ -88,13 +86,9 @@
     transition: 0.3s;
   }
 
-  input:focus, textarea:focus {
+  input:focus, textarea:focus, select:focus {
     border-color: #00c6ff;
     box-shadow: 0 0 6px rgba(0,198,255,0.4);
-  }
-
-  input:hover, textarea:hover {
-    background: rgba(255,255,255,0.12);
   }
 
   textarea {
@@ -102,11 +96,10 @@
     height: 90px;
   }
 
-  /* Current Image Display */
   .current-image {
     grid-column: span 2;
     text-align: center;
-    margin-top: 15px;
+    margin-top: 10px;
   }
 
   .current-image img {
@@ -123,14 +116,13 @@
     font-weight: 500;
   }
 
-  /* Buttons Row */
   .btn-group {
     grid-column: span 2;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 15px;
-    margin-top: 10px;
+    margin-top: 15px;
   }
 
   .btn-submit, .btn-back {
@@ -142,7 +134,6 @@
     font-size: 15px;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
     transition: 0.3s;
     cursor: pointer;
   }
@@ -170,6 +161,14 @@
     transform: translateY(-2px);
   }
 
+  @media (max-width: 600px) {
+    form {
+      grid-template-columns: 1fr;
+    }
+    .btn-group {
+      flex-direction: column;
+    }
+  }
 </style>
 </head>
 
@@ -196,6 +195,15 @@
       <div>
         <label for="stock"><i class="fa-solid fa-boxes-stacked"></i> Stock Quantity</label>
         <input type="number" name="stock" id="stock" value="{{ perfume.stock }}" required>
+      </div>
+
+      <div>
+        <label for="category"><i class="fa-solid fa-venus-mars"></i> Category</label>
+        <select name="category" id="category" required>
+          <option value="Men" {% if perfume.category == 'Men' %}selected{% endif %}>Men & Women</option>
+          <option value="Men" {% if perfume.category == 'Men' %}selected{% endif %}>Men</option>
+          <option value="Women" {% if perfume.category == 'Women' %}selected{% endif %}>Women</option>
+        </select>
       </div>
 
       <div style="grid-column: span 2;">
