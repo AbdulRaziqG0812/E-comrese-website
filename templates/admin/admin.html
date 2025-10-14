@@ -241,6 +241,7 @@
           <th>Image</th>
           <th>Name</th>
           <th>Category</th>
+          <th>description</th>
           <th>Price</th>
           <th>Sale</th>
           <th>Stock</th>
@@ -254,6 +255,7 @@
           <td><img src="{{ url_for('static', filename=p.image) }}" alt="{{ p.name }}"></td>
           <td>{{ p.name }}</td>
           <td>{{ p.category }}</td>
+          <td>{{ p.description }}</td>
           <td class="price">{{ p.price }}</td>
           <td class="sale">{{ p.sale_price }}</td>
           <td class="stock">{{ p.stock }}</td>

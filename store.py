@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, session, url_for, flash
 import os, time, random, string, json
 from werkzeug.utils import secure_filename
 import mysql.connector
@@ -49,8 +49,113 @@ def remove_file(filepath):
 # Root route redirects to dashboard
 @app.route('/')
 def home():
-    return redirect(url_for('dashboard'))
+    return redirect(url_for('home_switch'))
 
+@app.route('/home_switch')
+def home_switch():
+    return render_template('home_switch.html')
+
+
+# route for loginpage
+@app.route('/loginpage', methods=['GET', 'POST'])
+def loginpage():
+    if request.method == 'POST':
+        username = request.form.get('id')
+        password = request.form.get('password')
+
+        try:
+            conn = mysql.connector.connect(**DB_CONFIG)
+            cursor = conn.cursor(dictionary=True)
+
+            # 1️⃣ Get user by username only
+            cursor.execute("SELECT * FROM login WHERE username = %s", (username,))
+            user = cursor.fetchone()
+
+            # 2️⃣ Check if user exists and password matches (plain text)
+            if user and user['password'] == password:
+                # 3️⃣ Save session (login success)
+                session['user_id'] = user['id']
+                session['username'] = user['username']
+                session['role'] = user.get('role', 'user')  # optional, if you use roles
+
+                return redirect(url_for('dashboard'))
+            else:
+                flash("Invalid username or password!", "error")
+                return redirect(url_for('loginpage'))
+
+        except Exception as e:
+            flash(f"Error: {e}", "error")
+            return redirect(url_for('loginpage'))
+        finally:
+            cursor.close()
+            conn.close()
+
+    return render_template('admin/loginpage.html')
+
+
+# register route
+REGISTER_KEY = "areez_fragrance_2025"
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form.get('fullname')
+        email = request.form.get('email')
+        password = request.form.get('password')
+        confirm = request.form.get('confirm')
+        entered_key = request.form.get('register_key')
+
+        # 1️⃣ Check registration key
+        if entered_key != REGISTER_KEY:
+            flash("Invalid registration key!", "error")
+            return redirect(url_for('register'))
+
+        # 2️⃣ Check password match
+        if password != confirm:
+            flash("Passwords do not match!", "error")
+            return redirect(url_for('register'))
+
+        # 3️⃣ Check password strength
+        if len(password) < 6:
+            flash("Password must be at least 6 characters long.", "error")
+            return redirect(url_for('register'))
+
+        try:
+            conn = mysql.connector.connect(**DB_CONFIG)
+            cursor = conn.cursor(dictionary=True)
+
+            # 4️⃣ Check duplicate username
+            cursor.execute("SELECT * FROM login WHERE username = %s", (username,))
+            existing_user = cursor.fetchone()
+            if existing_user:
+                flash("Username already exists. Please choose another.", "error")
+                return redirect(url_for('register'))
+
+            # 5️⃣ Insert into register table (plain text password)
+            cursor.execute(
+                "INSERT INTO register (username, email, password, confirm_password) VALUES (%s, %s, %s, %s)",
+                (username, email, password, password)
+            )
+
+            # 6️⃣ Insert into login table (plain text password)
+            cursor.execute(
+                "INSERT INTO login (username, password) VALUES (%s, %s)",
+                (username, password)
+            )
+
+            conn.commit()
+            flash("Registration successful! You can now log in.", "success")
+            return redirect(url_for('loginpage'))
+
+        except Exception as e:
+            flash(f"Error: {e}", "error")
+            return redirect(url_for('register'))
+
+        finally:
+            cursor.close()
+            conn.close()
+
+    return render_template("admin/register.html")
 
 # Dashboard Route
 @app.route('/dashboard')
@@ -224,6 +329,36 @@ def admin_orders():
     cursor.close()
     conn.close()
     return render_template('admin/orders.html', orders=orders)
+# -----------------------------
+# User Home Route
+# -----------------------------
+
+@app.route('/home')
+def store_home():
+    conn = get_db()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM perfumes ORDER BY id DESC")
+    perfumes = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return render_template('user/home.html', perfumes=perfumes)
+
+
+@app.route('/shop')
+def shop():
+    return render_template('user/shop.html')
+
+# contact route
+@app.route('/contact')
+def contact():
+    return render_template('user/contact.html')
+
+# cart route
+@app.route('/cart')
+def cart():
+    return render_template('user/cart.html')
+
+
 
 # -----------------------------
 # User Checkout Route

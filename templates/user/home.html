@@ -5,456 +5,431 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AREEZ FRAGRANCE - Home</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+<style>
+/* ========================== */
+/* 🌿 Global Styles */
+/* ========================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
 
-  <style>
-    /* 🌹 Base Styling */
-    body {
-      font-family: "Poppins", sans-serif;
-      margin: 0;
-      background: #fffafc;
-      color: #222;
-      overflow-x: hidden;
-      scroll-behavior: smooth;
-    }
+body {
+  background: #fdf6fb;
+  color: #333;
+  scroll-behavior: smooth;
+  line-height: 1.6;
+}
 
-    /* 🔝 Navbar */
-    nav {
-      background: rgba(255,255,255,0.85);
-      backdrop-filter: blur(10px);
-      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-      padding: 15px 60px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
+a {
+  text-decoration: none;
+  color: inherit;
+}
 
-    nav .logo {
-      font-size: 30px;
-      font-weight: 700;
-      color: #e91e63;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      transition: 0.3s;
-    }
+/* ========================== */
+/* 🔝 Navbar - Single Line Links (No Gap/Wrap) */
+/* ========================== */
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px; /* reduced padding to fit all on one line */
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  flex-wrap: nowrap; /* prevent wrapping */
+}
 
-    nav .logo:hover {
-      color: #ff6ea8;
-      transform: scale(1.05);
-    }
+nav .logo {
+  font-size: 32px;
+  font-weight: 700;
+  color: #e91e63;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  transition: 0.3s;
+  flex-shrink: 0; /* do not shrink */
+}
 
-    /* Navbar center: links + search */
-    .nav-center {
-      display: flex;
-      align-items: center;
-      gap: 25px;
-    }
+nav .logo:hover {
+  color: #ff6ea8;
+  transform: scale(1.05);
+}
 
-    .nav-center a {
-      text-decoration: none;
-      color: #333;
-      font-weight: 500;
-      transition: 0.3s;
-    }
+.nav-links {
+  display: flex;
+  gap: 0; /* no gap between links */
+  font-weight: 500;
+  flex-shrink: 1; /* allow shrinking if needed */
+  white-space: nowrap; /* prevent wrap */
+}
 
-    .nav-center a:hover {
-      color: #e91e63;
-    }
+.nav-links a {
+  color: #555;
+  padding: 0 12px; /* optional small padding between links */
+  transition: 0.3s;
+}
 
-    /* 🔍 Search Bar */
-    .search-bar {
-      position: relative;
-    }
+.nav-links a:hover {
+  color: #e91e63;
+}
 
-    .search-bar input {
-      padding: 8px 35px 8px 15px;
-      border-radius: 25px;
-      border: 1px solid #ccc;
-      outline: none;
-      font-size: 0.95rem;
-      transition: all 0.3s;
-    }
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 0; /* no gap between icons */
+  flex-shrink: 0;
+}
 
-    .search-bar input:focus {
-      border-color: #e91e63;
-      box-shadow: 0 0 5px rgba(233,30,99,0.3);
-    }
+.nav-right a,
+.order-dropdown .order-btn {
+  padding: 0 10px; /* optional small padding */
+  white-space: nowrap;
+}
 
-    .search-bar i {
-      position: absolute;
-      right: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: #e91e63;
-      cursor: pointer;
-    }
+.order-dropdown {
+  position: relative;
+}
 
-    /* Navbar right: cart, user, order dropdown */
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      position: relative;
-    }
+.order-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #555;
+}
 
-    .order-dropdown {
-      position: relative;
-    }
+.order-btn i {
+  color: #e91e63;
+}
 
-    .order-btn {
-      background: none;
-      border: none;
-      cursor: pointer;
-      font-size: 1rem;
-      font-weight: 500;
-      color: #333;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
+.dropdown-content {
+  display: none;
+  position: absolute;
+  top: 40px;
+  right: 0;
+  background: #fff;
+  border-radius: 12px;
+  min-width: 200px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  z-index: 50;
+}
 
-    .order-btn i {
-      color: #e91e63;
-    }
+.dropdown-content a {
+  display: block;
+  padding: 12px 18px;
+  color: #333;
+  transition: 0.3s;
+}
 
-    .dropdown-content {
-      display: none;
-      position: absolute;
-      top: 40px;
-      right: 0;
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-      min-width: 180px;
-      overflow: hidden;
-      animation: fadeIn 0.3s ease;
-      z-index: 1000;
-    }
+.dropdown-content a:hover {
+  background: #ffe6ef;
+  color: #e91e63;
+}
 
-    .dropdown-content a {
-      display: block;
-      padding: 10px 15px;
-      text-decoration: none;
-      color: #333;
-      font-size: 0.95rem;
-      transition: 0.3s;
-    }
+.order-dropdown:hover .dropdown-content {
+  display: block;
+}
 
-    .dropdown-content a:hover {
-      background: #ffe6ef;
-      color: #e91e63;
-    }
+/* ========================== */
+/* 🌟 Hero Section */
+/* ========================== */
+.hero {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 50px;
+  min-height: 90vh;
+  padding: 0 40px;
+  background: linear-gradient(to right, rgba(255, 240, 245, 0.85), rgba(255, 255, 255, 0.95));
+}
 
-    .order-dropdown:hover .dropdown-content {
-      display: block;
-    }
+.hero-content {
+  max-width: 500px;
+}
 
-    /* 🌸 Hero Section */
-    .hero {
-      min-height: 95vh;
-      background: linear-gradient(to right, rgba(255,240,245,0.8), rgba(255,255,255,0.95)),
-                  url("{{ url_for('static', filename='hero-bg.jpg') }}") center/cover no-repeat;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 80px 50px;
-      flex-wrap: wrap;
-      gap: 80px;
-      animation: fadeIn 1s ease-out;
-    }
+.hero-content h1 {
+  font-size: 3.5rem;
+  color: #e91e63;
+  margin-bottom: 20px;
+}
 
-    .hero-content {
-      max-width: 520px;
-      animation: slideUp 1.2s ease-out;
-    }
+.hero-content p {
+  font-size: 1.2rem;
+  color: #555;
+  margin-bottom: 25px;
+}
 
-    .hero h1 {
-      font-size: 3.8rem;
-      color: #e91e63;
-      margin-bottom: 20px;
-    }
+.hero-content button {
+  background: linear-gradient(135deg, #e91e63, #ff80ab);
+  border: none;
+  padding: 14px 40px;
+  border-radius: 30px;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
 
-    .hero p {
-      font-size: 1.2rem;
-      color: #444;
-      margin-bottom: 30px;
-      line-height: 1.6;
-    }
+.hero-content button:hover {
+  background: linear-gradient(135deg, #ff4d8f, #ffa0c5);
+  transform: scale(1.05);
+}
 
-    .hero a button {
-      background: linear-gradient(135deg, #e91e63, #ff80ab);
-      color: white;
-      border: none;
-      padding: 14px 40px;
-      border-radius: 30px;
-      font-size: 1rem;
-      cursor: pointer;
-      font-weight: 600;
-      box-shadow: 0 5px 15px rgba(233,30,99,0.4);
-      transition: 0.3s;
-    }
+.hero img {
+  width: 350px;
+  border-radius: 25px;
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.25);
+  transition: 0.4s;
+}
 
-    .hero a button:hover {
-      transform: translateY(-3px);
-      background: linear-gradient(135deg, #ff4081, #f48fb1);
-    }
+.hero img:hover {
+  transform: scale(1.03);
+}
 
-    .hero img {
-      width: 400px;
-      border-radius: 25px;
-      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
-      animation: fadeIn 1.5s ease-out;
-    }
+/* ========================== */
+/* 💎 Signature Perfume Section */
+/* ========================== */
+.signature {
+  padding: 100px 40px;
+  background: #fff0f5;
+  text-align: center;
+}
 
-    /* 💎 Signature Perfume */
-    .signature {
-      padding: 120px 60px;
-      background: linear-gradient(135deg, #fff0f5, #fff);
-      text-align: center;
-    }
+.signature h2 {
+  font-size: 3rem;
+  color: #e91e63;
+  margin-bottom: 60px;
+}
 
-    .signature h2 {
-      font-size: 2.8rem;
-      color: #e91e63;
-      margin-bottom: 60px;
-      animation: fadeIn 1s;
-    }
+.signature-content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 60px;
+}
 
-    .signature-content {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-items: center;
-      gap: 80px;
-    }
+.signature-content img {
+  width: 380px;
+  border-radius: 25px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+  transition: 0.4s;
+}
 
-    .signature-content img {
-      width: 380px;
-      border-radius: 25px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-      transition: 0.3s;
-    }
+.signature-content img:hover {
+  transform: scale(1.05);
+}
 
-    .signature-content img:hover {
-      transform: scale(1.05);
-    }
+.signature-text {
+  max-width: 450px;
+  text-align: left;
+}
 
-    .signature-text {
-      max-width: 450px;
-      text-align: left;
-      animation: slideUp 1.3s ease-out;
-    }
+.signature-text h3 {
+  font-size: 2.2rem;
+  color: #e91e63;
+  margin-bottom: 15px;
+}
 
-    .signature-text h3 {
-      font-size: 2rem;
-      color: #e91e63;
-      margin-bottom: 15px;
-    }
+.signature-text p {
+  font-size: 1.05rem;
+  color: #555;
+  margin-bottom: 20px;
+}
 
-    .signature-text p {
-      color: #555;
-      font-size: 1.05rem;
-      line-height: 1.7;
-      margin-bottom: 25px;
-    }
+.signature-text button {
+  background: linear-gradient(135deg, #e91e63, #ff80ab);
+  border: none;
+  padding: 12px 35px;
+  border-radius: 25px;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
 
-    .signature-text a button {
-      background: linear-gradient(135deg, #e91e63, #ff80ab);
-      color: white;
-      border: none;
-      padding: 12px 35px;
-      border-radius: 25px;
-      cursor: pointer;
-      font-size: 1rem;
-      font-weight: 600;
-    }
+.signature-text button:hover {
+  background: linear-gradient(135deg, #ff4d8f, #ffa0c5);
+  transform: scale(1.05);
+}
 
-    .signature-text a button:hover {
-      background: linear-gradient(135deg, #ff4d8f, #ffa0c5);
-      transform: scale(1.05);
-    }
+/* ========================== */
+/* ✨ Products Section */
+/* ========================== */
+.products {
+  padding: 80px 40px;
+  text-align: center;
+}
 
-    /* ✨ Most Selling Perfumes */
-    .products {
-      padding: 100px 60px;
-      text-align: center;
-      background: #fff;
-    }
+.products h2 {
+  font-size: 2.8rem;
+  color: #e91e63;
+  margin-bottom: 50px;
+}
 
-    .products h2 {
-      font-size: 2.5rem;
-      margin-bottom: 50px;
-      color: #e91e63;
-    }
+.product-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: center;
+}
 
-    .product-grid {
-      display: flex;
-      justify-content: center;
-      gap: 35px;
-      flex-wrap: wrap;
-    }
+.product-card {
+  background: #fff;
+  border-radius: 25px;
+  overflow: hidden;
+  width: 260px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+  transition: 0.4s;
+}
 
-    .product-card {
-      background: white;
-      border-radius: 20px;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-      width: 250px;
-      transition: all 0.4s ease;
-      overflow: hidden;
-      position: relative;
-    }
+.product-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 30px rgba(233, 30, 99, 0.25);
+}
 
-    .product-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 10px 25px rgba(233,30,99,0.2);
-    }
+.product-card img {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  transition: 0.3s;
+}
 
-    .product-card img {
-      width: 100%;
-      height: 270px;
-      object-fit: cover;
-      border-top-left-radius: 20px;
-      border-top-right-radius: 20px;
-      transition: transform 0.4s;
-    }
+.product-card:hover img {
+  transform: scale(1.05);
+}
 
-    .product-card:hover img {
-      transform: scale(1.08);
-    }
+.product-info {
+  padding: 18px;
+  text-align: left;
+}
 
-    .product-info {
-      padding: 18px;
-    }
+.product-info h3 {
+  color: #e91e63;
+  margin-bottom: 8px;
+  font-size: 1.3rem;
+}
 
-    .product-info h3 {
-      margin: 8px 0;
-      font-size: 1.2rem;
-      color: #e91e63;
-    }
+.product-info p {
+  font-size: 1rem;
+  color: #555;
+  min-height: 50px;
+}
 
-    .product-info p {
-      color: #666;
-      font-size: 0.95rem;
-      min-height: 40px;
-    }
+.product-info button {
+  background: linear-gradient(135deg, #e91e63, #ff80ab);
+  border: none;
+  padding: 10px 28px;
+  border-radius: 25px;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 500;
+  margin-top: 12px;
+  transition: 0.3s;
+}
 
-    .product-info a button {
-      background: linear-gradient(135deg, #e91e63, #ff80ab);
-      color: white;
-      border: none;
-      padding: 10px 25px;
-      border-radius: 20px;
-      cursor: pointer;
-      font-size: 0.9rem;
-      margin-top: 10px;
-    }
+.product-info button:hover {
+  background: linear-gradient(135deg, #ff4d8f, #ffa0c5);
+}
 
-    .product-info a button:hover {
-      background: linear-gradient(135deg, #ff4d8f, #ffa0c5);
-    }
+/* ========================== */
+/* 🌷 Footer */
+/* ========================== */
+footer {
+  background: #fff0f5;
+  padding: 60px 40px;
+  color: #555;
+}
 
-    /* 🌷 Footer */
-    footer {
-      background: linear-gradient(135deg, #ffe4ec, #fff);
-      color: #444;
-      padding: 70px 30px 40px;
-    }
+.footer-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+  max-width: 1200px;
+  margin: auto;
+  text-align: center;
+}
 
-    .footer-container {
-      max-width: 1200px;
-      margin: auto;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 40px;
-      text-align: center;
-    }
+.footer-container h3 {
+  color: #e91e63;
+  margin-bottom: 15px;
+}
 
-    .footer-container h3 {
-      color: #e91e63;
-      margin-bottom: 20px;
-    }
+.footer-container a {
+  display: block;
+  margin-bottom: 8px;
+  color: #555;
+  transition: 0.3s;
+}
 
-    .footer-container a {
-      color: #555;
-      text-decoration: none;
-      display: block;
-      margin-bottom: 8px;
-      transition: 0.3s;
-    }
+.footer-container a:hover {
+  color: #e91e63;
+}
 
-    .footer-container a:hover {
-      color: #e91e63;
-    }
+.social-links a {
+  font-size: 1.6rem;
+  margin: 0 10px;
+  transition: 0.3s;
+}
 
-    .social-links a {
-      font-size: 1.8rem;
-      margin: 0 10px;
-      transition: 0.3s;
-    }
+.social-links a:hover {
+  transform: scale(1.2);
+}
 
-    .social-links a:hover {
-      transform: scale(1.2);
-      filter: brightness(1.3);
-    }
+footer hr {
+  margin: 40px auto;
+  border: 0.5px solid #ccc;
+  width: 90%;
+}
 
-    footer hr {
-      margin: 40px auto;
-      border: 0.5px solid #ccc;
-      width: 90%;
-    }
+footer p {
+  margin-top: 15px;
+  font-size: 0.9rem;
+}
 
-    footer p {
-      text-align: center;
-      font-size: 0.9rem;
-      color: #666;
-    }
+/* ========================== */
+/* 📱 Responsive */
+@media (max-width: 1024px) {
+  .hero img { width: 350px; }
+  .signature-content { gap: 40px; }
+}
 
-    /* 🌈 Animations */
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
+@media (max-width: 768px) {
+  .hero { flex-direction: column-reverse; }
+  .hero img { width: 300px; }
+  .signature-content { flex-direction: column-reverse; text-align: center; }
+  .signature-text { text-align: center; }
+}
 
-    @keyframes slideUp {
-      from { transform: translateY(30px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-  </style>
+@media (max-width: 480px) {
+  .hero img { width: 260px; }
+  .hero-content h1 { font-size: 2.5rem; }
+  .signature h2 { font-size: 2rem; }
+}
+</style>
 </head>
-
 <body>
-  <!-- 🔝 Navbar -->
+
+  <!-- Navbar -->
   <nav>
     <div class="logo">AREEZ FRAGRANCE</div>
-
-    <div class="nav-center">
-      <a href="/">Home</a>
-      <a href="/shop">Shop</a>
-      <a href="/contact">Contact</a>
-
-      <!-- 🔍 Search Bar -->
-      <div class="search-bar">
-        <form action="{{ url_for('search') }}" method="GET">
-          <input type="text" name="q" placeholder="Search perfume..." required />
-          <i class="fa fa-search"></i>
-        </form>
-      </div>
-    </div>
-
-    <div class="nav-right">
-      <!-- 🛒 Cart -->
-      <a href="/cart"><i class="fa-solid fa-cart-shopping" style="color:#e91e63;font-size:1.2rem;"></i></a>
-
-      <!-- 👤 Account -->
-      <a href="#"><i class="fa-solid fa-user" style="color:#e91e63;font-size:1.2rem;"></i></a>
-
-      <!-- 📦 Order Status Dropdown -->
+    <div class="nav-links">
+      <a href="/home">Home</a>
+      <a href="{{ url_for('shop') }}">Shop</a>
+      <a href="{{ url_for('contact') }}">Contact</a>
+      <a href="{{ url_for('cart') }}"><i class="fa-solid fa-cart-shopping" style="color:#e91e63;"></i></a>
+      <a href="#"><i class="fa-solid fa-user" style="color:#e91e63;"></i></a>
       <div class="order-dropdown">
-        <button class="order-btn">
-          <i class="fa-solid fa-box"></i> Orders
-        </button>
+        <button class="order-btn"><i class="fa-solid fa-box"></i> Orders</button>
         <div class="dropdown-content">
           <a href="/orders/placed">📝 Placed Orders</a>
           <a href="/orders/in_process">⚙️ In Process</a>
@@ -465,74 +440,50 @@
     </div>
   </nav>
 
-  <!-- 🌸 Hero Section -->
+  <!-- Hero Section -->
   <section class="hero">
     <div class="hero-content">
-      <h1>AREEZ FRAGRANCE</h1>
-      <p>Discover the art of fragrance — where passion meets luxury.  
-         Every bottle tells a story of elegance and timeless beauty.</p>
+      <h1><i>AREEZ FRAGRANCE</i></h1>
+      <p>A luxurious fragrance crafted for elegance and sophistication. Feel the art of scent in every drop.</p>
       <a href="{{ url_for('shop') }}"><button>Shop Now</button></a>
     </div>
     <img src="{{ url_for('static', filename='areez.png') }}" alt="AREEZ Perfume">
   </section>
 
-  <!-- 💎 Signature Perfume -->
+  <!-- Signature Perfume -->
   <section class="signature">
-    <h2>Our Signature Perfume</h2>
+    <h2>Signature Perfume - Paradise</h2>
     <div class="signature-content">
-      <img src="{{ url_for('static', filename='rose.webp') }}" alt="Rose Essence">
+      <img src="{{ url_for('static', filename='paradise.webp') }}" alt="Paradise Perfume">
       <div class="signature-text">
-        <h3>Rose Essence</h3>
-        <p>The heart of AREEZ FRAGRANCE — a romantic floral scent that defines timeless beauty and elegance.  
-           Experience the essence of luxury in every drop.</p>
+        <h3>Paradise</h3>
+        <p>A captivating scent blending floral and exotic notes to leave a lasting impression of luxury and grace.</p>
         <a href="{{ url_for('shop') }}"><button>Shop Now</button></a>
       </div>
     </div>
   </section>
 
-  <!-- ✨ Most Selling Perfumes -->
+  <!-- Most Selling Perfumes (Dynamic) -->
   <section class="products">
-    <h2>Our Most Selling Perfumes</h2>
+    <h2>Most Selling Perfumes</h2>
     <div class="product-grid">
+      {% for perfume in perfumes %}
       <div class="product-card">
-        <img src="{{ url_for('static', filename='ocean.webp') }}" alt="Ocean Breeze">
+        <img src="{{ url_for('static', filename=perfume.image) }}" alt="{{ perfume.name }}">
         <div class="product-info">
-          <h3>Ocean Breeze</h3>
-          <p>Refreshing marine aroma with a hint of citrus.</p>
+          <h3>{{ perfume.name }}</h3>
+          <p>{{ perfume.description }}</p>
           <a href="{{ url_for('shop') }}"><button>Shop Now</button></a>
         </div>
       </div>
-
-      <div class="product-card">
-        <img src="{{ url_for('static', filename='amber.jpg') }}" alt="Amber Oud">
-        <div class="product-info">
-          <h3>Amber Oud</h3>
-          <p>Rich oriental scent with a warm, luxurious base.</p>
-          <a href="{{ url_for('shop') }}"><button>Shop Now</button></a>
-        </div>
-      </div>
-
-      <div class="product-card">
-        <img src="{{ url_for('static', filename='midnight.jpg') }}" alt="Midnight Bloom">
-        <div class="product-info">
-          <h3>Midnight Bloom</h3>
-          <p>Elegant blend of floral and musk for evenings to remember.</p>
-          <a href="{{ url_for('shop') }}"><button>Shop Now</button></a>
-        </div>
-      </div>
-
-      <div class="product-card">
-        <img src="{{ url_for('static', filename='golden.jpg') }}" alt="Golden Musk">
-        <div class="product-info">
-          <h3>Golden Musk</h3>
-          <p>Classic signature scent with a golden touch.</p>
-          <a href="{{ url_for('shop') }}"><button>Shop Now</button></a>
-        </div>
-      </div>
+      {% endfor %}
+      {% if perfumes|length == 0 %}
+        <p style="color:#e91e63;">No perfumes available yet.</p>
+      {% endif %}
     </div>
   </section>
 
-  <!-- 🌷 Footer -->
+  <!-- Footer -->
   <footer>
     <div class="footer-container">
       <div>
@@ -541,17 +492,14 @@
         <a href="/refund_policy">Refund Policy</a>
         <a href="/privacy_policy">Privacy Policy</a>
         <a href="/terms_of_service">Terms of Service</a>
-        <a href="/contact">Contact Information</a>
+        <a href="{{ url_for('contact') }}">Contact Us</a>
       </div>
-
       <div>
         <h3>About AREEZ</h3>
-        <p style="color:#555;">Discover AREEZ FRAGRANCE — where elegance meets luxury.  
-           Our perfumes are crafted to inspire confidence, beauty, and grace.</p>
+        <p>Elegant fragrances crafted to inspire confidence, beauty, and grace.</p>
       </div>
-
       <div>
-        <h3>Follow AREEZ Fragrance</h3>
+        <h3>Follow Us</h3>
         <div class="social-links">
           <a href="https://instagram.com/areezfragrance" target="_blank" style="color:#E1306C;"><i class="fab fa-instagram"></i></a>
           <a href="https://facebook.com/areezfragrance" target="_blank" style="color:#1877F2;"><i class="fab fa-facebook"></i></a>
@@ -559,9 +507,9 @@
         </div>
       </div>
     </div>
-
     <hr>
     <p>© 2025 AREEZ FRAGRANCE — Crafted with elegance & love.</p>
   </footer>
+
 </body>
 </html>

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register Page</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    /* 🌈 Animated Background */
+    body {
+      height: 100vh;
+      margin: 0;
+      font-family: 'Poppins', 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(-45deg, #007bff, #00bcd4, #4caf50, #004aad);
+      background-size: 400% 400%;
+      animation: gradientBG 10s ease infinite;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* 🧊 Register Box with Glass Effect */
+    .register-container {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 18px;
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.2);
+      padding: 45px 40px;
+      width: 100%;
+      max-width: 450px;
+      animation: fadeIn 0.8s ease;
+      color: #fff;
+    }
+
+    h2 {
+      text-align: center;
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 25px;
+      color: #ffffff;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    }
+
+    /* ✅ Flash Messages */
+    .flash-container {
+      margin-bottom: 20px;
+    }
+    .message {
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      font-size: 14px;
+      font-weight: 500;
+      text-align: center;
+      animation: fadeIn 0.5s ease;
+    }
+    .success {
+      background: rgba(46, 204, 113, 0.9);
+      color: white;
+    }
+    .error {
+      background: rgba(231, 76, 60, 0.9);
+      color: white;
+    }
+
+    /* 📋 Form Styling */
+    .form-group {
+      margin-bottom: 22px;
+    }
+
+    .input-field {
+      position: relative;
+      width: 100%;
+    }
+
+    .input-field input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 14px 45px 14px 45px;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      outline: none;
+      color: #222;
+      background: rgba(255, 255, 255, 0.9);
+      transition: all 0.3s ease;
+    }
+
+    .input-field input:focus {
+      box-shadow: 0 0 0 4px rgba(0,123,255,0.3);
+    }
+
+    .input-field .left-icon {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #007bff;
+      font-size: 17px;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #007bff;
+      font-size: 17px;
+      transition: color 0.3s ease;
+    }
+
+    .toggle-password:hover {
+      color: #004aad;
+    }
+
+    /* 🔘 Button */
+    button {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(90deg, #007bff, #00bcd4);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 17px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+      box-shadow: 0 4px 14px rgba(0, 91, 187, 0.25);
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      background: linear-gradient(90deg, #0062cc, #0097a7);
+      box-shadow: 0 6px 16px rgba(0, 91, 187, 0.4);
+    }
+
+    /* 💬 Note + Login Link */
+    .note {
+      font-size: 13px;
+      text-align: center;
+      margin-top: 20px;
+      color: #f1f1f1;
+    }
+
+    .note a {
+      color: #00e1ff;
+      font-weight: 600;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .note a:hover {
+      color: #ffffff;
+      text-decoration: underline;
+    }
+
+    /* ✨ Animation */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* 📱 Responsive */
+    @media (max-width: 480px) {
+      .register-container {
+        padding: 35px 25px;
+      }
+      h2 {
+        font-size: 26px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="register-container">
+    <h2><i class="fa-solid fa-user-plus"></i> Register</h2>
+
+    <!-- ✅ Flask Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-container">
+          {% for category, msg in messages %}
+            <div class="message {{ category }}">
+              {{ msg }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <!-- ✅ Form -->
+    <form method="post" action="/register" autocomplete="off">
+      <div class="form-group">
+        <div class="input-field">
+          <i class="fa-solid fa-user left-icon"></i>
+          <input type="text" id="fullname" name="fullname" placeholder="Enter your full name" required autocomplete="off">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="input-field">
+          <i class="fa-solid fa-envelope left-icon"></i>
+          <input type="email" id="email" name="email" placeholder="Enter your email" required autocomplete="off">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="input-field">
+          <i class="fa-solid fa-lock left-icon"></i>
+          <input type="password" id="password" name="password" placeholder="Enter password" required autocomplete="new-password">
+          <i class="fa-solid fa-eye-slash toggle-password" data-target="password"></i>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="input-field">
+          <i class="fa-solid fa-lock left-icon"></i>
+          <input type="password" id="confirm" name="confirm" placeholder="Re-enter password" required autocomplete="new-password">
+          <i class="fa-solid fa-eye-slash toggle-password" data-target="confirm"></i>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="input-field">
+          <i class="fa-solid fa-key left-icon"></i>
+          <input type="password" id="register_key" name="register_key" placeholder="Enter registration key" required autocomplete="off">
+          <i class="fa-solid fa-eye-slash toggle-password" data-target="register_key"></i>
+        </div>
+      </div>
+
+      <button type="submit"><i class="fa-solid fa-user-plus"></i> Register</button>
+    </form>
+
+    <div class="note">
+      Already have an account? <a href="/loginpage"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
+    </div>
+  </div>
+
+  <script>
+    // 👁 Toggle Password Visibility
+    document.querySelectorAll(".toggle-password").forEach(icon => {
+      icon.addEventListener("click", function() {
+        const targetId = this.getAttribute("data-target");
+        const input = document.getElementById(targetId);
+        if (input.type === "password") {
+          input.type = "text";
+          this.classList.replace("fa-eye-slash", "fa-eye");
+        } else {
+          input.type = "password";
+          this.classList.replace("fa-eye", "fa-eye-slash");
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
