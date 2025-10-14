@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout - AREEZ FRAGRANCE</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      margin: 0;
+      background: linear-gradient(180deg, #fff6fa, #ffffff);
+      color: #222;
+      overflow-x: hidden;
+    }
+
+    /* 🔸 Navbar */
+    nav {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      padding: 15px 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    nav .logo {
+      font-size: 28px;
+      font-weight: 700;
+      color: #e91e63;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 30px;
+      margin: 0;
+      padding: 0;
+    }
+
+    nav ul li a {
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+
+    nav ul li a:hover {
+      color: #e91e63;
+    }
+
+    .banner {
+      text-align: center;
+      background: linear-gradient(135deg, #ffebf3, #fff);
+      color: #e91e63;
+      padding: 10px 0;
+      font-weight: 500;
+    }
+
+    /* 🔸 Checkout Container */
+    .checkout-container {
+      max-width: 1000px;
+      margin: 60px auto;
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+      padding: 50px;
+      animation: fadeIn 0.8s ease;
+    }
+
+    h2 {
+      text-align: center;
+      color: #e91e63;
+      font-size: 2rem;
+      margin-bottom: 40px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+    }
+
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 25px;
+    }
+
+    .form-group {
+      flex: 1;
+      min-width: 250px;
+    }
+
+    label {
+      font-weight: 500;
+      color: #555;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    input, select, textarea {
+      width: 450px;
+      padding: 12px 15px;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      font-size: 0.95rem;
+      outline: none;
+      transition: 0.3s;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: #e91e63;
+      box-shadow: 0 0 8px rgba(233,30,99,0.2);
+    }
+
+    textarea {
+      resize: none;
+    }
+
+    /* 🧾 Order Summary */
+    .order-section {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 25px;
+      margin-top: 30px;
+    }
+
+    .order-summary, .payment-box {
+      flex: 1;
+      min-width: 300px;
+      background: #fff8fb;
+      border: 1px solid #ffd6e5;
+      border-radius: 14px;
+      padding: 25px;
+    }
+
+    .order-summary h3, .payment-box h3 {
+      color: #e91e63;
+      margin-bottom: 15px;
+    }
+
+    .order-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px dashed #f2b5c6;
+      font-size: 0.95rem;
+    }
+
+    .order-total {
+      text-align: right;
+      font-weight: 600;
+      color: #e91e63;
+      margin-top: 10px;
+    }
+
+    /* 💳 Payment Box */
+    .payment-box p {
+      color: #555;
+      margin-bottom: 15px;
+      line-height: 1.5;
+    }
+
+    .cod-method {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #ffe9f0;
+      padding: 12px 15px;
+      border-radius: 10px;
+      border: 1px solid #ffc1d6;
+    }
+
+    .cod-method i {
+      color: #e91e63;
+      font-size: 1.3rem;
+    }
+
+    /* Buttons */
+    .btn-group {
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    .btn {
+      border: none;
+      padding: 14px 35px;
+      border-radius: 25px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin: 0 10px;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+
+    .confirm-btn {
+      background: linear-gradient(135deg, #e91e63, #ff80ab);
+      color: white;
+      box-shadow: 0 5px 15px rgba(233,30,99,0.3);
+    }
+
+    .confirm-btn:hover {
+      background: linear-gradient(135deg, #ff4d8f, #ffa3c8);
+    }
+
+    .cancel-btn {
+      background: #eee;
+      color: #444;
+    }
+
+    .cancel-btn:hover {
+      background: #ddd;
+    }
+
+    /* 🔸 Footer */
+    footer {
+      background: linear-gradient(135deg, #ffe4ec, #fff);
+      color: #444;
+      padding: 70px 30px 40px;
+      margin-top: 100px;
+    }
+
+    footer h3 {
+      color: #e91e63;
+    }
+
+    .footer-container {
+      max-width: 1200px;
+      margin: auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 40px;
+      text-align: center;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .footer-links a {
+      text-decoration: none;
+      color: #444;
+      font-size: 0.95rem;
+      transition: 0.3s ease;
+    }
+
+    .footer-links a:hover {
+      color: #e91e63;
+      transform: translateX(4px);
+    }
+
+    .social-links a {
+      font-size: 1.8rem;
+      margin: 0 10px;
+      transition: 0.3s;
+    }
+
+    .social-links a:hover {
+      transform: scale(1.2);
+      filter: brightness(1.3);
+    }
+
+    footer hr {
+      margin: 40px auto;
+      border: 0.5px solid #ccc;
+      width: 90%;
+    }
+
+    footer p {
+      text-align: center;
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+
+<body>
+  <nav>
+    <div class="logo">AREEZ FRAGRANCE</div>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/shop">Shop</a></li>
+      <li><a href="/cart">Cart</a></li>
+    </ul>
+  </nav>
+
+  <div class="banner">🎁 Free Shipping & Cash on Delivery Available</div>
+
+  <div class="checkout-container">
+    <h2>Checkout</h2>
+
+    <form id="checkoutForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="name" placeholder="Enter your name" required />
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" id="email" placeholder="Enter your email" required />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Contact Number</label>
+          <input type="tel" id="phone" placeholder="Enter your contact number" required />
+        </div>
+        <div class="form-group">
+          <label>City</label>
+          <input type="text" id="city" placeholder="Enter your city" required />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Country</label>
+          <select id="country" required>
+            <option value="">Select Country</option>
+            <option value="Pakistan">Pakistan</option>
+            <option value="UAE">UAE</option>
+            <option value="Saudi Arabia">Saudi Arabia</option>
+            <option value="UK">UK</option>
+            <option value="USA">USA</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Postal / Zip Code</label>
+          <input type="text" id="postal" placeholder="Enter postal or zip code" required />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Shipping Address</label>
+        <textarea id="address" rows="3" placeholder="Enter your full address" required></textarea>
+      </div>
+
+      <div class="order-section">
+        <div class="order-summary" id="orderSummary"></div>
+        <div class="payment-box">
+          <h3>Payment Method</h3>
+          <div class="cod-method">
+            <i class="fa-solid fa-truck"></i>
+            <span><b>Cash on Delivery</b> — Pay when your order arrives.</span>
+          </div>
+          <p>You’ll receive a confirmation call before delivery.</p>
+        </div>
+      </div>
+
+      <div class="btn-group">
+        <button type="submit" class="btn confirm-btn">Place Order</button>
+        <button type="button" class="btn cancel-btn" onclick="window.location.href='/cart'">Cancel</button>
+      </div>
+    </form>
+  </div>
+
+  <footer>
+    <div class="footer-container">
+      <div>
+        <h3>Customer Support</h3>
+        <div class="footer-links">
+          <a href="/shipping_policy">Shipping Policy</a>
+          <a href="/refund_policy">Refund Policy</a>
+          <a href="/privacy_policy">Privacy Policy</a>
+          <a href="/terms_of_service">Terms of Service</a>
+          <a href="/contact">Contact Information</a>
+        </div>
+      </div>
+
+      <div>
+        <h3>About AREEZ</h3>
+        <p>Discover AREEZ FRAGRANCE — where elegance meets luxury.</p>
+      </div>
+
+      <div>
+        <h3>Follow AREEZ</h3>
+        <div class="social-links">
+          <a href="#"><i class="fab fa-instagram" style="color:#E1306C;"></i></a>
+          <a href="#"><i class="fab fa-facebook" style="color:#1877F2;"></i></a>
+          <a href="#"><i class="fab fa-snapchat-ghost" style="color:#FFFC00;"></i></a>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <p>© 2025 AREEZ FRAGRANCE — Crafted with elegance & love.</p>
+  </footer>
+
+  <script>
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const summary = document.getElementById("orderSummary");
+
+    if (cart.length === 0) {
+      summary.innerHTML = "<p style='text-align:center;color:#777;'>Your cart is empty.</p>";
+    } else {
+      let total = 0;
+      summary.innerHTML = "<h3>Order Summary</h3>";
+      cart.forEach(item => {
+        total += item.price * item.quantity;
+        summary.innerHTML += `
+          <div class='order-item'>
+            <span>${item.name} (x${item.quantity})</span>
+            <span>$${(item.price * item.quantity).toFixed(2)}</span>
+          </div>
+        `;
+      });
+      summary.innerHTML += `
+        <div class='order-item'>
+          <span>Shipping</span>
+          <span style='color:#28a745;'>Free</span>
+        </div>
+        <div class='order-total'>Total: $${total.toFixed(2)}</div>`;
+    }
+
+    document.getElementById("checkoutForm").addEventListener("submit", e => {
+      e.preventDefault();
+      alert("✅ Your order has been placed successfully with Cash on Delivery! 💖");
+      localStorage.removeItem("cart");
+      window.location.href = "/";
+    });
+  </script>
+</body>
+</html>

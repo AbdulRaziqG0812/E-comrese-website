@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Perfume Admin Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    /* 🌈 Animated Gradient Background */
+    body { 
+      font-family: "Segoe UI", Tahoma, sans-serif; 
+      margin: 0; 
+      padding: 20px; 
+      color: #fff;
+      background: linear-gradient(135deg, #1e3c72, #2a5298, #4a90e2);
+      background-size: 400% 400%;
+      animation: gradientShift 10s ease infinite;
+      overflow-y: auto;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    h1 { 
+      text-align: center; 
+      color: #fff; 
+      margin-bottom: 30px; 
+      font-size: 32px; 
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border-bottom: 3px solid #ffcc00;
+      display: inline-block;
+      padding-bottom: 8px;
+      text-shadow: 0 0 12px rgba(0,0,0,0.4);
+    }
+
+    /* 🔝 Top Action Bar */
+    .top-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    /* 🔍 Search Box */
+    .search-box form {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.15);
+      padding: 8px 12px;
+      border-radius: 8px;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+    }
+
+    .search-box input {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      background: rgba(255,255,255,0.2);
+      color: #fff;
+      min-width: 240px;
+      outline: none;
+    }
+
+    .search-box input::placeholder {
+      color: rgba(255,255,255,0.8);
+    }
+
+    /* 🔘 Buttons */
+    .btn { 
+      padding: 8px 14px; 
+      border-radius: 8px; 
+      color: white; 
+      font-size: 14px; 
+      text-decoration: none; 
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.25s ease;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn i { font-size: 14px; }
+    .btn-success { background: linear-gradient(90deg, #28a745, #34ce57); }
+    .btn-edit { background: linear-gradient(90deg, #ffc107, #ffdd57); color: #000; }
+    .btn-delete { background: linear-gradient(90deg, #dc3545, #e55368); }
+
+    .btn:hover { 
+      transform: translateY(-2px); 
+      box-shadow: 0 3px 8px rgba(0,0,0,0.3); 
+    }
+
+    /* 💎 Glass Table */
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      padding: 5px;
+    }
+
+    table { 
+      width: max-content;
+      min-width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td { 
+      padding: 12px; 
+      text-align: center; 
+      font-size: 14px; 
+      border-bottom: 1px solid rgba(255,255,255,0.3);
+      color: #fff;
+      white-space: nowrap;
+    }
+
+    th { 
+      background: rgba(0,0,0,0.3);
+      color: #ffcc00; 
+      font-weight: 600; 
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      font-size: 13px;
+    }
+
+    td img {
+      border-radius: 8px;
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+
+    tr:hover { 
+      background: rgba(255,255,255,0.1); 
+      transition: 0.2s; 
+    }
+
+    /* 📄 Pagination */
+    #pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    .page-btn {
+      background: linear-gradient(90deg, #1e90ff, #00bfff);
+      color: white;
+      border: none;
+      padding: 8px 13px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.3s;
+      width: 35px;
+      height: 35px;
+    }
+
+    .page-btn:hover { background: #0056b3; }
+    .page-btn.active {
+      background: linear-gradient(90deg, #28a745, #34ce57);
+      font-weight: bold;
+      transform: scale(1.1);
+    }
+  </style>
+</head>
+
+<body>
+  <div style="text-align:center;">
+    <h1>🌸 Perfume Admin Dashboard</h1>
+  </div>
+
+  <!-- 🔝 Top Actions -->
+  <div class="top-actions">
+    <div class="search-box">
+      <form method="GET" id="searchForm">
+        <input type="text" id="searchInput" placeholder="Search perfume by name or price...">
+        <button type="submit" class="btn btn-success">
+          <i class="fa-solid fa-magnifying-glass"></i> Search
+        </button>
+      </form>
+    </div>
+
+    <a href="{{ url_for('perfume') }}" class="btn btn-success"><i class="fa-solid fa-plus"></i> Add Perfume</a>
+  </div>
+
+  <!-- 💎 Perfume Table -->
+  <div class="table-container">
+    <table class="paginated-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Image</th>
+          <th>Name</th>
+          <th>Price</th>
+          <th>Sale</th>
+          <th>Stock</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in perfumes %}
+        <tr>
+          <td>{{ p.id }}</td>
+          <td><img src="{{ url_for('static', filename='uploads/' ~ p.image) }}" alt="{{ p.name }}"></td>
+          <td>{{ p.name }}</td>
+          <td>Rs {{ p.price }}</td>
+          <td>Rs {{ p.sale_price }}</td>
+          <td>{{ p.stock }}</td>
+          <td>
+            <a href="{{ url_for('edit_perfume', id=p.id) }}" class="btn btn-edit"><i class="fa fa-pen"></i></a>
+            <a href="{{ url_for('delete_perfume', id=p.id) }}" class="btn btn-delete" onclick="return confirm('Are you sure?')"><i class="fa fa-trash"></i></a>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="7" style="padding:18px;color:#ffcc00;">No perfumes found.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 📄 Pagination -->
+  <div id="pagination"></div>
+
+  <script>
+  // 🔍 Live Search Filter
+  document.getElementById('searchInput').addEventListener('keyup', function() {
+    const filter = this.value.toLowerCase();
+    const rows = document.querySelectorAll('.paginated-table tbody tr');
+    rows.forEach(row => {
+      const text = row.textContent.toLowerCase();
+      row.style.display = text.includes(filter) ? '' : 'none';
+    });
+  });
+
+  // 📄 Smart Pagination (shows limited page numbers with next/prev)
+  document.addEventListener("DOMContentLoaded", function () {
+    const rowsPerPage = 15;
+    const table = document.querySelector(".paginated-table");
+    const tbody = table.querySelector("tbody");
+    const rows = Array.from(tbody.querySelectorAll("tr"));
+    const pagination = document.getElementById("pagination");
+
+    const totalPages = Math.ceil(rows.length / rowsPerPage);
+    let currentPage = 1;
+
+    function displayPage(page) {
+      currentPage = page;
+      const start = (page - 1) * rowsPerPage;
+      const end = start + rowsPerPage;
+      rows.forEach((r, i) => r.style.display = (i >= start && i < end) ? "" : "none");
+      updatePagination();
+    }
+
+    function updatePagination() {
+      pagination.innerHTML = "";
+      const maxVisible = 5;
+      let startPage = Math.max(1, currentPage - Math.floor(maxVisible / 2));
+      let endPage = Math.min(totalPages, startPage + maxVisible - 1);
+
+      if (endPage - startPage + 1 < maxVisible)
+        startPage = Math.max(1, endPage - maxVisible + 1);
+
+      // Prev
+      const prev = document.createElement("button");
+      prev.innerHTML = "«";
+      prev.disabled = currentPage === 1;
+      prev.className = "page-btn";
+      prev.onclick = () => displayPage(currentPage - 1);
+      pagination.appendChild(prev);
+
+      // Page numbers
+      for (let i = startPage; i <= endPage; i++) {
+        const btn = document.createElement("button");
+        btn.innerHTML = i;
+        btn.className = "page-btn" + (i === currentPage ? " active" : "");
+        btn.onclick = () => displayPage(i);
+        pagination.appendChild(btn);
+      }
+
+      // Next
+      const next = document.createElement("button");
+      next.innerHTML = "»";
+      next.disabled = currentPage === totalPages;
+      next.className = "page-btn";
+      next.onclick = () => displayPage(currentPage + 1);
+      pagination.appendChild(next);
+    }
+
+    displayPage(1);
+  });
+  </script>
+</body>
+</html>
