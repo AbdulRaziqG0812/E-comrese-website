@@ -346,7 +346,12 @@ def store_home():
 
 @app.route('/shop')
 def shop():
-    return render_template('user/shop.html')
+    conn = get_db()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM perfumes ORDER BY id DESC")
+    perfumes = cursor.fetchall()
+    conn.close()
+    return render_template('user/shop.html', perfumes=perfumes)
 
 # contact route
 @app.route('/contact')

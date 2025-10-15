@@ -229,7 +229,7 @@
     <h2>Your Shopping Cart</h2>
     <div id="cartItems"></div>
     <div class="cart-summary">
-      <p><strong>Total:</strong> $<span id="cartTotal">0</span></p>
+      <p><strong>Total:</strong> PKR <span id="cartTotal">0</span></p>
       <button class="checkout-btn" onclick="window.location.href='/checkout'">Proceed to Checkout</button>
     </div>
   </div>
@@ -266,6 +266,11 @@
   </footer>
 
   <script>
+    // Format price with commas (PKR format)
+    function formatPKR(amount) {
+      return amount.toLocaleString("en-PK", { minimumFractionDigits: 2 });
+    }
+
     function renderCart() {
       const cart = JSON.parse(localStorage.getItem("cart")) || [];
       const cartContainer = document.getElementById("cartItems");
@@ -284,7 +289,7 @@
             <img src="${item.image}" alt="${item.name}">
             <div class="cart-details">
               <h3>${item.name}</h3>
-              <p>$${item.price}</p>
+              <p>₨ ${formatPKR(item.price)}</p>
             </div>
             <div class="cart-quantity">
               <button onclick="changeQty(${index}, -1)">−</button>
@@ -296,7 +301,7 @@
         `;
       });
 
-      cartTotal.textContent = total.toFixed(2);
+      cartTotal.textContent = formatPKR(total);
     }
 
     function changeQty(index, change) {
