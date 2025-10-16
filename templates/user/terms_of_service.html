@@ -93,6 +93,26 @@
       padding: 25px;
       margin-top: 60px;
     }
+    /* 📱 Responsive */
+@media (max-width: 1024px) {
+  .hero img { width: 350px; }
+  .signature-content { gap: 40px; }
+}
+
+@media (max-width: 768px) {
+  .hero { flex-direction: column-reverse; }
+  .hero img { width: 300px; }
+  .signature-content { flex-direction: column-reverse; text-align: center; }
+  .signature-text { text-align: center; }
+}
+
+@media (max-width: 480px) {
+  .hero img { width: 260px; }
+  .hero-content h1 { font-size: 2.5rem; }
+  .signature h2 { font-size: 2rem; }
+  .modal-content { width: 90%; padding: 20px; }
+  .modal-content h3 { font-size: 1.5rem; }
+}
   </style>
 </head>
 

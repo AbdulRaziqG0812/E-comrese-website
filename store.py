@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session, url_for, flash
+from flask import Flask, jsonify, render_template, request, redirect, session, url_for, flash
 import os, time, random, string, json
 from werkzeug.utils import secure_filename
 import mysql.connector
@@ -157,27 +157,41 @@ def register():
 
     return render_template("admin/register.html")
 
-# Dashboard Route
+# dashboard route
 @app.route('/dashboard')
 def dashboard():
     conn = get_db()
     cursor = conn.cursor()
-    
-    # Total perfumes
+
+    # 🧴 Total perfumes
     cursor.execute("SELECT COUNT(*) FROM perfumes")
     total_perfumes = cursor.fetchone()[0]
-    
-    # Total orders
+
+    # 📦 Total orders
     cursor.execute("SELECT COUNT(*) FROM orders")
     total_orders = cursor.fetchone()[0]
-    
+
+    # 💰 Total sales (sum of order totals)
+    cursor.execute("SELECT IFNULL(SUM(total), 0) FROM orders")
+    total_sales = cursor.fetchone()[0]
+
+    # ⏳ Pending orders
+    cursor.execute("SELECT COUNT(*) FROM orders WHERE status = 'Pending'")
+    pending_orders = cursor.fetchone()[0]
+
     cursor.close()
     conn.close()
-    
-    return render_template('admin/dashboard.html', total_perfumes=total_perfumes, total_orders=total_orders)
+
+    return render_template(
+        'admin/dashboard.html',
+        total_perfumes=total_perfumes,
+        total_orders=total_orders,
+        total_sales=total_sales,
+        pending_orders=pending_orders
+    )
 
 
-# -----------------------------
+# ---------------------------
 # Admin Panel - Perfumes
 # -----------------------------
 @app.route('/admin/admin')
@@ -320,15 +334,158 @@ def delete_perfume(id):
 # -----------------------------
 # Admin Orders Route
 # -----------------------------
+
+# 🧾 Admin Orders Dashboard
 @app.route('/admin/orders')
 def admin_orders():
     conn = get_db()
     cursor = conn.cursor(dictionary=True)
+
     cursor.execute("SELECT * FROM orders ORDER BY created_at DESC")
     orders = cursor.fetchall()
+
+    # 🛠 Safely decode JSON from 'items' field
+    for order in orders:
+        try:
+            items_value = order.get("items")
+
+            # If items are stored as a JSON string → decode it
+            if isinstance(items_value, str) and items_value.strip():
+                order["items"] = json.loads(items_value)
+
+            # If items are None or empty string → make empty list
+            elif not items_value:
+                order["items"] = []
+
+            # If already a list/dict → keep as is
+            elif isinstance(items_value, (list, dict)):
+                order["items"] = items_value
+
+            else:
+                order["items"] = []
+
+        except Exception as e:
+            print(f"⚠️ JSON decode error for order {order.get('id')}: {e}")
+            order["items"] = []
+
     cursor.close()
     conn.close()
+
     return render_template('admin/orders.html', orders=orders)
+
+# 🗑️ Delete Order (AJAX)
+@app.route('/delete_order/<int:id>', methods=['DELETE'])
+def delete_order(id):
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("DELETE FROM orders WHERE id = %s", (id,))
+    db.commit()
+    cursor.close()
+    return jsonify({"success": True, "message": "🗑️ Order deleted successfully!"})
+
+# ✅ Update Order Status (AJAX)
+@app.route('/update_order_status/<int:order_id>', methods=['POST'])
+def update_order_status(order_id):
+    data = request.get_json()
+    if not data or 'status' not in data:
+        return jsonify({"error": "Missing 'status' in request"}), 400
+
+    new_status = data['status']
+
+    # ✅ Allowed statuses (match your dropdown options)
+    allowed_statuses = ['Pending', 'Processing', 'Shipped', 'Completed', 'Cancelled']
+    if new_status not in allowed_statuses:
+        return jsonify({"error": f"Invalid status. Allowed: {', '.join(allowed_statuses)}"}), 400
+
+    conn = get_db()  # your function to get MySQL connection
+    cursor = conn.cursor()
+    try:
+        cursor.execute("UPDATE orders SET status=%s WHERE id=%s", (new_status, order_id))
+        conn.commit()
+
+        if cursor.rowcount == 0:
+            return jsonify({"error": f"Order ID {order_id} not found"}), 404
+
+        return jsonify({"success": True, "message": f"✅ Order status updated to '{new_status}' successfully!"})
+
+    except Exception as e:
+        conn.rollback()
+        return jsonify({"error": f"Error updating status: {str(e)}"}), 500
+
+    finally:
+        cursor.close()
+        conn.close()
+
+
+# -----------------------------
+# 📊 AREEZ Admin Dashboard
+# -----------------------------
+@app.route('/report')
+def report():
+    conn = get_db()
+    cursor = conn.cursor(dictionary=True)
+
+    # 🧾 Total Orders
+    cursor.execute("SELECT COUNT(*) AS total_orders FROM orders")
+    total_orders = cursor.fetchone()['total_orders']
+
+    # 💰 Total Sales (sum of order totals)
+    cursor.execute("SELECT IFNULL(SUM(total), 0) AS total_sales FROM orders")
+    total_sales = cursor.fetchone()['total_sales']
+
+    # ⏳ Pending Orders
+    cursor.execute("SELECT COUNT(*) AS pending_orders FROM orders WHERE status='Pending'")
+    pending_orders = cursor.fetchone()['pending_orders']
+
+    # 📈 Sales (last 30 days)
+    cursor.execute("""
+        SELECT DATE(created_at) AS date, SUM(total) AS total
+        FROM orders
+        WHERE created_at >= CURDATE() - INTERVAL 30 DAY
+        GROUP BY DATE(created_at)
+        ORDER BY DATE(created_at)
+    """)
+    sales_data = cursor.fetchall()
+    sales_labels = [row['date'].strftime("%d %b") for row in sales_data] if sales_data else []
+    sales_values = [float(row['total']) for row in sales_data] if sales_data else []
+
+    # 🧾 Order status breakdown
+    cursor.execute("SELECT status, COUNT(*) AS count FROM orders GROUP BY status")
+    status_data = cursor.fetchall()
+    status_labels = [row['status'] for row in status_data] if status_data else []
+    status_counts = [row['count'] for row in status_data] if status_data else []
+
+    # 🌸 Top perfumes (from items JSON)
+    cursor.execute("SELECT items FROM orders WHERE items IS NOT NULL AND items != ''")
+    perfume_sales = {}
+    for row in cursor.fetchall():
+        try:
+            items = json.loads(row['items'])
+            for item in items:
+                name = item.get('name')
+                qty = item.get('quantity', 1)
+                if name:
+                    perfume_sales[name] = perfume_sales.get(name, 0) + qty
+        except Exception:
+            continue
+
+    top_perfumes = sorted(perfume_sales.items(), key=lambda x: x[1], reverse=True)[:5]
+
+    cursor.close()
+    conn.close()
+
+    return render_template(
+        'admin/report.html',
+        total_orders=total_orders,
+        total_sales=total_sales,
+        pending_orders=pending_orders,
+        sales_labels=sales_labels or [],
+        sales_values=sales_values or [],
+        status_labels=status_labels or [],
+        status_counts=status_counts or [],
+        top_perfumes=top_perfumes or []
+    )
+
 # -----------------------------
 # User Home Route
 # -----------------------------
@@ -342,6 +499,32 @@ def store_home():
     cursor.close()
     conn.close()
     return render_template('user/home.html', perfumes=perfumes)
+
+# ✅ Update traking order Status (AJAX)
+@app.route('/order_status/<int:order_id>', methods=['GET'])
+def order_status(order_id):
+    conn = get_db()
+    cursor = conn.cursor(dictionary=True)
+
+    try:
+        cursor.execute("SELECT id, user_name, total, payment_method, created_at, status FROM orders WHERE id=%s", (order_id,))
+        order = cursor.fetchone()
+        if not order:
+            return jsonify({"error": "Order not found"}), 404
+
+        return jsonify({
+            "id": order['id'],
+            "name": order['user_name'],
+            "status": order['status'] if order['status'] else 'pending',
+            "total_amount": float(order['total']),
+            "created_at": order['created_at'].isoformat()  # ensures JS can parse it
+        })
+
+    except Exception as e:
+        return jsonify({"error": f"Error fetching order: {str(e)}"}), 500
+    finally:
+        cursor.close()
+        conn.close()
 
 
 @app.route('/shop')
@@ -363,14 +546,34 @@ def contact():
 def cart():
     return render_template('user/cart.html')
 
+# privacy route
+@app.route('/privacy_policy')
+def privacy_policy():
+    return render_template('user/privacy_policy.html')
 
+# terms route
+@app.route('/terms_of_service')
+def terms_of_service():
+    return render_template('user/terms_of_service.html')
+
+# refund route
+@app.route('/refund_policy')
+def refund_policy():
+    return render_template('user/refund_policy.html')
+
+# shipping route
+@app.route('/shipping_policy')
+def shipping_policy():
+    return render_template('user/shipping_policy.html')
 
 # -----------------------------
 # User Checkout Route
 # -----------------------------
+
 @app.route('/checkout', methods=['GET', 'POST'])
 def checkout():
     if request.method == 'POST':
+        # 🧾 Customer Details
         name = request.form.get('name')
         email = request.form.get('email')
         phone = request.form.get('phone')
@@ -380,29 +583,60 @@ def checkout():
         address = request.form.get('address')
         payment_method = "Cash on Delivery"
 
+        # 🛒 Cart Items
         items_json = request.form.get('items')
         try:
             items = json.loads(items_json)
         except:
             items = []
 
-        total = sum([item['price']*item['quantity'] for item in items])
+        total = sum([float(item['price']) * int(item['quantity']) for item in items]) if items else 0
 
         conn = get_db()
-        cursor = conn.cursor()
-        cursor.execute(
-            "INSERT INTO orders (user_name, email, phone, city, country, postal, address, items, total, payment_method) "
-            "VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
-            (name, email, phone, city, country, postal, address, json.dumps(items), total, payment_method)
-        )
-        conn.commit()
-        cursor.close()
-        conn.close()
+        cursor = conn.cursor(dictionary=True)
 
-        flash("✅ Order placed successfully! Admin will process it soon.")
-        return redirect(url_for('home'))
+        try:
+            # ✅ Check stock & update perfumes
+            for item in items:
+                cursor.execute("SELECT id, stock FROM perfumes WHERE name=%s", (item['name'],))
+                perfume = cursor.fetchone()
+                if not perfume:
+                    conn.rollback()
+                    return jsonify({"error": f"Product '{item['name']}' not found."}), 400
 
+                if perfume['stock'] < int(item['quantity']):
+                    conn.rollback()
+                    return jsonify({"error": f"Not enough stock for {item['name']}. Only {perfume['stock']} left."}), 400
+
+                cursor.execute(
+                    "UPDATE perfumes SET stock=%s WHERE id=%s",
+                    (perfume['stock'] - int(item['quantity']), perfume['id'])
+                )
+
+            # ✅ Insert order
+            cursor.execute("""
+                INSERT INTO orders 
+                (user_name, email, phone, city, country, postal, address, items, total, payment_method)
+                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+            """, (name, email, phone, city, country, postal, address, json.dumps(items), total, payment_method))
+
+            conn.commit()
+            order_id = cursor.lastrowid  # <-- get the newly generated Order ID
+
+        except Exception as e:
+            conn.rollback()
+            return jsonify({"error": f"Error placing order: {str(e)}"}), 500
+        finally:
+            cursor.close()
+            conn.close()
+
+        # ✅ Return JSON for modal
+        return jsonify({"order_id": order_id})
+
+    # GET request
     return render_template('user/checkout.html')
+
+
 
 # -----------------------------
 if __name__ == '__main__':

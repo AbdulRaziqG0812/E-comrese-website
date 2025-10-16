@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 <style>
 /* ========================== */
+/* ========================== */
 /* 🌿 Global Styles */
 /* ========================== */
 * {
@@ -21,6 +22,7 @@ body {
   color: #333;
   scroll-behavior: smooth;
   line-height: 1.6;
+  min-width: 1200px; /* keeps desktop layout intact */
 }
 
 a {
@@ -29,20 +31,19 @@ a {
 }
 
 /* ========================== */
-/* 🔝 Navbar - Single Line Links (No Gap/Wrap) */
+/* 🔝 Navbar Styling */
 /* ========================== */
 nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 30px; /* reduced padding to fit all on one line */
+  padding: 15px 30px;
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(12px);
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-  flex-wrap: nowrap; /* prevent wrapping */
+  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
 }
 
 nav .logo {
@@ -52,7 +53,6 @@ nav .logo {
   letter-spacing: 2px;
   text-transform: uppercase;
   transition: 0.3s;
-  flex-shrink: 0; /* do not shrink */
 }
 
 nav .logo:hover {
@@ -62,15 +62,17 @@ nav .logo:hover {
 
 .nav-links {
   display: flex;
-  gap: 0; /* no gap between links */
-  font-weight: 500;
-  flex-shrink: 1; /* allow shrinking if needed */
-  white-space: nowrap; /* prevent wrap */
+  align-items: center;
+  gap: 15px;
+  flex-wrap: nowrap; /* prevent wrapping */
+  overflow-x: auto;  /* allow horizontal scroll if needed */
 }
 
-.nav-links a {
+.nav-links a, .order-btn {
   color: #555;
-  padding: 0 12px; /* optional small padding between links */
+  padding: 8px 14px;
+  border-radius: 25px;
+  font-weight: 500;
   transition: 0.3s;
 }
 
@@ -78,64 +80,23 @@ nav .logo:hover {
   color: #e91e63;
 }
 
-.nav-right {
+.order-btn {
   display: flex;
   align-items: center;
-  gap: 0; /* no gap between icons */
-  flex-shrink: 0;
-}
-
-.nav-right a,
-.order-dropdown .order-btn {
-  padding: 0 10px; /* optional small padding */
-  white-space: nowrap;
-}
-
-.order-dropdown {
-  position: relative;
-}
-
-.order-btn {
-  background: none;
+  gap: 6px;
+  background: linear-gradient(135deg, #e91e63, #ff80ab);
+  color: #fff;
   border: none;
   cursor: pointer;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  color: #555;
-}
-
-.order-btn i {
-  color: #e91e63;
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  top: 40px;
-  right: 0;
-  background: #fff;
-  border-radius: 12px;
-  min-width: 200px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-  z-index: 50;
-}
-
-.dropdown-content a {
-  display: block;
-  padding: 12px 18px;
-  color: #333;
+  padding: 10px 20px;
+  border-radius: 30px;
+  font-weight: 600;
   transition: 0.3s;
 }
 
-.dropdown-content a:hover {
-  background: #ffe6ef;
-  color: #e91e63;
-}
-
-.order-dropdown:hover .dropdown-content {
-  display: block;
+.order-btn:hover {
+  background: linear-gradient(135deg, #ff4d8f, #ffa0c5);
+  transform: scale(1.05);
 }
 
 /* ========================== */
@@ -149,7 +110,7 @@ nav .logo:hover {
   gap: 50px;
   min-height: 90vh;
   padding: 0 40px;
-  background: linear-gradient(to right, rgba(255, 240, 245, 0.85), rgba(255, 255, 255, 0.95));
+  background: linear-gradient(to right, rgba(255,240,245,0.85), rgba(255,255,255,0.95));
 }
 
 .hero-content {
@@ -187,8 +148,10 @@ nav .logo:hover {
 .hero img {
   width: 350px;
   border-radius: 25px;
-  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 15px 45px rgba(0,0,0,0.25);
   transition: 0.4s;
+  max-width: 90%; /* prevent overflow */
+  height: auto;
 }
 
 .hero img:hover {
@@ -196,7 +159,7 @@ nav .logo:hover {
 }
 
 /* ========================== */
-/* 💎 Signature Perfume Section */
+/* 💎 Signature Section */
 /* ========================== */
 .signature {
   padding: 100px 40px;
@@ -221,8 +184,10 @@ nav .logo:hover {
 .signature-content img {
   width: 380px;
   border-radius: 25px;
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.15);
   transition: 0.4s;
+  max-width: 90%;
+  height: auto;
 }
 
 .signature-content img:hover {
@@ -264,7 +229,6 @@ nav .logo:hover {
 
 /* ========================== */
 /* ✨ Products Section */
-/* ========================== */
 .products {
   padding: 80px 40px;
   text-align: center;
@@ -288,13 +252,13 @@ nav .logo:hover {
   border-radius: 25px;
   overflow: hidden;
   width: 260px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.12);
   transition: 0.4s;
 }
 
 .product-card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 12px 30px rgba(233, 30, 99, 0.25);
+  box-shadow: 0 12px 30px rgba(233,30,99,0.25);
 }
 
 .product-card img {
@@ -302,10 +266,6 @@ nav .logo:hover {
   height: 280px;
   object-fit: cover;
   transition: 0.3s;
-}
-
-.product-card:hover img {
-  transform: scale(1.05);
 }
 
 .product-info {
@@ -342,8 +302,113 @@ nav .logo:hover {
 }
 
 /* ========================== */
-/* 🌷 Footer */
+/* 🌸 Order Tracking Modal */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(6px);
+  z-index: 300;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+  overflow-y: auto;
+}
+
+.modal-content {
+  background: linear-gradient(145deg, #fff0f5, #ffe6f0);
+  padding: 30px 25px;
+  border-radius: 25px;
+  text-align: center;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  animation: slideIn 0.3s ease-out;
+}
+
+.modal-content h3 {
+  color: #e91e63;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  font-size: 28px;
+  cursor: pointer;
+  color: #e91e63;
+  transition: 0.3s;
+}
+
+.close:hover {
+  transform: scale(1.2);
+}
+
+.modal input[type="text"] {
+  padding: 14px 18px;
+  border-radius: 30px;
+  border: 1px solid #e0c0d4;
+  width: 100%;
+  font-size: 1rem;
+  outline: none;
+  transition: 0.3s;
+}
+
+.modal input[type="text"]:focus {
+  border-color: #e91e63;
+  box-shadow: 0 0 10px rgba(233,30,99,0.25);
+}
+
+button.track-btn {
+  background: linear-gradient(135deg, #e91e63, #ff80ab);
+  border: none;
+  padding: 14px 40px;
+  color: #fff;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: 0.3s;
+}
+
+button.track-btn:hover {
+  background: linear-gradient(135deg, #ff4d8f, #ffa0c5);
+  transform: scale(1.05);
+}
+
+.order-info {
+  margin-top: 15px;
+  font-size: 1rem;
+  color: #444;
+  line-height: 1.5;
+  text-align: left;
+}
+
+.order-info p {
+  margin-bottom: 10px;
+  padding: 10px 15px;
+  border-radius: 25px;
+  background: #ffe6ef;
+  color: #e91e63;
+  font-weight: 500;
+}
+
 /* ========================== */
+/* ✨ Animations */
+@keyframes slideIn {
+  from { transform: translateY(-20px); opacity: 0; } 
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* ========================== */
+/* 🌷 Footer Styling */
 footer {
   background: #fff0f5;
   padding: 60px 40px;
@@ -394,6 +459,7 @@ footer hr {
 footer p {
   margin-top: 15px;
   font-size: 0.9rem;
+  text-align: center;
 }
 
 /* ========================== */
@@ -414,12 +480,14 @@ footer p {
   .hero img { width: 260px; }
   .hero-content h1 { font-size: 2.5rem; }
   .signature h2 { font-size: 2rem; }
+  .modal-content { width: 90%; padding: 20px; }
+  .modal-content h3 { font-size: 1.5rem; }
 }
 </style>
 </head>
 <body>
 
-  <!-- Navbar -->
+  <!-- ✅ Navbar -->
   <nav>
     <div class="logo">AREEZ FRAGRANCE</div>
     <div class="nav-links">
@@ -427,16 +495,9 @@ footer p {
       <a href="{{ url_for('shop') }}">Shop</a>
       <a href="{{ url_for('contact') }}">Contact</a>
       <a href="{{ url_for('cart') }}"><i class="fa-solid fa-cart-shopping" style="color:#e91e63;"></i></a>
-      <a href="#"><i class="fa-solid fa-user" style="color:#e91e63;"></i></a>
-      <div class="order-dropdown">
-        <button class="order-btn"><i class="fa-solid fa-box"></i> Orders</button>
-        <div class="dropdown-content">
-          <a href="/orders/placed">📝 Placed Orders</a>
-          <a href="/orders/in_process">⚙️ In Process</a>
-          <a href="/orders/shipped">🚚 Shipped</a>
-          <a href="/orders/completed">✅ Completed</a>
-        </div>
-      </div>
+      <button class="order-btn" onclick="openModal()">
+        <i class="fa-solid fa-box"></i> Track Order
+      </button>
     </div>
   </nav>
 
@@ -450,7 +511,7 @@ footer p {
     <img src="{{ url_for('static', filename='areez.png') }}" alt="AREEZ Perfume">
   </section>
 
-  <!-- Signature Perfume -->
+  <!-- Signature Perfume Section -->
   <section class="signature">
     <h2>Signature Perfume - Paradise</h2>
     <div class="signature-content">
@@ -463,7 +524,7 @@ footer p {
     </div>
   </section>
 
-  <!-- Most Selling Perfumes (Dynamic) -->
+  <!-- Most Selling Perfumes -->
   <section class="products">
     <h2>Most Selling Perfumes</h2>
     <div class="product-grid">
@@ -496,7 +557,7 @@ footer p {
       </div>
       <div>
         <h3>About AREEZ</h3>
-        <p>Elegant fragrances crafted to inspire confidence, beauty, and grace.</p>
+        <p>Luxury perfumes crafted with passion and purity. Experience timeless fragrances for Men & Women.</p>
       </div>
       <div>
         <h3>Follow Us</h3>
@@ -511,5 +572,46 @@ footer p {
     <p>© 2025 AREEZ FRAGRANCE — Crafted with elegance & love.</p>
   </footer>
 
+  <!-- ✅ Real-Time Order Modal -->
+  <div class="modal" id="orderModal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <h3>Track Your Order</h3>
+      <input type="text" id="orderId" placeholder="Enter Order ID" />
+      <button class="track-btn" onclick="trackOrder()">Track</button>
+      <div class="order-info" id="orderInfo"></div>
+    </div>
+  </div>
+
+  <script>
+    const modal = document.getElementById('orderModal');
+    function openModal() { modal.style.display = 'flex'; }
+    function closeModal() { modal.style.display = 'none'; }
+
+    function trackOrder() {
+      const id = document.getElementById('orderId').value.trim();
+      if (!id) return alert("Please enter your Order ID");
+
+      fetch(`/order_status/${id}`)
+        .then(res => res.json())
+        .then(data => {
+          const info = document.getElementById('orderInfo');
+          if (data.error) {
+            info.innerHTML = `<p style="color:red;">${data.error}</p>`;
+          } else {
+            info.innerHTML = `
+              <p><strong>Order ID:</strong> ${data.id}</p>
+              <p><strong>Name:</strong> ${data.name}</p>
+              <p><strong>Status:</strong> <b style="color:#e91e63;">${data.status.toUpperCase()}</b></p>
+              <p><strong>Total:</strong> Rs. ${data.total_amount}</p>
+              <p><strong>Placed on:</strong> ${new Date(data.created_at).toLocaleString()}</p>
+            `;
+          }
+        })
+        .catch(() => {
+          document.getElementById('orderInfo').innerHTML = `<p style="color:red;">Error fetching order.</p>`;
+        });
+    }
+  </script>
 </body>
 </html>

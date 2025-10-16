@@ -211,6 +211,29 @@
       font-size: 0.9rem;
       color: #666;
     }
+    /* 📱 Mobile Fixed Layout (desktop jaisa) */
+@media (max-width: 500px) {
+  body {
+    min-width: 800px; /* keep desktop layout width */
+    zoom: 0.55;        /* scale down to fit mobile screen */
+  }
+
+  nav .nav-links {
+    overflow-x: auto;  /* allow horizontal scroll if nav items overflow */
+  }
+
+  .hero img,
+  .signature-content img,
+  .product-card img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .product-card {
+    width: 260px; /* same as desktop */
+  }
+}
+
   </style>
 </head>
 
@@ -218,7 +241,7 @@
   <nav>
     <div class="logo">AREEZ FRAGRANCE</div>
     <ul>
-      <li><a href="/">Home</a></li>
+      <li><a href="/home">Home</a></li>
       <li><a href="/shop">Shop</a></li>
       <li><a href="/contact">Contact</a></li>
       <li><a href="/cart"><i class="fa-solid fa-cart-shopping"></i> Cart</a></li>
@@ -249,7 +272,7 @@
 
       <div>
         <h3>About AREEZ</h3>
-        <p style="color:#555;">Discover AREEZ FRAGRANCE — where elegance meets luxury.</p>
+        <p style="color:#555;">Luxury perfumes crafted with passion and purity. Experience timeless fragrances for Men & Women.</p>
       </div>
 
       <div>

@@ -6,15 +6,15 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
   <style>
-    /* 🌈 Animated Gradient Background */
-    body { 
-      font-family: "Segoe UI", Tahoma, sans-serif; 
-      margin: 0; 
-      padding: 20px; 
+    /* 🌌 AREZ FRAGRANCE - Dark Luxury Gradient */
+    body {
+      font-family: "Poppins", "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 20px;
       color: #fff;
-      background: linear-gradient(135deg, #1e3c72, #2a5298, #4a90e2);
+      background: radial-gradient(circle at top left, #0f2027, #203a43, #2c5364);
       background-size: 400% 400%;
-      animation: gradientShift 10s ease infinite;
+      animation: gradientShift 12s ease infinite;
       overflow-y: auto;
     }
 
@@ -24,29 +24,30 @@
       100% { background-position: 0% 50%; }
     }
 
-    h1 { 
-      text-align: center; 
-      color: #fff; 
-      margin-bottom: 30px; 
-      font-size: 32px; 
+    /* 🌟 Title */
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 34px;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 1px;
-      border-bottom: 3px solid #ffcc00;
+      color: #ffcc00;
+      text-shadow: 0 0 15px rgba(255, 204, 0, 0.6);
+      position: relative;
       display: inline-block;
+      border-bottom: 3px solid #ffcc00;
       padding-bottom: 8px;
-      text-shadow: 0 0 12px rgba(0,0,0,0.4);
     }
 
-    /* 🔝 Top Action Bar */
+    /* 🔝 Top Actions Bar */
     .top-actions {
       display: flex;
-      justify-content: space-between;
       justify-content: center;
       align-items: center;
-      margin-bottom: 25px;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 14px;
+      margin-bottom: 30px;
     }
 
     /* 🔍 Search Box */
@@ -54,129 +55,129 @@
       display: flex;
       gap: 10px;
       align-items: center;
-      background: rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.08);
       padding: 8px 12px;
-      border-radius: 8px;
-      backdrop-filter: blur(8px);
-      box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+      border-radius: 10px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
     }
 
     .search-box input {
-      padding: 8px 12px;
+      background: transparent;
       border: none;
-      border-radius: 6px;
-      font-size: 14px;
-      background: rgba(255,255,255,0.2);
       color: #fff;
-      min-width: 240px;
       outline: none;
+      font-size: 14px;
+      width: 240px;
+      padding: 6px 10px;
     }
 
     .search-box input::placeholder {
-      color: rgba(255,255,255,0.8);
+      color: rgba(255,255,255,0.7);
     }
 
-    /* 🔘 Buttons */
-    .btn { 
-      padding: 8px 14px; 
-      border-radius: 8px; 
-      color: white; 
-      font-size: 14px; 
-      text-decoration: none; 
+    /* ✨ Buttons */
+    .btn {
+      padding: 8px 14px;
+      border-radius: 8px;
+      color: white;
+      font-size: 14px;
       font-weight: 500;
+      text-decoration: none;
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      transition: all 0.25s ease;
       border: none;
       cursor: pointer;
+      transition: all 0.3s ease;
     }
 
-    .btn i { font-size: 14px; }
-    .btn-success { background: linear-gradient(90deg, #28a745, #34ce57); }
-    .btn-edit { background: linear-gradient(90deg, #ffc107, #ffdd57); color: #000; }
-    .btn-delete { background: linear-gradient(90deg, #dc3545, #e55368); }
-
-    .btn:hover { 
-      transform: translateY(-2px); 
-      box-shadow: 0 3px 8px rgba(0,0,0,0.3); 
-    }
-    .btn-success { 
-      background-color: #28a745; 
-      color: #fff; 
+    .btn-success {
+      background: linear-gradient(90deg, #00b09b, #96c93d);
+      box-shadow: 0 0 10px rgba(0, 176, 155, 0.4);
     }
 
-    .btn-success:hover { 
-      opacity: 0.85; 
+    .btn-edit {
+      background: linear-gradient(90deg, #ffcc00, #ffd633);
+      color: #000;
     }
 
+    .btn-delete {
+      background: linear-gradient(90deg, #ff416c, #ff4b2b);
+    }
 
-    /* 💎 Glass Table */
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+    }
+
+    /* 💎 Glass Table Container */
     .table-container {
-      width: 100%;
-      overflow-x: auto;
-      border-radius: 12px;
-      background: rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 15px;
       backdrop-filter: blur(12px);
-      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-      padding: 5px;
+      box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4);
+      padding: 10px;
+      overflow-x: auto;
     }
 
-    table { 
-      width: max-content;
-      min-width: 100%;
+    table {
+      width: 100%;
       border-collapse: collapse;
     }
 
-    th, td { 
-      padding: 12px; 
-      text-align: center; 
-      font-size: 14px; 
-      border-bottom: 1px solid rgba(255,255,255,0.3);
+    th, td {
+      padding: 12px 14px;
+      text-align: center;
+      font-size: 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.15);
       color: #fff;
-      white-space: nowrap;
     }
 
-    th { 
-      background: rgba(0,0,0,0.3);
-      color: #ffcc00; 
-      font-weight: 600; 
+    th {
+      background: rgba(0, 0, 0, 0.4);
+      color: #ffcc00;
+      font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.7px;
+      letter-spacing: 0.6px;
       font-size: 13px;
     }
 
-    td img {
-      border-radius: 8px;
-      width: 60px;
-      height: 60px;
-      object-fit: cover;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    tr:hover {
+      background: rgba(255, 255, 255, 0.08);
+      transition: background 0.2s ease;
     }
 
-    tr:hover { 
-      background: rgba(255,255,255,0.1); 
-      transition: 0.2s; 
+    td img {
+      width: 65px;
+      height: 65px;
+      border-radius: 10px;
+      object-fit: cover;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease;
+    }
+
+    td img:hover {
+      transform: scale(1.08);
     }
 
     /* 📊 Totals Section */
     .totals {
       margin-top: 25px;
-      padding: 18px;
+      padding: 15px;
       border-radius: 12px;
-      background: rgba(0,0,0,0.3);
-      backdrop-filter: blur(10px);
       text-align: center;
-      color: #ffcc00;
-      font-size: 16px;
       font-weight: 600;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+      color: #ffcc00;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.4);
     }
 
     .totals span {
-      margin: 0 18px;
       color: #fff;
       font-weight: 700;
+      margin: 0 15px;
     }
 
     /* 📄 Pagination */
@@ -184,28 +185,34 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 6px;
-      flex-wrap: wrap;
+      gap: 8px;
       margin-top: 20px;
+      flex-wrap: wrap;
     }
 
     .page-btn {
-      background: linear-gradient(90deg, #1e90ff, #00bfff);
+      background: linear-gradient(90deg, #0072ff, #00c6ff);
       color: white;
       border: none;
-      padding: 8px 13px;
       border-radius: 50%;
+      padding: 8px 13px;
+      width: 36px;
+      height: 36px;
       cursor: pointer;
-      transition: all 0.3s;
-      width: 35px;
-      height: 35px;
+      transition: 0.3s;
+      font-weight: 600;
     }
 
-    .page-btn:hover { background: #0056b3; }
+    .page-btn:hover {
+      transform: scale(1.15);
+      background: linear-gradient(90deg, #00b09b, #96c93d);
+    }
+
     .page-btn.active {
-      background: linear-gradient(90deg, #28a745, #34ce57);
-      font-weight: bold;
-      transform: scale(1.1);
+      background: linear-gradient(90deg, #ffcc00, #ffdd33);
+      color: #000;
+      box-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
+      transform: scale(1.2);
     }
   </style>
 </head>
@@ -226,10 +233,8 @@
       </form>
     </div>
 
-    <!-- 🔘 Top Action Buttons (Simple) -->
     <a href="{{ url_for('perfume') }}" class="btn btn-success"><i class="fa-solid fa-plus"></i> Add Perfume</a>
     <a href="{{ url_for('dashboard') }}" class="btn btn-success"><i class="fa-solid fa-house"></i> Home</a>
-
   </div>
 
   <!-- 💎 Perfume Table -->
@@ -241,7 +246,7 @@
           <th>Image</th>
           <th>Name</th>
           <th>Category</th>
-          <th>description</th>
+          <th>Description</th>
           <th>Price</th>
           <th>Sale</th>
           <th>Stock</th>
@@ -265,106 +270,101 @@
           </td>
         </tr>
         {% else %}
-        <tr>
-          <td colspan="8" style="padding:18px;color:#ffcc00;">No perfumes found.</td>
-        </tr>
+        <tr><td colspan="9" style="padding:18px;color:#ffcc00;">No perfumes found.</td></tr>
         {% endfor %}
       </tbody>
     </table>
   </div>
 
-  <!-- 📊 Totals Section -->
+  <!-- 📊 Totals -->
   <div class="totals">
     Total Regular Price: <span id="totalPrice">0</span> |
-    Total Sale Price: <span id="totalSale">0</span> |
+    Total Sale Price: <span id="totalSale">0</span>
   </div>
 
   <!-- 📄 Pagination -->
   <div id="pagination"></div>
 
+  <!-- ⚙️ Script -->
   <script>
-  // 🔍 Live Search Filter
-  document.getElementById('searchInput').addEventListener('keyup', function() {
-    const filter = this.value.toLowerCase();
-    const rows = document.querySelectorAll('.paginated-table tbody tr');
-    rows.forEach(row => {
-      const text = row.textContent.toLowerCase();
-      row.style.display = text.includes(filter) ? '' : 'none';
-    });
-    calculateTotals();
-  });
-
-  // 📊 Totals Calculation
-  function calculateTotals() {
-    let totalPrice = 0, totalSale = 0, totalStock = 0;
-    document.querySelectorAll('.paginated-table tbody tr').forEach(row => {
-      if (row.style.display !== 'none') {
-        const price = parseFloat(row.querySelector('.price')?.textContent || 0);
-        const sale = parseFloat(row.querySelector('.sale')?.textContent || 0);
-        totalPrice += price;
-        totalSale += sale;
-      }
-    });
-    document.getElementById('totalPrice').textContent = "Rs " + totalPrice.toFixed(2);
-    document.getElementById('totalSale').textContent = "Rs " + totalSale.toFixed(2);
-  }
-
-  // 📄 Smart Pagination
-  document.addEventListener("DOMContentLoaded", function () {
-    const rowsPerPage = 15;
-    const table = document.querySelector(".paginated-table");
-    const tbody = table.querySelector("tbody");
-    const rows = Array.from(tbody.querySelectorAll("tr"));
-    const pagination = document.getElementById("pagination");
-
-    const totalPages = Math.ceil(rows.length / rowsPerPage);
-    let currentPage = 1;
-
-    function displayPage(page) {
-      currentPage = page;
-      const start = (page - 1) * rowsPerPage;
-      const end = start + rowsPerPage;
-      rows.forEach((r, i) => r.style.display = (i >= start && i < end) ? "" : "none");
-      updatePagination();
+    // 🔍 Search Filter
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+      const filter = this.value.toLowerCase();
+      const rows = document.querySelectorAll('.paginated-table tbody tr');
+      rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(filter) ? '' : 'none';
+      });
       calculateTotals();
+    });
+
+    // 📊 Calculate Totals
+    function calculateTotals() {
+      let totalPrice = 0, totalSale = 0;
+      document.querySelectorAll('.paginated-table tbody tr').forEach(row => {
+        if (row.style.display !== 'none') {
+          const price = parseFloat(row.querySelector('.price')?.textContent || 0);
+          const sale = parseFloat(row.querySelector('.sale')?.textContent || 0);
+          totalPrice += price;
+          totalSale += sale;
+        }
+      });
+      document.getElementById('totalPrice').textContent = "Rs " + totalPrice.toFixed(2);
+      document.getElementById('totalSale').textContent = "Rs " + totalSale.toFixed(2);
     }
 
-    function updatePagination() {
-      pagination.innerHTML = "";
-      const maxVisible = 5;
-      let startPage = Math.max(1, currentPage - Math.floor(maxVisible / 2));
-      let endPage = Math.min(totalPages, startPage + maxVisible - 1);
-      if (endPage - startPage + 1 < maxVisible)
-        startPage = Math.max(1, endPage - maxVisible + 1);
+    // 📄 Pagination
+    document.addEventListener("DOMContentLoaded", function () {
+      const rowsPerPage = 15;
+      const table = document.querySelector(".paginated-table");
+      const tbody = table.querySelector("tbody");
+      const rows = Array.from(tbody.querySelectorAll("tr"));
+      const pagination = document.getElementById("pagination");
+      const totalPages = Math.ceil(rows.length / rowsPerPage);
+      let currentPage = 1;
 
-      // Prev
-      const prev = document.createElement("button");
-      prev.innerHTML = "«";
-      prev.disabled = currentPage === 1;
-      prev.className = "page-btn";
-      prev.onclick = () => displayPage(currentPage - 1);
-      pagination.appendChild(prev);
-
-      // Page numbers
-      for (let i = startPage; i <= endPage; i++) {
-        const btn = document.createElement("button");
-        btn.innerHTML = i;
-        btn.className = "page-btn" + (i === currentPage ? " active" : "");
-        btn.onclick = () => displayPage(i);
-        pagination.appendChild(btn);
+      function displayPage(page) {
+        currentPage = page;
+        const start = (page - 1) * rowsPerPage;
+        const end = start + rowsPerPage;
+        rows.forEach((r, i) => r.style.display = (i >= start && i < end) ? "" : "none");
+        updatePagination();
+        calculateTotals();
       }
 
-      // Next
-      const next = document.createElement("button");
-      next.innerHTML = "»";
-      next.disabled = currentPage === totalPages;
-      next.className = "page-btn";
-      next.onclick = () => displayPage(currentPage + 1);
-      pagination.appendChild(next);
-    }
+      function updatePagination() {
+        pagination.innerHTML = "";
+        const maxVisible = 5;
+        let startPage = Math.max(1, currentPage - Math.floor(maxVisible / 2));
+        let endPage = Math.min(totalPages, startPage + maxVisible - 1);
+        if (endPage - startPage + 1 < maxVisible)
+          startPage = Math.max(1, endPage - maxVisible + 1);
 
-    displayPage(1);
-  });
+        const prev = document.createElement("button");
+        prev.innerHTML = "«";
+        prev.disabled = currentPage === 1;
+        prev.className = "page-btn";
+        prev.onclick = () => displayPage(currentPage - 1);
+        pagination.appendChild(prev);
+
+        for (let i = startPage; i <= endPage; i++) {
+          const btn = document.createElement("button");
+          btn.innerHTML = i;
+          btn.className = "page-btn" + (i === currentPage ? " active" : "");
+          btn.onclick = () => displayPage(i);
+          pagination.appendChild(btn);
+        }
+
+        const next = document.createElement("button");
+        next.innerHTML = "»";
+        next.disabled = currentPage === totalPages;
+        next.className = "page-btn";
+        next.onclick = () => displayPage(currentPage + 1);
+        pagination.appendChild(next);
+      }
+
+      displayPage(1);
+    });
   </script>
 </body>
 </html>

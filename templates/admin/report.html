@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AREEZ Admin Report</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(180deg, #0b0b0b, #1a1a1a);
+      color: #f2f2f2;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background: linear-gradient(90deg, #d4af37, #b8860b);
+      color: #000;
+      padding: 20px;
+      text-align: center;
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+      text-transform: uppercase;
+    }
+
+    /* === Summary Cards === */
+    .container {
+      width: 90%;
+      margin: 40px auto 10px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 25px;
+    }
+
+    .card {
+      background: radial-gradient(circle at top left, rgba(212, 175, 55, 0.15), #141414);
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      border-radius: 16px;
+      padding: 25px 20px;
+      box-shadow: 0 0 25px rgba(212, 175, 55, 0.1);
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 35px rgba(212, 175, 55, 0.3);
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: 18px;
+      color: #d4af37;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .card p {
+      font-size: 28px;
+      font-weight: 600;
+      color: #fff;
+      margin-top: 8px;
+      text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+    }
+
+    /* === Charts Section === */
+    .charts-section {
+      width: 90%;
+      margin: 40px auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 25px;
+    }
+
+    .chart-box {
+      background: #141414;
+      border: 1px solid rgba(255, 215, 0, 0.25);
+      border-radius: 18px;
+      padding: 25px;
+      box-shadow: 0 0 25px rgba(212, 175, 55, 0.1);
+      text-align: center;
+    }
+
+    .chart-box h3 {
+      margin-bottom: 15px;
+      color: #d4af37;
+      font-size: 18px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    canvas {
+      width: 100% !important;
+      height: 280px !important;
+    }
+
+    /* === Top Products === */
+    .top-products {
+      width: 90%;
+      margin: 40px auto;
+      background: #141414;
+      border-radius: 18px;
+      padding: 25px;
+      border: 1px solid rgba(255, 215, 0, 0.25);
+      box-shadow: 0 0 20px rgba(212, 175, 55, 0.1);
+    }
+
+    .top-products h3 {
+      color: #d4af37;
+      margin-bottom: 15px;
+      text-transform: uppercase;
+    }
+
+    .top-products ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .top-products li {
+      padding: 10px 0;
+      border-bottom: 1px solid #333;
+      font-size: 16px;
+    }
+
+    .top-products li span {
+      color: #d4af37;
+      font-weight: bold;
+    }
+
+    @media (max-width: 768px) {
+      .charts-section {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header><i class="fa-solid fa-chart-line"></i> AREEZ Admin Report</header>
+
+  <!-- 🔸 Summary Cards -->
+  <div class="container">
+    <div class="card">
+      <h3>Total Sales</h3>
+      <p>PKR {{ total_sales }}</p>
+    </div>
+    <div class="card">
+      <h3>Total Orders</h3>
+      <p>{{ total_orders }}</p>
+    </div>
+    <div class="card">
+      <h3>Pending Orders</h3>
+      <p>{{ pending_orders }}</p>
+    </div>
+    <div class="card">
+      <h3>Completed Orders</h3>
+      <p>
+        {% if 'Completed' in status_labels %}
+          {{ status_counts[status_labels.index('Completed')] }}
+        {% else %}
+          0
+        {% endif %}
+      </p>
+    </div>
+  </div>
+
+  <!-- 🔹 Charts Section -->
+  <div class="charts-section">
+    <div class="chart-box">
+      <h3>📈 Sales (Last 30 Days)</h3>
+      <canvas id="salesChart"></canvas>
+    </div>
+
+    <div class="chart-box">
+      <h3>🧾 Orders by Status</h3>
+      <canvas id="statusChart"></canvas>
+    </div>
+  </div>
+
+  <!-- 🔸 Top Products -->
+  <div class="top-products">
+    <h3>🌸 Top 5 Perfumes</h3>
+    <ul>
+      {% if top_perfumes %}
+        {% for name, qty in top_perfumes %}
+          <li><span>{{ name }}</span> — {{ qty }} sold</li>
+        {% endfor %}
+      {% else %}
+        <li>No data available</li>
+      {% endif %}
+    </ul>
+  </div>
+
+  <!-- 📊 Chart.js -->
+  <script>
+    const gold = '#d4af37';
+
+    // === Sales Chart ===
+    const salesCtx = document.getElementById('salesChart').getContext('2d');
+    const gradient = salesCtx.createLinearGradient(0, 0, 0, 300);
+    gradient.addColorStop(0, 'rgba(212,175,55,0.4)');
+    gradient.addColorStop(1, 'rgba(212,175,55,0)');
+
+    new Chart(salesCtx, {
+      type: 'line',
+      data: {
+        labels: {{ sales_labels|tojson }},
+        datasets: [{
+          label: 'Sales (PKR)',
+          data: {{ sales_values|tojson }},
+          borderColor: gold,
+          backgroundColor: gradient,
+          fill: true,
+          tension: 0.4,
+          borderWidth: 2,
+          pointRadius: 4,
+          pointBackgroundColor: gold
+        }]
+      },
+      options: {
+        plugins: {
+          legend: { labels: { color: '#fff' } }
+        },
+        scales: {
+          x: { ticks: { color: '#bbb' }, grid: { color: '#333' } },
+          y: { ticks: { color: '#bbb' }, grid: { color: '#333' } }
+        }
+      }
+    });
+
+    // === Orders by Status ===
+    new Chart(document.getElementById('statusChart'), {
+      type: 'bar',
+      data: {
+        labels: {{ status_labels|tojson }},
+        datasets: [{
+          label: 'Orders',
+          data: {{ status_counts|tojson }},
+          backgroundColor: ['#d4af37', '#22c55e', '#ef4444', '#999']
+        }]
+      },
+      options: {
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          x: { ticks: { color: '#bbb' }, grid: { color: '#333' } },
+          y: { ticks: { color: '#bbb' }, grid: { color: '#333' } }
+        }
+      }
+    });
+  </script>
+</body>
+</html>
