@@ -69,7 +69,6 @@ nav .logo:hover {
 }
 
 .nav-links a, .order-btn {
-  color: #555;
   padding: 8px 14px;
   border-radius: 25px;
   font-weight: 500;
@@ -491,10 +490,13 @@ footer p {
   <nav>
     <div class="logo">AREEZ FRAGRANCE</div>
     <div class="nav-links">
-      <a href="/home">Home</a>
+      <a href="/">Home</a>
       <a href="{{ url_for('shop') }}">Shop</a>
       <a href="{{ url_for('contact') }}">Contact</a>
       <a href="{{ url_for('cart') }}"><i class="fa-solid fa-cart-shopping" style="color:#e91e63;"></i></a>
+      <a href="{{ url_for('loginpage') }}" class="order-btn">
+        <i class="fa-solid fa-user-shield"></i> Login
+      </a>
       <button class="order-btn" onclick="openModal()">
         <i class="fa-solid fa-box"></i> Track Order
       </button>
@@ -526,7 +528,7 @@ footer p {
 
   <!-- Most Selling Perfumes -->
   <section class="products">
-    <h2>Most Selling Perfumes</h2>
+    <h2> Featured Perfumes</h2>
     <div class="product-grid">
       {% for perfume in perfumes %}
       <div class="product-card">

@@ -46,14 +46,16 @@ def remove_file(filepath):
 # Routes
 # -----------------------------
 
-# Root route redirects to dashboard
 @app.route('/')
+@app.route('/home')
 def home():
-    return redirect(url_for('home_switch'))
-
-@app.route('/home_switch')
-def home_switch():
-    return render_template('home_switch.html')
+    conn = get_db()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM perfumes ORDER BY id DESC")
+    perfumes = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return render_template('home.html', perfumes=perfumes)
 
 
 # route for loginpage
@@ -90,7 +92,7 @@ def loginpage():
             cursor.close()
             conn.close()
 
-    return render_template('admin/loginpage.html')
+    return render_template('loginpage.html')
 
 
 # register route
@@ -155,7 +157,7 @@ def register():
             cursor.close()
             conn.close()
 
-    return render_template("admin/register.html")
+    return render_template("register.html")
 
 # dashboard route
 @app.route('/dashboard')
@@ -183,7 +185,7 @@ def dashboard():
     conn.close()
 
     return render_template(
-        'admin/dashboard.html',
+        'dashboard.html',
         total_perfumes=total_perfumes,
         total_orders=total_orders,
         total_sales=total_sales,
@@ -194,7 +196,7 @@ def dashboard():
 # ---------------------------
 # Admin Panel - Perfumes
 # -----------------------------
-@app.route('/admin/admin')
+@app.route('/admin')
 def admin():
     conn = get_db()
     cursor = conn.cursor(dictionary=True)
@@ -202,9 +204,12 @@ def admin():
     perfumes = cursor.fetchall()
     cursor.close()
     conn.close()
-    return render_template('admin/admin.html', perfumes=perfumes)
+    return render_template('admin.html', perfumes=perfumes)
 
-@app.route('/admin/perfume', methods=['GET', 'POST'])
+
+# 🧴 Add New Perfume
+
+@app.route('/perfume', methods=['GET', 'POST'])
 def perfume():
     if request.method == 'POST':
         name = request.form.get('name', '').strip()
@@ -252,9 +257,9 @@ def perfume():
         flash("✅ Perfume added successfully!")
         return redirect(url_for('admin'))
 
-    return render_template('admin/perfume.html')
+    return render_template('perfume.html')
 
-@app.route('/admin/edit_perfume/<int:id>', methods=['GET','POST'])
+@app.route('/edit_perfume/<int:id>', methods=['GET','POST'])
 def edit_perfume(id):
     conn = get_db()
     cursor = conn.cursor(dictionary=True)
@@ -312,9 +317,9 @@ def edit_perfume(id):
         flash("✏️ Perfume updated successfully!")
         return redirect(url_for('admin'))
 
-    return render_template('admin/edit_perfume.html', perfume=perfume)
+    return render_template('edit_perfume.html', perfume=perfume)
 
-@app.route('/delete/<int:id>')
+@app.route('/delete_perfume/<int:id>')
 def delete_perfume(id):
     conn = get_db()
     cursor = conn.cursor(dictionary=True)
@@ -336,7 +341,7 @@ def delete_perfume(id):
 # -----------------------------
 
 # 🧾 Admin Orders Dashboard
-@app.route('/admin/orders')
+@app.route('/orders')
 def admin_orders():
     conn = get_db()
     cursor = conn.cursor(dictionary=True)
@@ -371,7 +376,7 @@ def admin_orders():
     cursor.close()
     conn.close()
 
-    return render_template('admin/orders.html', orders=orders)
+    return render_template('orders.html', orders=orders)
 
 # 🗑️ Delete Order (AJAX)
 @app.route('/delete_order/<int:id>', methods=['DELETE'])
@@ -475,7 +480,7 @@ def report():
     conn.close()
 
     return render_template(
-        'admin/report.html',
+        'report.html',
         total_orders=total_orders,
         total_sales=total_sales,
         pending_orders=pending_orders,
@@ -486,19 +491,6 @@ def report():
         top_perfumes=top_perfumes or []
     )
 
-# -----------------------------
-# User Home Route
-# -----------------------------
-
-@app.route('/home')
-def store_home():
-    conn = get_db()
-    cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM perfumes ORDER BY id DESC")
-    perfumes = cursor.fetchall()
-    cursor.close()
-    conn.close()
-    return render_template('user/home.html', perfumes=perfumes)
 
 # ✅ Update traking order Status (AJAX)
 @app.route('/order_status/<int:order_id>', methods=['GET'])
@@ -534,37 +526,37 @@ def shop():
     cursor.execute("SELECT * FROM perfumes ORDER BY id DESC")
     perfumes = cursor.fetchall()
     conn.close()
-    return render_template('user/shop.html', perfumes=perfumes)
+    return render_template('shop.html', perfumes=perfumes)
 
 # contact route
 @app.route('/contact')
 def contact():
-    return render_template('user/contact.html')
+    return render_template('contact.html')
 
 # cart route
 @app.route('/cart')
 def cart():
-    return render_template('user/cart.html')
+    return render_template('cart.html')
 
 # privacy route
 @app.route('/privacy_policy')
 def privacy_policy():
-    return render_template('user/privacy_policy.html')
+    return render_template('privacy_policy.html')
 
 # terms route
 @app.route('/terms_of_service')
 def terms_of_service():
-    return render_template('user/terms_of_service.html')
+    return render_template('terms_of_service.html')
 
 # refund route
 @app.route('/refund_policy')
 def refund_policy():
-    return render_template('user/refund_policy.html')
+    return render_template('refund_policy.html')
 
 # shipping route
 @app.route('/shipping_policy')
 def shipping_policy():
-    return render_template('user/shipping_policy.html')
+    return render_template('shipping_policy.html')
 
 # -----------------------------
 # User Checkout Route
@@ -634,7 +626,7 @@ def checkout():
         return jsonify({"order_id": order_id})
 
     # GET request
-    return render_template('user/checkout.html')
+    return render_template('checkout.html')
 
 
 
