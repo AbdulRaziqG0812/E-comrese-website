@@ -255,7 +255,7 @@ def perfume():
         cursor.close()
         conn.close()
         flash("✅ Perfume added successfully!")
-        return redirect(url_for('admin'))
+        return redirect(url_for('perfume'))
 
     return render_template('perfume.html')
 
