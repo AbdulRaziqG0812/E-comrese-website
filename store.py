@@ -259,6 +259,8 @@ def perfume():
 
     return render_template('perfume.html')
 
+# ✏️ Edit Perfume
+
 @app.route('/edit_perfume/<int:id>', methods=['GET','POST'])
 def edit_perfume(id):
     conn = get_db()
@@ -319,6 +321,8 @@ def edit_perfume(id):
 
     return render_template('edit_perfume.html', perfume=perfume)
 
+# 🗑️ Delete Perfume
+
 @app.route('/delete_perfume/<int:id>')
 def delete_perfume(id):
     conn = get_db()
@@ -378,7 +382,9 @@ def admin_orders():
 
     return render_template('orders.html', orders=orders)
 
+
 # 🗑️ Delete Order (AJAX)
+
 @app.route('/delete_order/<int:id>', methods=['DELETE'])
 def delete_order(id):
     db = get_db()
@@ -388,7 +394,9 @@ def delete_order(id):
     cursor.close()
     return jsonify({"success": True, "message": "🗑️ Order deleted successfully!"})
 
+
 # ✅ Update Order Status (AJAX)
+
 @app.route('/update_order_status/<int:order_id>', methods=['POST'])
 def update_order_status(order_id):
     data = request.get_json()
@@ -493,6 +501,7 @@ def report():
 
 
 # ✅ Update traking order Status (AJAX)
+
 @app.route('/order_status/<int:order_id>', methods=['GET'])
 def order_status(order_id):
     conn = get_db()
@@ -521,12 +530,22 @@ def order_status(order_id):
 
 @app.route('/shop')
 def shop():
+    category = request.args.get('category')
+
     conn = get_db()
     cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM perfumes ORDER BY id DESC")
+
+    if category:
+        cursor.execute("SELECT * FROM perfumes WHERE category=%s ORDER BY id DESC", (category,))
+    else:
+        cursor.execute("SELECT * FROM perfumes ORDER BY id DESC")
+
     perfumes = cursor.fetchall()
+    cursor.close()
     conn.close()
-    return render_template('shop.html', perfumes=perfumes)
+
+    return render_template('shop.html', perfumes=perfumes, selected_category=category)
+
 
 # contact route
 @app.route('/contact')
@@ -630,6 +649,9 @@ def checkout():
 
 
 
+
 # -----------------------------
 if __name__ == '__main__':
-    app.run(host="192.168.100.23", port=5600, debug=True)
+    # app.run(host="192.168.100.23", port=5600, debug=True)
+    app.run(debug=True)
+    

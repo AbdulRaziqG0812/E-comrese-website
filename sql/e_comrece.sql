@@ -43,3 +43,5 @@ CREATE TABLE orders (
     status VARCHAR(50) DEFAULT 'Pending',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+
