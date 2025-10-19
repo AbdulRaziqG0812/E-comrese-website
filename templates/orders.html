@@ -317,7 +317,10 @@ function viewItems(items) {
   }
   document.getElementById('itemModal').style.display = 'flex';
 }
-function closeModal() { document.getElementById('itemModal').style.display = 'none'; }
+
+function closeModal() {
+  document.getElementById('itemModal').style.display = 'none';
+}
 
 function updateStatus(orderId, newStatus) {
   fetch(`/update_order_status/${orderId}`, {
@@ -345,7 +348,6 @@ function deleteOrder(orderId) {
   })
   .catch(() => alert("❌ Failed to delete order. Please try again."));
 }
-
 
 function calculateTotalSales() {
   const totals = document.querySelectorAll('.order-total');
@@ -413,7 +415,14 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   displayPage(1);
+
+  // 🔍 Live Search — filters automatically as you type
+  const searchInput = document.getElementById('searchInput');
+  if (searchInput) {
+    searchInput.addEventListener('input', filterOrders);
+  }
 });
 </script>
+
 </body>
 </html>
