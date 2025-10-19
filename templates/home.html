@@ -70,7 +70,7 @@ nav .logo:hover { color: #ff6ea8; transform: scale(1.05); }
   padding: 100px 40px; background: #fff0f5; text-align: center;
 }
 .signature h2 {
-  font-size: 3rem; color: #e91e63; margin-bottom: 60px;
+  font-size: 30px; color: #e91e63; margin-bottom: 60px;
 }
 .signature-content {
   display: flex; flex-wrap: wrap; justify-content: center;
@@ -83,8 +83,12 @@ nav .logo:hover { color: #ff6ea8; transform: scale(1.05); }
 }
 .signature-content img:hover { transform: scale(1.05); }
 .signature-text { max-width: 450px; text-align: left; }
-.signature-text h3 { font-size: 2.2rem; color: #e91e63; margin-bottom: 15px; }
-.signature-text p { font-size: 1.05rem; color: #555; margin-bottom: 20px; }
+.signature-text h3 {     
+    font-size: 25px;
+    color: #e91e63;
+    margin-bottom: 15px;
+}
+.signature-text p { font-size: 15px; color: #555; margin-bottom: 20px; }
 .signature-text button {
   background: linear-gradient(135deg,#e91e63,#ff80ab);
   border: none; padding: 12px 35px; border-radius: 25px;
@@ -153,79 +157,123 @@ footer p { margin-top: 15px; font-size: 0.9rem; text-align: center; }
 /* 💻 Tablets (portrait) — FIXED */
 @media (max-width: 1024px) {
   nav {
+    position: relative; /* ✅ scrolls away */
     padding: 12px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
   }
+
+  .nav-links {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+
   .hero {
-    padding: 30px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row; /* ✅ side-by-side */
     gap: 40px;
+    padding: 30px 20px;
   }
+
+  .hero img {
+    width: 280px;
+    height: auto;
+    border-radius: 18px;
+  }
+
+  .hero-content {
+    text-align: left;
+    max-width: 400px;
+  }
+
   .hero-content h1 {
     font-size: 2.4rem;
   }
+
   .hero-content p {
     font-size: 1rem;
   }
 
-  /* Signature + Men + Women perfume sections side-by-side */
+  /* ✅ Signature + Men + Women perfume sections — hero style */
   .signature-content,
   .mens-section,
   .womens-section {
     display: flex;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
     gap: 40px;
-    flex-wrap: wrap;
+    padding: 30px 20px;
+    max-width: 1100px;
+    margin: 0 auto;
   }
+
   .signature-content img,
   .mens-section img,
   .womens-section img {
-    width: 200px;
+    width: 240px;
     height: auto;
-    border-radius: 12px;
+    border-radius: 15px;
+    object-fit: cover;
   }
+
   .signature-text,
   .mens-text,
   .womens-text {
     flex: 1;
-    text-align: center;
+    text-align: left;
+    max-width: 400px;
   }
 
   /* 🧴 Perfume Grid — improved for iPad */
   .products {
     padding: 60px 30px;
   }
+
   .product-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* ✅ 3 per row like desktop */
+    grid-template-columns: repeat(3, 1fr);
     gap: 25px;
     justify-items: center;
   }
+
   .product-card {
     width: 100%;
-    max-width: 240px; /* ✅ smaller cards */
+    max-width: 240px;
     border-radius: 12px;
     transition: transform 0.2s ease;
   }
+
   .product-card:hover {
     transform: translateY(-5px);
   }
+
   .product-card img {
     width: 100%;
     height: 220px;
     object-fit: cover;
     border-radius: 12px 12px 0 0;
   }
+
   .product-info {
     padding: 10px 12px;
     text-align: center;
   }
+
   .product-info h3 {
     font-size: 1rem;
     margin: 6px 0;
   }
+
   .product-info p {
     font-size: 0.85rem;
   }
+
   .product-info button {
     padding: 8px 18px;
     font-size: 0.85rem;
@@ -235,107 +283,144 @@ footer p { margin-top: 15px; font-size: 0.9rem; text-align: center; }
 /* 📲 Mobile Landscape (large phones & small tablets) */
 @media (max-width: 768px) {
   nav {
-    position: relative;
+    position: relative; /* ✅ scrolls away */
+    display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 8px 15px; /* 🔹 Smaller navbar */
+    padding: 10px 15px;
+    gap: 10px;
+    background: #fff;
   }
+
   .nav-links {
+    display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 6px;
+    gap: 12px;
   }
 
   .hero {
-    flex-direction: column-reverse;
-    text-align: center;
-    padding: 20px 10px;
+    display: flex;
+    flex-direction: row; /* ✅ text left, image right */
+    align-items: center;
+    justify-content: center;
+    text-align: left;
     gap: 20px;
+    padding: 20px 10px;
   }
+
   .hero img {
-    width: 75%;
-    max-width: 250px;
+    width: 45%;
+    max-width: 180px;
+    border-radius: 15px;
   }
+
+  .hero-content {
+    width: 50%;
+  }
+
   .hero-content h1 {
     font-size: 1.8rem;
     line-height: 1.3;
   }
+
   .hero-content p {
     font-size: 0.95rem;
   }
+
   .hero-content button {
     padding: 10px 25px;
     font-size: 0.9rem;
   }
 
-  /* 🧴 Perfume Grid - 2 per row */
-  .products {
-    padding: 40px 15px;
-  }
-  .products h2 {
-    font-size: 1.8rem;
-    margin-bottom: 20px;
-  }
-  .product-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-    justify-items: center;
-  }
-  .product-card {
-    width: 100%;
-    max-width: 170px;
-    border-radius: 10px;
-  }
-  .product-card img {
-    width: 100%;
-    height: 150px;
-    object-fit: cover;
-    border-radius: 10px 10px 0 0;
-  }
-  .product-info {
-    padding: 8px 10px;
-    text-align: center;
-  }
-  .product-info h3 {
-    font-size: 0.9rem;
-    margin: 5px 0;
-  }
-  .product-info p {
-    font-size: 0.75rem;
-    line-height: 1.2;
-  }
-  .product-info button {
-    padding: 6px 14px;
-    font-size: 0.75rem;
-  }
-
-  /* 🔹 Signature + Men + Women side-by-side still */
+  /* ✅ Signature, Men, Women — side-by-side (hero style) */
   .signature-content,
   .mens-section,
   .womens-section {
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    text-align: center;
     gap: 20px;
+    padding: 15px;
   }
+
   .signature-content img,
   .mens-section img,
   .womens-section img {
-    width: 160px;
+    width: 150px;
     height: auto;
+    border-radius: 12px;
+  }
+
+  .signature-text,
+  .mens-text,
+  .womens-text {
+    width: 50%;
+    text-align: left;
+  }
+
+  /* 🧴 Perfume Grid - 2 per row */
+  .products {
+    padding: 40px 15px;
+  }
+
+  .products h2 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+  }
+
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    justify-items: center;
+  }
+
+  .product-card {
+    width: 100%;
+    max-width: 170px;
+    border-radius: 10px;
+  }
+
+  .product-card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 10px 10px 0 0;
+  }
+
+  .product-info {
+    padding: 8px 10px;
+    text-align: center;
+  }
+
+  .product-info h3 {
+    font-size: 0.9rem;
+    margin: 5px 0;
+  }
+
+  .product-info p {
+    font-size: 0.75rem;
+    line-height: 1.2;
+  }
+
+  .product-info button {
+    padding: 6px 14px;
+    font-size: 0.75rem;
   }
 
   footer {
     padding: 40px 20px;
   }
+
   .footer-container {
     grid-template-columns: 1fr;
     gap: 15px;
   }
+
   .footer-container h3 {
     font-size: 1.1rem;
   }
+
   footer p {
     font-size: 0.8rem;
   }
@@ -344,24 +429,69 @@ footer p { margin-top: 15px; font-size: 0.9rem; text-align: center; }
 /* 📱 Small Mobile (below 480px) */
 @media (max-width: 480px) {
   nav {
+    position: relative; /* ✅ scrolls with page */
     flex-direction: column;
     align-items: center;
-    padding: 6px 10px;
+    padding: 8px 10px;
+    gap: 8px;
+  }
+
+  .nav-links {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
   }
 
   .hero {
-    padding: 15px;
-    gap: 15px;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    text-align: left;
+    padding: 10px;
+    gap: 12px;
   }
+
   .hero img {
-    width: 70%;
-    max-width: 200px;
+    width: 45%;
+    max-width: 140px;
   }
+
+  .hero-content {
+    width: 50%;
+  }
+
   .hero-content h1 {
-    font-size: 1.6rem;
+    font-size: 1.4rem;
   }
+
   .hero-content p {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
+  }
+
+  /* ✅ Signature + Men + Women - hero style */
+  .signature-content,
+  .mens-section,
+  .womens-section {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    text-align: left;
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .signature-content img,
+  .mens-section img,
+  .womens-section img {
+    width: 120px;
+    height: auto;
+    border-radius: 10px;
+  }
+
+  .signature-text,
+  .mens-text,
+  .womens-text {
+    width: 50%;
   }
 
   /* Compact perfume layout */
@@ -369,29 +499,17 @@ footer p { margin-top: 15px; font-size: 0.9rem; text-align: center; }
     grid-template-columns: repeat(2, 1fr);
     gap: 10px;
   }
+
   .product-card img {
     height: 140px;
   }
+
   .product-info h3 {
     font-size: 0.9rem;
   }
+
   .product-info p {
     font-size: 0.75rem;
-  }
-
-  /* 🔹 Signature + Men + Women stacked neatly */
-  .signature-content,
-  .mens-section,
-  .womens-section {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-  .signature-content img,
-  .mens-section img,
-  .womens-section img {
-    width: 160px;
-    height: auto;
   }
 
   .view-all-btn {
@@ -411,8 +529,7 @@ footer p { margin-top: 15px; font-size: 0.9rem; text-align: center; }
     <a href="{{ url_for('shop') }}">Shop</a>
     <a href="{{ url_for('contact') }}">Contact</a>
     <a href="{{ url_for('cart') }}"><i class="fa-solid fa-cart-shopping" style="color:#e91e63;"></i></a>
-    <a href="{{ url_for('loginpage') }}" class="order-btn"><i class="fa-solid fa-user-shield"></i> Login</a>
-    <button class="order-btn" onclick="openModal()"><i class="fa-solid fa-box"></i> Track Order</button>
+    <a href="{{ url_for('loginpage') }}" class="order-btn"><i class="fa-solid fa-user-shield"></i></a>
   </div>
 </nav>
 
@@ -541,35 +658,13 @@ footer p { margin-top: 15px; font-size: 0.9rem; text-align: center; }
   <p>© 2025 AREEZ FRAGRANCE — Crafted with elegance & love.</p>
 </footer>
 
-<!-- ✅ Order Tracking Modal -->
-<div class="modal" id="orderModal" style="display:none;">
-  <div class="modal-content">
-    <span class="close" onclick="closeModal()">&times;</span>
-    <h3>Track Your Order</h3>
-    <input type="text" id="orderId" placeholder="Enter Order ID" />
-    <button class="track-btn" onclick="trackOrder()">Track</button>
-    <div class="order-info" id="orderInfo"></div>
-  </div>
-</div>
-
 <script>
-function openModal(){document.getElementById('orderModal').style.display='flex';}
-function closeModal(){document.getElementById('orderModal').style.display='none';}
-function trackOrder(){
-  const id=document.getElementById('orderId').value.trim();
-  if(!id)return alert("Please enter your Order ID");
-  fetch(`/order_status/${id}`).then(res=>res.json()).then(data=>{
-    const info=document.getElementById('orderInfo');
-    if(data.error){info.innerHTML=`<p style="color:red;">${data.error}</p>`;}
-    else{
-      info.innerHTML=`
-      <p><strong>Order ID:</strong> ${data.id}</p>
-      <p><strong>Name:</strong> ${data.name}</p>
-      <p><strong>Status:</strong> <b style="color:#e91e63;">${data.status.toUpperCase()}</b></p>
-      <p><strong>Total:</strong> Rs. ${data.total_amount}</p>
-      <p><strong>Placed on:</strong> ${new Date(data.created_at).toLocaleString()}</p>`;
-    }
-  }).catch(()=>{document.getElementById('orderInfo').innerHTML=`<p style="color:red;">Error fetching order.</p>`;});
+function openModal() {
+  document.getElementById('orderModal').style.display = 'flex';
+}
+
+function closeModal() {
+  document.getElementById('orderModal').style.display = 'none';
 }
 </script>
 </body>

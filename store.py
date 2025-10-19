@@ -58,7 +58,10 @@ def home():
     return render_template('home.html', perfumes=perfumes)
 
 
+# -----------------------------
 # route for loginpage
+# -----------------------------
+
 @app.route('/loginpage', methods=['GET', 'POST'])
 def loginpage():
     if request.method == 'POST':
@@ -95,7 +98,10 @@ def loginpage():
     return render_template('loginpage.html')
 
 
+# -----------------------------
 # register route
+# -----------------------------
+
 REGISTER_KEY = "areez_fragrance_2025"
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -159,7 +165,11 @@ def register():
 
     return render_template("register.html")
 
+
+# -----------------------------
 # dashboard route
+# -----------------------------
+
 @app.route('/dashboard')
 def dashboard():
     conn = get_db()
@@ -207,7 +217,9 @@ def admin():
     return render_template('admin.html', perfumes=perfumes)
 
 
+# -----------------------------
 # 🧴 Add New Perfume
+# -----------------------------
 
 @app.route('/perfume', methods=['GET', 'POST'])
 def perfume():
@@ -259,7 +271,10 @@ def perfume():
 
     return render_template('perfume.html')
 
+
+# -----------------------------
 # ✏️ Edit Perfume
+# -----------------------------
 
 @app.route('/edit_perfume/<int:id>', methods=['GET','POST'])
 def edit_perfume(id):
@@ -321,7 +336,10 @@ def edit_perfume(id):
 
     return render_template('edit_perfume.html', perfume=perfume)
 
+
+# -----------------------------
 # 🗑️ Delete Perfume
+# -----------------------------
 
 @app.route('/delete_perfume/<int:id>')
 def delete_perfume(id):
@@ -340,11 +358,11 @@ def delete_perfume(id):
     conn.close()
     return redirect(url_for('admin'))
 
+
 # -----------------------------
 # Admin Orders Route
 # -----------------------------
 
-# 🧾 Admin Orders Dashboard
 @app.route('/orders')
 def admin_orders():
     conn = get_db()
@@ -383,7 +401,9 @@ def admin_orders():
     return render_template('orders.html', orders=orders)
 
 
+# -----------------------------
 # 🗑️ Delete Order (AJAX)
+# -----------------------------
 
 @app.route('/delete_order/<int:id>', methods=['DELETE'])
 def delete_order(id):
@@ -395,7 +415,9 @@ def delete_order(id):
     return jsonify({"success": True, "message": "🗑️ Order deleted successfully!"})
 
 
+# -----------------------------
 # ✅ Update Order Status (AJAX)
+# -----------------------------
 
 @app.route('/update_order_status/<int:order_id>', methods=['POST'])
 def update_order_status(order_id):
@@ -438,38 +460,61 @@ def report():
     conn = get_db()
     cursor = conn.cursor(dictionary=True)
 
+    # 🗓️ Optional date filter
+    from_date = request.args.get('from')
+    to_date = request.args.get('to')
+
+    date_filter = ""
+    params = []
+    if from_date and to_date:
+        date_filter = "WHERE DATE(created_at) BETWEEN %s AND %s"
+        params = [from_date, to_date]
+
     # 🧾 Total Orders
-    cursor.execute("SELECT COUNT(*) AS total_orders FROM orders")
+    cursor.execute(f"SELECT COUNT(*) AS total_orders FROM orders {date_filter}", params)
     total_orders = cursor.fetchone()['total_orders']
 
-    # 💰 Total Sales (sum of order totals)
-    cursor.execute("SELECT IFNULL(SUM(total), 0) AS total_sales FROM orders")
+    # 💰 Total Sales
+    cursor.execute(f"SELECT IFNULL(SUM(total), 0) AS total_sales FROM orders {date_filter}", params)
     total_sales = cursor.fetchone()['total_sales']
 
     # ⏳ Pending Orders
-    cursor.execute("SELECT COUNT(*) AS pending_orders FROM orders WHERE status='Pending'")
+    cursor.execute(f"SELECT COUNT(*) AS pending_orders FROM orders {date_filter + ' AND' if date_filter else 'WHERE'} status='Pending'", params)
     pending_orders = cursor.fetchone()['pending_orders']
 
-    # 📈 Sales (last 30 days)
-    cursor.execute("""
-        SELECT DATE(created_at) AS date, SUM(total) AS total
-        FROM orders
-        WHERE created_at >= CURDATE() - INTERVAL 30 DAY
-        GROUP BY DATE(created_at)
-        ORDER BY DATE(created_at)
-    """)
+    # 📈 Sales (Current month or filtered)
+    if from_date and to_date:
+        # 📅 If user selected custom range
+        cursor.execute(f"""
+            SELECT DATE(created_at) AS date, SUM(total) AS total
+            FROM orders
+            WHERE DATE(created_at) BETWEEN %s AND %s
+            GROUP BY DATE(created_at)
+            ORDER BY DATE(created_at)
+        """, (from_date, to_date))
+    else:
+        # 🗓️ Default: show only current month's data
+        cursor.execute("""
+            SELECT DATE(created_at) AS date, SUM(total) AS total
+            FROM orders
+            WHERE MONTH(created_at) = MONTH(CURDATE())
+              AND YEAR(created_at) = YEAR(CURDATE())
+            GROUP BY DATE(created_at)
+            ORDER BY DATE(created_at)
+        """)
+
     sales_data = cursor.fetchall()
     sales_labels = [row['date'].strftime("%d %b") for row in sales_data] if sales_data else []
     sales_values = [float(row['total']) for row in sales_data] if sales_data else []
 
-    # 🧾 Order status breakdown
-    cursor.execute("SELECT status, COUNT(*) AS count FROM orders GROUP BY status")
+    # 🧾 Order Status Breakdown
+    cursor.execute(f"SELECT status, COUNT(*) AS count FROM orders {date_filter} GROUP BY status", params)
     status_data = cursor.fetchall()
     status_labels = [row['status'] for row in status_data] if status_data else []
     status_counts = [row['count'] for row in status_data] if status_data else []
 
-    # 🌸 Top perfumes (from items JSON)
-    cursor.execute("SELECT items FROM orders WHERE items IS NOT NULL AND items != ''")
+    # 🌸 Top Perfumes
+    cursor.execute(f"SELECT items FROM orders {date_filter}", params)
     perfume_sales = {}
     for row in cursor.fetchall():
         try:
@@ -496,37 +541,14 @@ def report():
         sales_values=sales_values or [],
         status_labels=status_labels or [],
         status_counts=status_counts or [],
-        top_perfumes=top_perfumes or []
+        top_perfumes=top_perfumes or [],
+        from_date=from_date,
+        to_date=to_date
     )
 
-
-# ✅ Update traking order Status (AJAX)
-
-@app.route('/order_status/<int:order_id>', methods=['GET'])
-def order_status(order_id):
-    conn = get_db()
-    cursor = conn.cursor(dictionary=True)
-
-    try:
-        cursor.execute("SELECT id, user_name, total, payment_method, created_at, status FROM orders WHERE id=%s", (order_id,))
-        order = cursor.fetchone()
-        if not order:
-            return jsonify({"error": "Order not found"}), 404
-
-        return jsonify({
-            "id": order['id'],
-            "name": order['user_name'],
-            "status": order['status'] if order['status'] else 'pending',
-            "total_amount": float(order['total']),
-            "created_at": order['created_at'].isoformat()  # ensures JS can parse it
-        })
-
-    except Exception as e:
-        return jsonify({"error": f"Error fetching order: {str(e)}"}), 500
-    finally:
-        cursor.close()
-        conn.close()
-
+# -----------------------------
+# Shop Route
+# -----------------------------
 
 @app.route('/shop')
 def shop():
@@ -536,46 +558,19 @@ def shop():
     cursor = conn.cursor(dictionary=True)
 
     if category:
-        cursor.execute("SELECT * FROM perfumes WHERE category=%s ORDER BY id DESC", (category,))
+        # 🧩 Show only perfumes from the selected category
+        cursor.execute("SELECT * FROM perfumes WHERE category = %s ORDER BY id DESC", (category,))
     else:
+        # 🧩 Show all perfumes if no category selected
         cursor.execute("SELECT * FROM perfumes ORDER BY id DESC")
 
     perfumes = cursor.fetchall()
+
     cursor.close()
     conn.close()
 
     return render_template('shop.html', perfumes=perfumes, selected_category=category)
 
-
-# contact route
-@app.route('/contact')
-def contact():
-    return render_template('contact.html')
-
-# cart route
-@app.route('/cart')
-def cart():
-    return render_template('cart.html')
-
-# privacy route
-@app.route('/privacy_policy')
-def privacy_policy():
-    return render_template('privacy_policy.html')
-
-# terms route
-@app.route('/terms_of_service')
-def terms_of_service():
-    return render_template('terms_of_service.html')
-
-# refund route
-@app.route('/refund_policy')
-def refund_policy():
-    return render_template('refund_policy.html')
-
-# shipping route
-@app.route('/shipping_policy')
-def shipping_policy():
-    return render_template('shipping_policy.html')
 
 # -----------------------------
 # User Checkout Route
@@ -648,10 +643,58 @@ def checkout():
     return render_template('checkout.html')
 
 
+# -----------------------------
+# contact route
+# -----------------------------
 
+@app.route('/contact')
+def contact():
+    return render_template('contact.html')
 
 # -----------------------------
+# cart route
+# -----------------------------
+
+@app.route('/cart')
+def cart():
+    return render_template('cart.html')
+
+# -----------------------------
+
+# privacy route
+# -----------------------------
+
+@app.route('/privacy_policy')
+def privacy_policy():
+    return render_template('privacy_policy.html')
+
+# -----------------------------
+# terms route
+# -----------------------------
+
+@app.route('/terms_of_service')
+def terms_of_service():
+    return render_template('terms_of_service.html')
+
+# -----------------------------
+# refund route
+# -----------------------------
+
+@app.route('/refund_policy')
+def refund_policy():
+    return render_template('refund_policy.html')
+
+# -----------------------------
+# shipping route
+# -----------------------------
+
+@app.route('/shipping_policy')
+def shipping_policy():
+    return render_template('shipping_policy.html')
+
+# -----------------------------
+
 if __name__ == '__main__':
-    # app.run(host="192.168.100.23", port=5600, debug=True)
-    app.run(debug=True)
+    app.run(host="192.168.100.23", port=5600, debug=True)
+    # app.run(debug=True)
     

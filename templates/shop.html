@@ -40,7 +40,7 @@ h2 {
   unicode-bidi: isolate;
   text-align: center;
   color: #e91e63;
-  font-size: 40px;
+  font-size: 30px;
 }
 
 .logo {
@@ -675,8 +675,8 @@ footer p {
           <h3>{{ perfume.name }}</h3>
           <h4>{{ perfume.description }}</h4>
           <div>
-            <span class="old-price">PKR {{ perfume.price + 1000 }}</span>
-            <span class="price">PKR {{ perfume.price }}</span>
+            <span class="old-price">PKR {{ perfume.sale_price + 1000 }}</span>
+            <span class="price">PKR {{ perfume.sale_price }}</span>
           </div>
           <button onclick="addToCartWithAnim(this, '{{ perfume.name }}', {{ perfume.price }}, '{{ url_for('static', filename=perfume.image) }}')"
             {% if perfume.stock == 0 %}disabled{% endif %}>
@@ -709,8 +709,8 @@ footer p {
           <h3>{{ perfume.name }}</h3>
           <h4>{{ perfume.description }}</h4>
           <div>
-            <span class="old-price">PKR {{ perfume.price + 1000 }}</span>
-            <span class="price">PKR {{ perfume.price }}</span>
+            <span class="old-price">PKR {{ perfume.sale_price + 1000 }}</span>
+            <span class="price">PKR {{ perfume.sale_price }}</span>
           </div>
           <button onclick="addToCartWithAnim(this, '{{ perfume.name }}', {{ perfume.price }}, '{{ url_for('static', filename=perfume.image) }}')"
             {% if perfume.stock == 0 %}disabled{% endif %}>

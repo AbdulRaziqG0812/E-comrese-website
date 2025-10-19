@@ -5,20 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Checkout - AREEZ FRAGRANCE</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
   <style>
     body {
-      font-family: "Poppins", sans-serif;
       margin: 0;
       background: linear-gradient(180deg, #fff6fa, #ffffff);
       color: #222;
       overflow-x: hidden;
     }
 
+    /* 🔹 Navbar */
     nav {
-      background: rgba(255, 255, 255, 0.9);
+      background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(10px);
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-      padding: 15px 60px;
+      padding: 15px 40px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -28,7 +29,7 @@
     }
 
     nav .logo {
-      font-size: 28px;
+      font-size: 26px;
       font-weight: 700;
       color: #e91e63;
       text-transform: uppercase;
@@ -38,9 +39,10 @@
     nav ul {
       list-style: none;
       display: flex;
-      gap: 30px;
+      gap: 25px;
       margin: 0;
       padding: 0;
+      transition: 0.3s ease;
     }
 
     nav ul li a {
@@ -54,6 +56,15 @@
       color: #e91e63;
     }
 
+    /* 🔹 Toggle Button (hidden on desktop) */
+    .menu-toggle {
+      display: none;
+      font-size: 1.7rem;
+      color: #e91e63;
+      cursor: pointer;
+    }
+
+    /* 🔸 Banner */
     .banner {
       text-align: center;
       background: linear-gradient(135deg, #ffebf3, #fff);
@@ -62,12 +73,13 @@
       font-weight: 500;
     }
 
+    /* 🔸 Checkout Section */
     .checkout-container {
       max-width: 1000px;
       margin: 60px auto;
       background: #fff;
       border-radius: 18px;
-      box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+      box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
       padding: 50px;
       animation: fadeIn 0.8s ease;
     }
@@ -75,51 +87,49 @@
     h2 {
       text-align: center;
       color: #e91e63;
-      font-size: 2rem;
+      font-size: 2.2rem;
       margin-bottom: 40px;
     }
 
     form {
       display: flex;
       flex-direction: column;
-      gap: 25px;
+      gap: 30px;
     }
 
     .form-row {
-      display: flex;
-      flex-wrap: wrap;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 25px;
-    }
-
-    .form-group {
-      flex: 1;
-      min-width: 250px;
+      width: 100%;
     }
 
     label {
       font-weight: 500;
-      color: #555;
+      color: #e91e63;
       display: block;
       margin-bottom: 6px;
     }
 
     input, select, textarea {
-      width: 450px;
+      width: 100%;
       padding: 12px 15px;
       border-radius: 10px;
       border: 1px solid #ddd;
-      font-size: 0.95rem;
+      font-size: 1rem;
       outline: none;
       transition: 0.3s;
+      box-sizing: border-box;
     }
 
     input:focus, select:focus, textarea:focus {
       border-color: #e91e63;
-      box-shadow: 0 0 8px rgba(233,30,99,0.2);
+      box-shadow: 0 0 8px rgba(233, 30, 99, 0.2);
     }
 
     textarea {
-      resize: none;
+      min-height: 100px;
+      resize: vertical;
     }
 
     .order-section {
@@ -135,7 +145,7 @@
       background: #fff8fb;
       border: 1px solid #ffd6e5;
       border-radius: 14px;
-      padding: 25px;
+      padding: 5px;
     }
 
     .order-summary h3, .payment-box h3 {
@@ -145,10 +155,25 @@
 
     .order-item {
       display: flex;
+      align-items: center;
       justify-content: space-between;
-      padding: 8px 0;
+      padding: 10px 0;
       border-bottom: 1px dashed #f2b5c6;
       font-size: 0.95rem;
+      gap: 10px;
+    }
+
+    .order-item img {
+      width: 45px;
+      height: 45px;
+      border-radius: 10px;
+      object-fit: cover;
+      border: 1px solid #ffe1ec;
+    }
+
+    .order-item span {
+      flex: 1;
+      color: #333;
     }
 
     .order-total {
@@ -198,7 +223,7 @@
     .confirm-btn {
       background: linear-gradient(135deg, #e91e63, #ff80ab);
       color: white;
-      box-shadow: 0 5px 15px rgba(233,30,99,0.3);
+      box-shadow: 0 5px 15px rgba(233, 30, 99, 0.3);
     }
 
     .confirm-btn:hover {
@@ -214,53 +239,47 @@
       background: #ddd;
     }
 
+    /* 🌷 Footer */
     footer {
-      background: linear-gradient(135deg, #ffe4ec, #fff);
-      color: #444;
-      padding: 70px 30px 40px;
-      margin-top: 100px;
-    }
-
-    footer h3 {
-      color: #e91e63;
+      background: #fff0f5;
+      padding: 60px 40px;
+      color: #555;
+      margin-top: 80px;
     }
 
     .footer-container {
-      max-width: 1200px;
-      margin: auto;
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 40px;
+      gap: 30px;
+      max-width: 1200px;
+      margin: auto;
       text-align: center;
     }
 
-    .footer-links {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .footer-links a {
-      text-decoration: none;
-      color: #444;
-      font-size: 0.95rem;
-      transition: 0.3s ease;
-    }
-
-    .footer-links a:hover {
+    .footer-container h3 {
       color: #e91e63;
-      transform: translateX(4px);
+      margin-bottom: 15px;
+    }
+
+    .footer-container a {
+      display: block;
+      margin-bottom: 8px;
+      color: #555;
+      transition: 0.3s;
+    }
+
+    .footer-container a:hover {
+      color: #e91e63;
     }
 
     .social-links a {
-      font-size: 1.8rem;
+      font-size: 1.6rem;
       margin: 0 10px;
       transition: 0.3s;
     }
 
     .social-links a:hover {
       transform: scale(1.2);
-      filter: brightness(1.3);
     }
 
     footer hr {
@@ -270,75 +289,100 @@
     }
 
     footer p {
-      text-align: center;
+      margin-top: 15px;
       font-size: 0.9rem;
-      color: #666;
+      text-align: center;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+    /* 📱 Responsive Design */
+    @media (max-width: 768px) {
+      nav {
+        padding: 12px 20px;
+        position: relative;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+
+      nav ul {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 65px;
+        left: 0;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.98);
+        padding: 20px 0;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        border-radius: 0 0 15px 15px;
+        text-align: center;
+      }
+
+      nav ul.show {
+        display: flex;
+      }
+
+      nav ul li a {
+        display: block;
+        padding: 10px 0;
+      }
     }
 
-    /* ====== Modal for Order ID ====== */
+    @media (max-width: 600px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .btn {
+        width: 100%;
+        margin: 8px 0;
+      }
+    }
+
+    /* Modal */
     .modal {
       display: none;
       position: fixed;
-      z-index: 200;
-      left: 0; top: 0;
+      top: 0; left: 0;
       width: 100%; height: 100%;
-      background: rgba(0,0,0,0.6);
+      background: rgba(0,0,0,0.5);
       justify-content: center;
       align-items: center;
+      z-index: 1000;
     }
+
     .modal-content {
-      background: linear-gradient(145deg,#fff0f5,#ffe6f0);
+      background: #fff;
       padding: 30px;
-      border-radius: 25px;
+      border-radius: 12px;
       text-align: center;
-      width: 350px;
-      max-width: 90%;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
-      position: relative;
+      max-width: 400px;
+      width: 90%;
     }
-    .modal-content h3 { color:#e91e63; font-size:1.8rem; margin-bottom:20px; }
-    .close { position:absolute; right:20px; top:15px; font-size:24px; cursor:pointer; color:#e91e63; transition:0.3s; }
-    .close:hover { transform: scale(1.2); }
-    .modal-content p { font-size:1rem; color:#444; margin-bottom:10px; }
-    
-    /* 📱 Mobile Fixed Layout (desktop jaisa) */
-@media (max-width: 500px) {
-  body {
-    min-width: 800px; /* keep desktop layout width */
-    zoom: 0.55;        /* scale down to fit mobile screen */
-  }
 
-  nav .nav-links {
-    overflow-x: auto;  /* allow horizontal scroll if nav items overflow */
-  }
-
-  .hero img,
-  .signature-content img,
-  .product-card img {
-    max-width: 100%;
-    height: auto;
-  }
-
-  .product-card {
-    width: 260px; /* same as desktop */
-  }
-}
-
+    .close {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 1.5rem;
+      color: #e91e63;
+      cursor: pointer;
+    }
   </style>
 </head>
 
 <body>
+  <!-- ✅ Navbar -->
   <nav>
     <div class="logo">AREEZ FRAGRANCE</div>
-    <ul>
+    <div class="menu-toggle" id="menu-toggle">
+      <i class="fas fa-bars"></i>
+    </div>
+    <ul id="nav-links">
       <li><a href="/">Home</a></li>
       <li><a href="/shop">Shop</a></li>
-      <li><a href="/cart">Cart</a></li>
+      <li><a href="/cart"><i class="fa-solid fa-cart-shopping"></i></a></li>
     </ul>
   </nav>
 
@@ -351,18 +395,18 @@
       <div class="form-row">
         <div class="form-group">
           <label>Full Name</label>
-          <input type="text" name="name" id="name" placeholder="Enter your name" required />
+          <input type="text" name="name" id="name" placeholder="Enter your full name" required />
         </div>
         <div class="form-group">
-          <label>Email Address</label>
-          <input type="email" name="email" id="email" placeholder="Enter your email" required />
+          <label>Email</label>
+          <input type="email" name="email" id="email" placeholder="Enter your email address" required />
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-group">
-          <label>Contact Number</label>
-          <input type="tel" name="phone" id="phone" placeholder="Enter your contact number" required />
+          <label>Phone</label>
+          <input type="tel" name="phone" id="phone" placeholder="03XX-XXXXXXX" required />
         </div>
         <div class="form-group">
           <label>City</label>
@@ -379,14 +423,14 @@
           </select>
         </div>
         <div class="form-group">
-          <label>Postal / Zip Code</label>
-          <input type="text" name="postal" id="postal" placeholder="Enter postal or zip code" required />
+          <label>Postal Code</label>
+          <input type="text" name="postal" id="postal" placeholder="Enter postal code" required />
         </div>
       </div>
 
       <div class="form-group">
         <label>Shipping Address</label>
-        <textarea name="address" id="address" rows="3" placeholder="Enter your full address" required></textarea>
+        <textarea name="address" id="address" rows="3" placeholder="House No, Street, Area, etc." required></textarea>
       </div>
 
       <div class="order-section">
@@ -410,13 +454,12 @@
     </form>
   </div>
 
-  <!-- Modal for Order ID -->
   <div id="orderModal" class="modal">
     <div class="modal-content">
       <span class="close">&times;</span>
-      <h3>✅ Order Placed!</h3>
-      <p>Your Order ID is:</p>
-      <p id="orderIdDisplay" style="font-weight:bold; font-size:1.3rem;"></p>
+      <h3>🎉 Thank You for Your Purchase!</h3>
+      <p class="thankyou-text">Your order has been placed successfully.</p>
+      <p id="orderIdDisplay" style="display:none;font-weight:bold;font-size:1.3rem;color:#e91e63;"></p>
       <button class="btn confirm-btn" onclick="window.location.href='/shop'">Continue Shopping</button>
     </div>
   </div>
@@ -425,20 +468,16 @@
     <div class="footer-container">
       <div>
         <h3>Customer Support</h3>
-        <div class="footer-links">
-          <a href="/shipping_policy">Shipping Policy</a>
-          <a href="/refund_policy">Refund Policy</a>
-          <a href="/privacy_policy">Privacy Policy</a>
-          <a href="/terms_of_service">Terms of Service</a>
-          <a href="/contact">Contact us</a>
-        </div>
+        <a href="/shipping_policy">Shipping Policy</a>
+        <a href="/refund_policy">Refund Policy</a>
+        <a href="/privacy_policy">Privacy Policy</a>
+        <a href="/terms_of_service">Terms of Service</a>
+        <a href="/contact">Contact us</a>
       </div>
-
       <div>
         <h3>About AREEZ</h3>
         <p>Luxury perfumes crafted with passion and purity. Experience timeless fragrances for Men & Women.</p>
       </div>
-
       <div>
         <h3>Follow AREEZ</h3>
         <div class="social-links">
@@ -453,6 +492,7 @@
   </footer>
 
 <script>
+  // ✅ Load Cart Summary
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
   const summary = document.getElementById("orderSummary");
   const itemsInput = document.getElementById("itemsInput");
@@ -466,8 +506,9 @@
       total += item.price * item.quantity;
       summary.innerHTML += `
         <div class='order-item'>
+          <img src="${item.image}" alt="${item.name}">
           <span>${item.name} (x${item.quantity})</span>
-          <span>PKR ${(item.price * item.quantity).toFixed(2)}</span>
+          <span>₨ ${(item.price * item.quantity).toFixed(2)}</span>
         </div>
       `;
     });
@@ -476,50 +517,42 @@
         <span>Shipping</span>
         <span style='color:#28a745;'>Free</span>
       </div>
-      <div class='order-total'>Total: PKR ${total.toFixed(2)}</div>`;
-
+      <div class='order-total'>Total: ₨ ${total.toFixed(2)}</div>`;
     itemsInput.value = JSON.stringify(cart);
   }
 
-  // Modal
+  // ✅ Modal Logic
   const modal = document.getElementById("orderModal");
   const orderIdDisplay = document.getElementById("orderIdDisplay");
   const span = document.getElementsByClassName("close")[0];
+  span.onclick = () => modal.style.display = "none";
+  window.onclick = e => { if (e.target == modal) modal.style.display = "none"; }
 
-  span.onclick = function() {
-    modal.style.display = "none";
-  }
-  window.onclick = function(event) {
-    if (event.target == modal) {
-      modal.style.display = "none";
-    }
-  }
-
-  // Form submission
+  // ✅ Form Submit Logic
   document.getElementById("checkoutForm").addEventListener("submit", async e => {
     e.preventDefault();
-
-    if (cart.length === 0) {
-      alert("🛒 Your cart is empty!");
-      return;
-    }
+    if (cart.length === 0) return alert("🛒 Your cart is empty!");
 
     const formData = new FormData(e.target);
-
-    // Send POST request to Flask
-    const response = await fetch("/checkout", {
-      method: "POST",
-      body: formData
-    });
+    const response = await fetch("/checkout", { method: "POST", body: formData });
 
     if (response.ok) {
-      const data = await response.json(); // Flask should return JSON with order_id
+      const data = await response.json();
+      // Show modal after successful checkout
       orderIdDisplay.textContent = data.order_id;
       modal.style.display = "flex";
       localStorage.removeItem("cart");
     } else {
-      alert("⚠️ Something went wrong. Try again.");
+      alert("⚠️ Something went wrong. Please try again.");
     }
+  });
+
+  // ✅ Toggle Menu Logic (Mobile Navigation)
+  const toggle = document.getElementById("menu-toggle");
+  const navLinks = document.getElementById("nav-links");
+
+  toggle.addEventListener("click", () => {
+    navLinks.classList.toggle("show");
   });
 </script>
 </body>
