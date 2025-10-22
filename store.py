@@ -418,7 +418,6 @@ def delete_order(id):
 # -----------------------------
 # ✅ Update Order Status (AJAX)
 # -----------------------------
-
 @app.route('/update_order_status/<int:order_id>', methods=['POST'])
 def update_order_status(order_id):
     data = request.get_json()
@@ -427,12 +426,12 @@ def update_order_status(order_id):
 
     new_status = data['status']
 
-    # ✅ Allowed statuses (match your dropdown options)
-    allowed_statuses = ['Pending', 'Processing', 'Shipped', 'Completed', 'Cancelled']
+    # ✅ Allowed statuses (added 'Returned')
+    allowed_statuses = ['Pending', 'Processing', 'Shipped', 'Completed', 'Cancelled', 'Returned']
     if new_status not in allowed_statuses:
         return jsonify({"error": f"Invalid status. Allowed: {', '.join(allowed_statuses)}"}), 400
 
-    conn = get_db()  # your function to get MySQL connection
+    conn = get_db()  # ✅ your function to get MySQL connection
     cursor = conn.cursor()
     try:
         cursor.execute("UPDATE orders SET status=%s WHERE id=%s", (new_status, order_id))
@@ -441,7 +440,10 @@ def update_order_status(order_id):
         if cursor.rowcount == 0:
             return jsonify({"error": f"Order ID {order_id} not found"}), 404
 
-        return jsonify({"success": True, "message": f"✅ Order status updated to '{new_status}' successfully!"})
+        return jsonify({
+            "success": True,
+            "message": f"✅ Order status updated to '{new_status}' successfully!"
+        })
 
     except Exception as e:
         conn.rollback()
@@ -464,89 +466,114 @@ def report():
     from_date = request.args.get('from')
     to_date = request.args.get('to')
 
+    # ✅ Safe query construction
     date_filter = ""
     params = []
     if from_date and to_date:
         date_filter = "WHERE DATE(created_at) BETWEEN %s AND %s"
         params = [from_date, to_date]
 
-    # 🧾 Total Orders
-    cursor.execute(f"SELECT COUNT(*) AS total_orders FROM orders {date_filter}", params)
-    total_orders = cursor.fetchone()['total_orders']
+    try:
+        # 🧾 Total Orders
+        cursor.execute(f"SELECT COUNT(*) AS total_orders FROM orders {date_filter}", params)
+        total_orders = cursor.fetchone()['total_orders'] or 0
 
-    # 💰 Total Sales
-    cursor.execute(f"SELECT IFNULL(SUM(total), 0) AS total_sales FROM orders {date_filter}", params)
-    total_sales = cursor.fetchone()['total_sales']
+        # 💰 Total Sales
+        cursor.execute(f"SELECT IFNULL(SUM(total), 0) AS total_sales FROM orders {date_filter}", params)
+        total_sales = cursor.fetchone()['total_sales'] or 0
 
-    # ⏳ Pending Orders
-    cursor.execute(f"SELECT COUNT(*) AS pending_orders FROM orders {date_filter + ' AND' if date_filter else 'WHERE'} status='Pending'", params)
-    pending_orders = cursor.fetchone()['pending_orders']
+        # ⏳ Pending Orders
+        if date_filter:
+            cursor.execute(f"""
+                SELECT COUNT(*) AS pending_orders
+                FROM orders
+                {date_filter} AND status = 'Pending'
+            """, params)
+        else:
+            cursor.execute("SELECT COUNT(*) AS pending_orders FROM orders WHERE status='Pending'")
+        pending_orders = cursor.fetchone()['pending_orders'] or 0
 
-    # 📈 Sales (Current month or filtered)
-    if from_date and to_date:
-        # 📅 If user selected custom range
-        cursor.execute(f"""
-            SELECT DATE(created_at) AS date, SUM(total) AS total
-            FROM orders
-            WHERE DATE(created_at) BETWEEN %s AND %s
-            GROUP BY DATE(created_at)
-            ORDER BY DATE(created_at)
-        """, (from_date, to_date))
-    else:
-        # 🗓️ Default: show only current month's data
-        cursor.execute("""
-            SELECT DATE(created_at) AS date, SUM(total) AS total
-            FROM orders
-            WHERE MONTH(created_at) = MONTH(CURDATE())
-              AND YEAR(created_at) = YEAR(CURDATE())
-            GROUP BY DATE(created_at)
-            ORDER BY DATE(created_at)
-        """)
+        # 🔁 Returned Orders
+        if date_filter:
+            cursor.execute(f"""
+                SELECT COUNT(*) AS returned_orders
+                FROM orders
+                {date_filter} AND status = 'Returned'
+            """, params)
+        else:
+            cursor.execute("SELECT COUNT(*) AS returned_orders FROM orders WHERE status='Returned'")
+        returned_orders = cursor.fetchone()['returned_orders'] or 0
 
-    sales_data = cursor.fetchall()
-    sales_labels = [row['date'].strftime("%d %b") for row in sales_data] if sales_data else []
-    sales_values = [float(row['total']) for row in sales_data] if sales_data else []
+        # 📈 Sales (current month or filtered)
+        if from_date and to_date:
+            cursor.execute("""
+                SELECT DATE(created_at) AS date, SUM(total) AS total
+                FROM orders
+                WHERE DATE(created_at) BETWEEN %s AND %s
+                GROUP BY DATE(created_at)
+                ORDER BY DATE(created_at)
+            """, (from_date, to_date))
+        else:
+            cursor.execute("""
+                SELECT DATE(created_at) AS date, SUM(total) AS total
+                FROM orders
+                WHERE MONTH(created_at) = MONTH(CURDATE())
+                  AND YEAR(created_at) = YEAR(CURDATE())
+                GROUP BY DATE(created_at)
+                ORDER BY DATE(created_at)
+            """)
+        sales_data = cursor.fetchall()
+        sales_labels = [row['date'].strftime("%d %b") for row in sales_data if row['date']] if sales_data else []
+        sales_values = [float(row['total']) for row in sales_data if row['total']] if sales_data else []
 
-    # 🧾 Order Status Breakdown
-    cursor.execute(f"SELECT status, COUNT(*) AS count FROM orders {date_filter} GROUP BY status", params)
-    status_data = cursor.fetchall()
-    status_labels = [row['status'] for row in status_data] if status_data else []
-    status_counts = [row['count'] for row in status_data] if status_data else []
+        # 🧾 Order Status Breakdown
+        cursor.execute(f"SELECT status, COUNT(*) AS count FROM orders {date_filter} GROUP BY status", params)
+        status_data = cursor.fetchall()
+        status_labels = [row['status'] for row in status_data] if status_data else []
+        status_counts = [row['count'] for row in status_data] if status_data else []
 
-    # 🌸 Top Perfumes
-    cursor.execute(f"SELECT items FROM orders {date_filter}", params)
-    perfume_sales = {}
-    for row in cursor.fetchall():
-        try:
-            items = json.loads(row['items'])
-            for item in items:
-                name = item.get('name')
-                qty = item.get('quantity', 1)
-                if name:
-                    perfume_sales[name] = perfume_sales.get(name, 0) + qty
-        except Exception:
-            continue
+        # 🌸 Top Perfumes
+        cursor.execute(f"SELECT items FROM orders {date_filter}", params)
+        perfume_sales = {}
+        for row in cursor.fetchall():
+            try:
+                items = json.loads(row['items']) if row['items'] else []
+                for item in items:
+                    name = item.get('name')
+                    qty = item.get('quantity', 1)
+                    if name:
+                        perfume_sales[name] = perfume_sales.get(name, 0) + qty
+            except json.JSONDecodeError:
+                continue
 
-    top_perfumes = sorted(perfume_sales.items(), key=lambda x: x[1], reverse=True)[:5]
+        top_perfumes = sorted(perfume_sales.items(), key=lambda x: x[1], reverse=True)[:5]
 
-    cursor.close()
-    conn.close()
+    except Exception as e:
+        print("Report Error:", e)
+        total_orders = total_sales = pending_orders = returned_orders = 0
+        sales_labels = sales_values = status_labels = status_counts = []
+        top_perfumes = []
+
+    finally:
+        cursor.close()
+        conn.close()
 
     return render_template(
         'report.html',
         total_orders=total_orders,
         total_sales=total_sales,
         pending_orders=pending_orders,
-        sales_labels=sales_labels or [],
-        sales_values=sales_values or [],
-        status_labels=status_labels or [],
-        status_counts=status_counts or [],
-        top_perfumes=top_perfumes or [],
+        returned_orders=returned_orders,  # ✅ Added to template
+        sales_labels=sales_labels,
+        sales_values=sales_values,
+        status_labels=status_labels,
+        status_counts=status_counts,
+        top_perfumes=top_perfumes,
         from_date=from_date,
         to_date=to_date
     )
 
-# -----------------------------
+# ----------------------------
 # Shop Route
 # -----------------------------
 
@@ -697,4 +724,5 @@ def shipping_policy():
 if __name__ == '__main__':
     app.run(host="192.168.100.23", port=5600, debug=True)
     # app.run(debug=True)
-    
+
+

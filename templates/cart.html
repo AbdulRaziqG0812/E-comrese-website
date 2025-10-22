@@ -74,6 +74,7 @@
       border-radius: 20px;
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
       padding: 30px;
+      
     }
 
     h2 {
@@ -90,6 +91,7 @@
       padding: 15px 0;
       border-bottom: 1px solid #f2c8d4;
       flex-wrap: wrap;
+      
     }
 
     .cart-item img {
@@ -97,6 +99,7 @@
       height: 80px;
       object-fit: cover;
       border-radius: 12px;
+      
     }
 
     .cart-details {
@@ -374,65 +377,76 @@
   </footer>
 
   <script>
-    function toggleMenu() {
-      document.getElementById("navLinks").classList.toggle("show");
+  function toggleMenu() {
+    document.getElementById("navLinks").classList.toggle("show");
+  }
+
+  function formatPKR(amount) {
+    return amount.toLocaleString("en-PK", { minimumFractionDigits: 2 });
+  }
+
+  // ✅ Render Cart — prioritize sale_price from DB
+  function renderCart() {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const cartContainer = document.getElementById("cartItems");
+    const cartTotal = document.getElementById("cartTotal");
+    cartContainer.innerHTML = "";
+    let total = 0;
+
+    if (cart.length === 0) {
+      cartContainer.innerHTML = "<p style='text-align:center;color:#777;'>Your cart is empty.</p>";
+      cartTotal.textContent = "0.00";
+      return;
     }
 
-    // Format price with commas
-    function formatPKR(amount) {
-      return amount.toLocaleString("en-PK", { minimumFractionDigits: 2 });
-    }
+    cart.forEach((item, index) => {
+      // ✅ Correct logic: use sale_price if available and > 0, else use regular price
+      const price = item.sale_price && parseFloat(item.sale_price) > 0
+        ? parseFloat(item.sale_price)
+        : parseFloat(item.price);
 
-    function renderCart() {
-      const cart = JSON.parse(localStorage.getItem("cart")) || [];
-      const cartContainer = document.getElementById("cartItems");
-      const cartTotal = document.getElementById("cartTotal");
-      cartContainer.innerHTML = "";
-      let total = 0;
+      const itemTotal = price * item.quantity;
+      total += itemTotal;
 
-      if (cart.length === 0) {
-        cartContainer.innerHTML = "<p style='text-align:center;color:#777;'>Your cart is empty.</p>";
-      }
-
-      cart.forEach((item, index) => {
-        total += item.price * item.quantity;
-        cartContainer.innerHTML += `
-          <div class="cart-item">
-            <img src="${item.image}" alt="${item.name}">
-            <div class="cart-details">
-              <h3>${item.name}</h3>
-              <p>₨ ${formatPKR(item.price)}</p>
-            </div>
-            <div class="cart-quantity">
-              <button onclick="changeQty(${index}, -1)">−</button>
-              <span>${item.quantity}</span>
-              <button onclick="changeQty(${index}, 1)">+</button>
-            </div>
-            <button class="remove-btn" onclick="removeItem(${index})">Remove</button>
+      cartContainer.innerHTML += `
+        <div class="cart-item">
+          <img src="${item.image}" alt="${item.name}">
+          <div class="cart-details">
+            <h3>${item.name}</h3>
+            <p>₨ ${formatPKR(price)} × ${item.quantity} = <strong>₨ ${formatPKR(itemTotal)}</strong></p>
           </div>
-        `;
-      });
+          <div class="cart-quantity">
+            <button onclick="changeQty(${index}, -1)">−</button>
+            <span>${item.quantity}</span>
+            <button onclick="changeQty(${index}, 1)">+</button>
+          </div>
+          <button class="remove-btn" onclick="removeItem(${index})">Remove</button>
+        </div>
+      `;
+    });
 
-      cartTotal.textContent = formatPKR(total);
+    cartTotal.textContent = formatPKR(total);
+  }
+
+  function changeQty(index, change) {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    if (cart[index].quantity + change > 0) {
+      cart[index].quantity += change;
     }
-
-    function changeQty(index, change) {
-      const cart = JSON.parse(localStorage.getItem("cart")) || [];
-      if (cart[index].quantity + change > 0) {
-        cart[index].quantity += change;
-      }
-      localStorage.setItem("cart", JSON.stringify(cart));
-      renderCart();
-    }
-
-    function removeItem(index) {
-      const cart = JSON.parse(localStorage.getItem("cart")) || [];
-      cart.splice(index, 1);
-      localStorage.setItem("cart", JSON.stringify(cart));
-      renderCart();
-    }
-
+    localStorage.setItem("cart", JSON.stringify(cart));
     renderCart();
-  </script>
+  }
+
+  function removeItem(index) {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    cart.splice(index, 1);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    renderCart();
+  }
+
+  renderCart();
+</script>
+
+
 </body>
 </html>

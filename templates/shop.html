@@ -117,7 +117,7 @@ ul li a:hover {
 .cart-icon {
   position: relative;
   font-size: 1.2rem;
-  color: #333;
+  color: #e91e63;
 }
 
 .cart-badge {
@@ -330,52 +330,80 @@ ul li a:hover {
 .modal-content {
   background: #fff;
   border-radius: 15px;
-  max-width: 600px;
+  max-width: 750px;
   width: 90%;
   padding: 25px;
-  text-align: center;
   position: relative;
   animation: fadeIn 0.3s ease;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+/* ✨ Layout */
+.modal-body {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: flex-start;
+  text-align: left;
 }
 
-.close-btn {
-  position: absolute;
-  top: 12px;
-  right: 15px;
+.modal-details {
+  flex: 1;
+  min-width: 260px;
+}
+
+.modal-details h3 {
+  color: #e91e63;
   font-size: 1.5rem;
-  color: #555;
-  cursor: pointer;
+  margin-bottom: 8px;
 }
 
+/* 🧾 Sections */
+.modal-section {
+  margin-bottom: 12px;
+}
+
+.modal-section strong {
+  color: #e91e63;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.modal-section p {
+  color: #555;
+  font-size: 0.95rem;
+  margin: 3px 0;
+}
+
+.price {
+  color: #e91e63;
+  font-size: 1.1rem;
+}
+
+.old-price {
+  font-size: 0.95rem;
+  color: #777;
+  margin-right: 6px;
+}
+
+/* 🖼️ Image */
 .modal-content img {
-  width: 230px;
-  height: 230px;
+  width: 250px;
+  height: 250px;
   object-fit: cover;
   border-radius: 12px;
-  margin-bottom: 15px;
 }
 
+/* 🧠 Buttons */
 .modal-buttons {
   display: flex;
-  justify-content: center;
-  gap: 15px;
+  justify-content: flex-start;
+  gap: 10px;
   margin-top: 15px;
 }
 
 .modal-buttons button {
   flex: 1;
-  padding: 10px 20px;
+  padding: 10px 18px;
   border-radius: 25px;
   border: none;
   cursor: pointer;
@@ -392,6 +420,28 @@ ul li a:hover {
 .add-cart:hover,
 .buy-now:hover {
   background: linear-gradient(135deg, #ff4d8f, #ffa0c5);
+}
+
+/* ❌ Close Button */
+.close-btn {
+  position: absolute;
+  top: 12px;
+  right: 15px;
+  font-size: 1.6rem;
+  color: #555;
+  cursor: pointer;
+}
+
+/* 🩰 Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 /* 🌷 FOOTER */
@@ -476,6 +526,22 @@ footer p {
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 20px;
   }
+
+  /* 💬 Modal */
+  .modal-content {
+    max-width: 90%;
+    padding: 20px;
+  }
+
+  .modal-content img {
+    width: 220px;
+    height: 220px;
+  }
+
+  .modal-buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
 }
 
 /* 📲 Tablet and Large Phones (768px and below) */
@@ -514,6 +580,22 @@ footer p {
   .product-grid {
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 18px;
+  }
+
+  /* 💬 Modal */
+  .modal-content {
+    width: 95%;
+    padding: 18px;
+  }
+
+  .modal-content img {
+    width: 200px;
+    height: 200px;
+  }
+
+  .modal-buttons {
+    flex-direction: column;
+    gap: 10px;
   }
 }
 
@@ -585,6 +667,22 @@ footer p {
     gap: 12px;
   }
 
+  /* 💬 Modal */
+  .modal-content {
+    width: 95%;
+    padding: 20px 15px;
+  }
+
+  .modal-content img {
+    width: 180px;
+    height: 180px;
+  }
+
+  .modal-buttons {
+    flex-direction: column;
+    gap: 8px;
+  }
+
   /* Very small screens (old phones) */
   @media (max-width: 360px) {
     .product-grid {
@@ -593,6 +691,12 @@ footer p {
     }
     .product-card img {
       height: 160px;
+    }
+
+    /* 💬 Modal small tweak */
+    .modal-content img {
+      width: 150px;
+      height: 150px;
     }
   }
 
@@ -603,18 +707,7 @@ footer p {
   .product-card img {
     height: 180px;
   }
-
-  .modal-content {
-    width: 95%;
-    padding: 20px 15px;
-  }
-
-  .modal-content img {
-    width: 180px;
-    height: 180px;
-  }
 }
-
 </style>
 </head>
 
@@ -670,15 +763,14 @@ footer p {
         </div>
         <img src="{{ url_for('static', filename=perfume.image) }}" alt="{{ perfume.name }}"
              onerror="this.onerror=null; this.src='https://via.placeholder.com/270x240?text=Image+Not+Found';"
-             onclick="openModal('{{ perfume.name }}', '{{ perfume.description }}', '{{ url_for('static', filename=perfume.image) }}', {{ perfume.price }})">
+             onclick="openModal('{{ perfume.name }}', '{{ perfume.description }}', '{{ url_for('static', filename=perfume.image) }}', {{ perfume.sale_price }}, {{ perfume.sale_price }})">
         <div class="product-info">
           <h3>{{ perfume.name }}</h3>
-          <h4>{{ perfume.description }}</h4>
           <div>
             <span class="old-price">PKR {{ perfume.sale_price + 1000 }}</span>
             <span class="price">PKR {{ perfume.sale_price }}</span>
           </div>
-          <button onclick="addToCartWithAnim(this, '{{ perfume.name }}', {{ perfume.price }}, '{{ url_for('static', filename=perfume.image) }}')"
+          <button onclick="addToCartWithAnim(this, '{{ perfume.name }}', {{ perfume.sale_price }}, '{{ url_for('static', filename=perfume.image) }}')"
             {% if perfume.stock == 0 %}disabled{% endif %}>
             {% if perfume.stock == 0 %}Sold Out{% else %}Add to Cart{% endif %}
           </button>
@@ -704,15 +796,14 @@ footer p {
         </div>
         <img src="{{ url_for('static', filename=perfume.image) }}" alt="{{ perfume.name }}"
              onerror="this.onerror=null; this.src='https://via.placeholder.com/270x240?text=Image+Not+Found';"
-             onclick="openModal('{{ perfume.name }}', '{{ perfume.description }}', '{{ url_for('static', filename=perfume.image) }}', {{ perfume.price }})">
+             onclick="openModal('{{ perfume.name }}', '{{ perfume.description }}', '{{ url_for('static', filename=perfume.image) }}', {{ perfume.sale_price }}, {{ perfume.sale_price }})">
         <div class="product-info">
           <h3>{{ perfume.name }}</h3>
-          <h4>{{ perfume.description }}</h4>
           <div>
             <span class="old-price">PKR {{ perfume.sale_price + 1000 }}</span>
             <span class="price">PKR {{ perfume.sale_price }}</span>
           </div>
-          <button onclick="addToCartWithAnim(this, '{{ perfume.name }}', {{ perfume.price }}, '{{ url_for('static', filename=perfume.image) }}')"
+          <button onclick="addToCartWithAnim(this, '{{ perfume.name }}', {{ perfume.sale_price }}, '{{ url_for('static', filename=perfume.image) }}')"
             {% if perfume.stock == 0 %}disabled{% endif %}>
             {% if perfume.stock == 0 %}Sold Out{% else %}Add to Cart{% endif %}
           </button>
@@ -722,23 +813,43 @@ footer p {
     </div>
   </section>
 
-  <!-- 💬 Modal -->
-  <div class="modal" id="product-modal">
-    <div class="modal-content">
-      <span class="close-btn" onclick="closeModal()">&times;</span>
-      <img id="modal-img" src="" alt="">
-      <h3 id="modal-name"></h3>
-      <p id="modal-desc"></p>
-      <div>
-        <span class="old-price" id="modal-old-price"></span>
-        <span class="price" id="modal-price"></span>
-      </div>
-      <div class="modal-buttons">
-        <button class="add-cart" id="modal-add-btn">Add to Cart</button>
-        <button class="buy-now" id="modal-buy-btn">Buy Now</button>
+<!-- 💬 Modal -->
+<div class="modal" id="product-modal">
+  <div class="modal-content">
+    <span class="close-btn" onclick="closeModal()">&times;</span>
+
+    <!-- 🌸 Layout: Left Image + Right Details -->
+    <div class="modal-body">
+      <img id="modal-img" src="" alt="Perfume Image">
+
+      <div class="modal-details">
+        <h3 id="modal-name"></h3>
+
+        <div class="modal-section">
+          <strong>Description:</strong>
+          <p id="modal-desc"></p>
+        </div>
+
+        <div class="modal-section">
+          <strong>Price:</strong><br>
+          <span id="modal-old-price" class="old-price"></span>
+          <span id="modal-price" class="price"></span>
+        </div>
+
+        <div class="modal-section">
+          <strong>Shipping & Returns:</strong>
+          <p><i class="fa-solid fa-truck-fast"></i> Estimated Delivery: <b>3–5 business days</b> (depending on your location)</p>
+          <p><i class="fa-solid fa-rotate-left"></i> Returns accepted for sealed items only.</p>
+        </div>
+
+        <div class="modal-buttons">
+          <button class="add-cart" id="modal-add-btn">Add to Cart</button>
+          <button class="buy-now" id="modal-buy-btn">Buy Now</button>
+        </div>
       </div>
     </div>
   </div>
+</div>
 
   <!-- 🌷 Footer -->
 <footer>
@@ -771,19 +882,23 @@ footer p {
 <script>
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
 
+  // ✅ Show only unique items count (not total quantity)
   function updateCartCount() {
-    const count = cart.reduce((a, i) => a + i.quantity, 0);
+    const count = cart.length;
     document.getElementById("cart-count").textContent = count;
   }
 
-  function addToCart(name, price, image) {
+  // ✅ Store proper sale price
+  function addToCart(name, price, image, salePrice = 0) {
+    const finalPrice = salePrice > 0 ? salePrice : price;
     const existing = cart.find(i => i.name === name);
     if (existing) existing.quantity++;
-    else cart.push({ name, price, image, quantity: 1 });
+    else cart.push({ name, price: finalPrice, image, quantity: 1 });
     localStorage.setItem("cart", JSON.stringify(cart));
     updateCartCount();
   }
 
+  // 🛒 Smooth flying image animation to cart
   function flyToCart(element) {
     const cartIcon = document.getElementById("cart-icon");
     const imgRect = element.getBoundingClientRect();
@@ -798,45 +913,69 @@ footer p {
     flyImg.style.transition = "transform 0.9s ease-in-out, opacity 0.9s ease-in-out";
     flyImg.style.zIndex = "2000";
     document.body.appendChild(flyImg);
+
     const x = cartRect.left - imgRect.left;
     const y = cartRect.top - imgRect.top;
+
     requestAnimationFrame(() => {
       flyImg.style.transform = `translate(${x}px, ${y}px) scale(0.1)`;
       flyImg.style.opacity = "0";
     });
+
     setTimeout(() => document.body.removeChild(flyImg), 900);
   }
 
-  function addToCartWithAnim(btn, name, price, image) {
+  // 🛒 Add from card with animation
+  function addToCartWithAnim(btn, name, salePrice, image) {
     const img = btn.closest(".product-card").querySelector("img");
     flyToCart(img);
-    addToCart(name, price, image);
+    addToCart(name, salePrice, image, salePrice);
   }
 
-  function openModal(name, desc, img, price) {
-    document.getElementById("modal-name").textContent = name;
-    document.getElementById("modal-desc").textContent = desc;
-    document.getElementById("modal-img").src = img;
-    document.getElementById("modal-price").textContent = "PKR " + price;
-    document.getElementById("modal-old-price").textContent = "PKR " + (price + 1000);
+  // 🧴 Product modal open (corrected + integrated)
+  function openModal(name, desc, img, price, sale_price) {
+    const modal = document.getElementById("product-modal");
+    const modalImg = document.getElementById("modal-img");
+    const modalName = document.getElementById("modal-name");
+    const modalDesc = document.getElementById("modal-desc");
+    const modalPrice = document.getElementById("modal-price");
+    const modalOldPrice = document.getElementById("modal-old-price");
 
+    const finalPrice = sale_price > 0 ? sale_price : price;
+
+    modalImg.src = img;
+    modalName.textContent = name;
+    modalDesc.textContent = desc;
+
+    if (sale_price > 0) {
+      modalPrice.textContent = "PKR " + sale_price.toFixed(2);
+      modalOldPrice.textContent = "PKR " + (sale_price + 1000).toFixed(2);
+      modalOldPrice.style.textDecoration = "line-through";
+    } else {
+      modalPrice.textContent = "PKR " + price.toFixed(2);
+      modalOldPrice.textContent = "";
+    }
+
+    // ✅ Ensure correct price added
     document.getElementById("modal-add-btn").onclick = () => {
-      const modalImg = document.getElementById("modal-img");
       flyToCart(modalImg);
-      addToCart(name, price, img);
+      addToCart(name, price, img, sale_price);
     };
+
     document.getElementById("modal-buy-btn").onclick = () => {
-      addToCart(name, price, img);
+      addToCart(name, price, img, sale_price);
       window.location.href = "/cart";
     };
-    document.getElementById("product-modal").style.display = "flex";
+
+    modal.style.display = "flex";
   }
 
+  // ❌ Close modal
   function closeModal() {
     document.getElementById("product-modal").style.display = "none";
   }
 
-  // 🔍 Fixed Search
+  // 🔍 Product search
   function searchProducts() {
     const query = document.getElementById("search-input").value.toLowerCase();
     document.querySelectorAll(".product-card").forEach(card => {
@@ -845,7 +984,7 @@ footer p {
     });
   }
 
-  // 🧭 Category Filter FIXED
+  // 🧩 Filter by category
   function filterCategory(category, btn) {
     document.querySelectorAll(".filter-buttons button").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");

@@ -244,7 +244,7 @@ tr:hover { background: rgba(255,255,255,0.08); transition: 0.2s; }
           <th>Items</th>
           <th>Status</th>
           <th>Created At</th>
-          <th>Action</th> <!-- ✅ new column -->
+          <th>Action</th>
         </tr>
       </thead>
       <tbody>
@@ -273,6 +273,7 @@ tr:hover { background: rgba(255,255,255,0.08); transition: 0.2s; }
               <option value="Shipped" {% if order.status=='Shipped' %}selected{% endif %}>Shipped</option>
               <option value="Completed" {% if order.status=='Completed' %}selected{% endif %}>Completed</option>
               <option value="Cancelled" {% if order.status=='Cancelled' %}selected{% endif %}>Cancelled</option>
+              <option value="Returned" {% if order.status=='Returned' %}selected{% endif %}>Returned</option>
             </select>
           </td>
           <td>{{ order.created_at }}</td>
@@ -280,6 +281,10 @@ tr:hover { background: rgba(255,255,255,0.08); transition: 0.2s; }
             <button onclick="deleteOrder({{ order.id }})" 
               style="background:linear-gradient(90deg,#ef4444,#dc2626);border:none;padding:6px 10px;border-radius:6px;color:white;cursor:pointer;">
               <i class="fa-solid fa-trash"></i>
+            </button>
+            <button onclick="markReturned({{ order.id }})"
+              style="background:linear-gradient(90deg,#f59e0b,#d97706);border:none;padding:6px 10px;border-radius:6px;color:white;cursor:pointer;margin-left:4px;">
+              <i class="fa-solid fa-rotate-left"></i>
             </button>
           </td>
         </tr>
@@ -335,28 +340,33 @@ function updateStatus(orderId, newStatus) {
 
 function deleteOrder(orderId) {
   if (!confirm("⚠️ Are you sure you want to delete this order?")) return;
+  fetch(`/delete_order/${orderId}`, { method: "DELETE" })
+  .then(res => res.json())
+  .then(data => { alert(data.message); if (data.success) location.reload(); })
+  .catch(() => alert("❌ Failed to delete order. Please try again."));
+}
 
-  fetch(`/delete_order/${orderId}`, {
-    method: "DELETE",
+function markReturned(orderId) {
+  if (!confirm("↩️ Are you sure you want to mark this order as Returned?")) return;
+  fetch(`/update_order_status/${orderId}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ status: "Returned" })
   })
   .then(res => res.json())
   .then(data => {
     alert(data.message);
-    if (data.success) {
-      location.reload();
-    }
+    if (data.success) location.reload();
   })
-  .catch(() => alert("❌ Failed to delete order. Please try again."));
+  .catch(() => alert("❌ Failed to mark as returned."));
 }
 
 function calculateTotalSales() {
   const totals = document.querySelectorAll('.order-total');
   let totalSum = 0;
   totals.forEach(td => {
-    if (td.closest('tr').style.display !== 'none') {
-      const val = parseFloat(td.textContent) || 0;
-      totalSum += val;
-    }
+    const val = parseFloat(td.textContent) || 0;
+    totalSum += val;
   });
   document.getElementById('totalSales').textContent = totalSum.toLocaleString();
 }
@@ -416,11 +426,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   displayPage(1);
 
-  // 🔍 Live Search — filters automatically as you type
   const searchInput = document.getElementById('searchInput');
-  if (searchInput) {
-    searchInput.addEventListener('input', filterOrders);
-  }
+  if (searchInput) searchInput.addEventListener('input', filterOrders);
 });
 </script>
 

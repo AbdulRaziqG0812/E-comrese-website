@@ -106,16 +106,56 @@ nav .logo:hover { color: #ff6ea8; transform: scale(1.05); }
 }
 .product-card:hover { transform: translateY(-8px); box-shadow: 0 12px 30px rgba(233,30,99,0.25); }
 .product-card img { width: 100%; height: 280px; object-fit: cover; }
-.product-info { padding: 18px; text-align: left; }
-.product-info h3 { color: #e91e63; margin-bottom: 8px; font-size: 1.3rem; }
-.product-info p { font-size: 1rem; color: #555; min-height: 50px; }
+/* 💰 Product Info (Centered + Stylish Price Layout) */
+.product-info {
+  padding: 18px;
+  text-align: center; /* ✅ Center align everything */
+}
+
+.product-info h3 {
+  color: #e91e63;
+  margin-bottom: 10px;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+/* 🔥 Price Styling */
+.product-info .price-box {
+  margin-bottom: 10px;
+}
+
+.product-info .old-price {
+  color: #999;
+  font-size: 0.95rem;
+  text-decoration: line-through;
+  margin-right: 8px;
+}
+
+.product-info .price {
+  color: #e91e63;
+  font-size: 1.2rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, #e91e63, #ff80ab);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* 🛍️ Shop Now button */
 .product-info button {
   background: linear-gradient(135deg,#e91e63,#ff80ab);
-  border: none; padding: 10px 28px; border-radius: 25px;
-  color: #fff; cursor: pointer; font-weight: 500;
-  margin-top: 12px; transition: 0.3s;
+  border: none;
+  padding: 10px 30px;
+  border-radius: 25px;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.3s;
 }
-.product-info button:hover { background: linear-gradient(135deg,#ff4d8f,#ffa0c5); }
+
+.product-info button:hover {
+  background: linear-gradient(135deg,#ff4d8f,#ffa0c5);
+  transform: scale(1.08);
+}
 
 /* 🌈 Animated View All Buttons */
 .view-all-btn {
@@ -566,7 +606,10 @@ footer p { margin-top: 15px; font-size: 0.9rem; text-align: center; }
           <img src="{{ url_for('static', filename=perfume.image) }}" alt="{{ perfume.name }}">
           <div class="product-info">
             <h3>{{ perfume.name }}</h3>
-            <p>{{ perfume.description }}</p>
+              <div class="price-box">
+                <span class="old-price">PKR {{ perfume.sale_price + 1000 }}</span>
+                <span class="price">PKR {{ perfume.sale_price }}</span>
+              </div>
             <a href="{{ url_for('shop') }}"><button>Shop Now</button></a>
           </div>
         </div>
@@ -576,7 +619,7 @@ footer p { margin-top: 15px; font-size: 0.9rem; text-align: center; }
 
   <!-- 🛍️ View All Button -->
   <div style="text-align:center;">
-    <a href="{{ url_for('shop') }}?category=Men" class="view-all-btn">View All Men’s Perfumes →</a>
+    <a href="{{ url_for('shop') }}" class="view-all-btn">View All Men’s Perfumes →</a>
   </div>
 </section>
 
@@ -603,7 +646,10 @@ footer p { margin-top: 15px; font-size: 0.9rem; text-align: center; }
           <img src="{{ url_for('static', filename=perfume.image) }}" alt="{{ perfume.name }}">
           <div class="product-info">
             <h3>{{ perfume.name }}</h3>
-            <p>{{ perfume.description }}</p>
+              <div class="price-box">
+                <span class="old-price">PKR {{ perfume.sale_price + 1000 }}</span>
+                <span class="price">PKR {{ perfume.sale_price }}</span>
+              </div>
             <a href="{{ url_for('shop') }}"><button>Shop Now</button></a>
           </div>
         </div>
@@ -613,7 +659,7 @@ footer p { margin-top: 15px; font-size: 0.9rem; text-align: center; }
 
   <!-- 🛍️ View All Button -->
   <div style="text-align:center;">
-    <a href="{{ url_for('shop') }}?category=Women" class="view-all-btn">View All Women’s Perfumes →</a>
+    <a href="{{ url_for('shop') }}" class="view-all-btn">View All Women’s Perfumes →</a>
   </div>
 </section>
 
