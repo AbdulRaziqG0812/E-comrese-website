@@ -15,60 +15,69 @@ body {
   scroll-behavior: smooth;
 }
 
-/* 🌹 NAVBAR */
+/* 🌹 NAVBAR (Enhanced Version) */
 nav {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-  padding: 10px 30px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 3px 18px rgba(0, 0, 0, 0.06);
+  padding: 12px 35px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 1000;
   flex-wrap: wrap;
-}
-h2 {
-  display: block;
-  font-size: 1.5em;
-  margin-block-start: 0.83em;
-  margin-block-end: 0.83em;
-  margin-inline-start: 0px;
-  margin-inline-end: 0px;
-  font-weight: bold;
-  unicode-bidi: isolate;
-  text-align: center;
-  color: #e91e63;
-  font-size: 30px;
+  transition: all 0.3s ease;
 }
 
 .logo {
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 700;
   color: #e91e63;
   letter-spacing: 1px;
   text-transform: uppercase;
+  transition: 0.3s ease;
+}
+.logo:hover {
+  color: #ff4081;
+  transform: scale(1.05);
 }
 
+/* 🔗 NAV LINKS */
 ul {
   list-style: none;
   display: flex;
-  gap: 20px;
+  gap: 22px;
   margin: 0;
   padding: 0;
   align-items: center;
+  justify-content: center;
 }
 
 ul li a {
   text-decoration: none;
   color: #333;
-  font-weight: 500;
-  transition: 0.3s;
+  font-weight: 600;
+  font-size: 0.95rem;
+  position: relative;
+  transition: color 0.3s ease;
 }
-
 ul li a:hover {
   color: #e91e63;
+}
+ul li a::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0%;
+  height: 2px;
+  background: linear-gradient(90deg, #e91e63, #ff80ab);
+  transition: width 0.3s ease;
+}
+ul li a:hover::after {
+  width: 100%;
 }
 
 /* 🔍 SEARCH BAR */
@@ -84,42 +93,47 @@ ul li a:hover {
   align-items: center;
   gap: 8px;
   background: #fff;
-  padding: 5px 10px;
+  padding: 6px 14px;
   border-radius: 25px;
   border: 1px solid #ddd;
+  transition: 0.3s ease;
 }
-
+.nav-search:hover {
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+}
 .nav-search input {
   border: none;
   outline: none;
   font-size: 0.9rem;
   padding: 6px 8px;
-  width: 140px;
+  width: 150px;
   background: transparent;
 }
-
 .nav-search button {
   background: linear-gradient(135deg, #e91e63, #ff80ab);
   border: none;
   color: white;
-  padding: 6px 12px;
-  border-radius: 20px;
+  padding: 7px 13px;
+  border-radius: 25px;
   cursor: pointer;
   font-weight: 600;
   transition: 0.3s;
 }
-
 .nav-search button:hover {
   background: linear-gradient(135deg, #ff4d8f, #ffa0c5);
+  transform: scale(1.05);
 }
 
 /* 🛒 CART ICON */
 .cart-icon {
   position: relative;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   color: #e91e63;
+  transition: 0.3s;
 }
-
+.cart-icon:hover {
+  transform: scale(1.15);
+}
 .cart-badge {
   position: absolute;
   top: -6px;
@@ -149,6 +163,21 @@ ul li a:hover {
   color: #555;
   font-size: 1rem;
 }
+
+h2 {
+  display: block;
+  font-size: 1.5em;
+  margin-block-start: 0.83em;
+  margin-block-end: 0.83em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  font-weight: bold;
+  unicode-bidi: isolate;
+  text-align: center;
+  color: #e91e63;
+  font-size: 30px;
+}
+
 
 /* 🧭 FILTER BUTTONS */
 .filter-buttons {
@@ -313,7 +342,8 @@ ul li a:hover {
   cursor: not-allowed;
 }
 
-/* 💬 MODAL */
+/* 💬 MODAL — Fixed Centered Base */
+/* Modal Background */
 .modal {
   display: none;
   position: fixed;
@@ -321,20 +351,30 @@ ul li a:hover {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.5);
   justify-content: center;
   align-items: center;
   z-index: 1000;
 }
 
+/* Show Modal When Active */
+.modal.show {
+  display: flex;
+}
+
+/* Modal Content (Box) */
 .modal-content {
   background: #fff;
-  border-radius: 15px;
-  max-width: 750px;
-  width: 90%;
+  width: 60%;
+  max-width: 850px;
+  max-height: 90vh;
   padding: 25px;
+  border-radius: 15px;
+  overflow-y: auto;
   position: relative;
-  animation: fadeIn 0.3s ease;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  display: flex;
+  gap: 20px;
 }
 
 /* ✨ Layout */
@@ -351,13 +391,13 @@ ul li a:hover {
   min-width: 260px;
 }
 
+/* 🧾 Text Details */
 .modal-details h3 {
   color: #e91e63;
   font-size: 1.5rem;
   margin-bottom: 8px;
 }
 
-/* 🧾 Sections */
 .modal-section {
   margin-bottom: 12px;
 }
@@ -372,8 +412,10 @@ ul li a:hover {
   color: #555;
   font-size: 0.95rem;
   margin: 3px 0;
+  line-height: 1.5;
 }
 
+/* 💰 Price */
 .price {
   color: #e91e63;
   font-size: 1.1rem;
@@ -396,9 +438,38 @@ ul li a:hover {
 /* 🧠 Buttons */
 .modal-buttons {
   display: flex;
-  justify-content: flex-start;
+  align-items: center;
   gap: 10px;
   margin-top: 15px;
+}
+
+.qty-inline {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.qty-inline input {
+  width: 50px;
+  text-align: center;
+  border: none;
+  outline: none;
+  font-size: 16px;
+}
+
+.qty-btn {
+  background: #f4f4f4;
+  border: none;
+  padding: 6px 10px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.qty-btn:hover {
+  background: #ddd;
 }
 
 .modal-buttons button {
@@ -421,7 +492,6 @@ ul li a:hover {
 .buy-now:hover {
   background: linear-gradient(135deg, #ff4d8f, #ffa0c5);
 }
-
 /* ❌ Close Button */
 .close-btn {
   position: absolute;
@@ -443,7 +513,6 @@ ul li a:hover {
     transform: scale(1);
   }
 }
-
 /* 🌷 FOOTER */
 footer {
   background: #fff0f5;
@@ -498,7 +567,9 @@ footer p {
   text-align: center;
 }
 
-/* 📱 RESPONSIVE DESIGN */
+/* 🌸 BASE RESPONSIVE DESIGN */
+
+/* 💻 Large Screens (1200px and below) */
 @media (max-width: 1200px) {
   .product-grid {
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -509,9 +580,10 @@ footer p {
 /* 🧊 Tablet and Small Laptop (992px and below) */
 @media (max-width: 992px) {
   nav {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
     padding: 10px 20px;
-    position: relative; /* ✅ scrolls naturally now */
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
   }
 
   .nav-search input {
@@ -531,6 +603,8 @@ footer p {
   .modal-content {
     max-width: 90%;
     padding: 20px;
+    max-height: 85vh;
+    overflow-y: auto;
   }
 
   .modal-content img {
@@ -546,13 +620,23 @@ footer p {
 
 /* 📲 Tablet and Large Phones (768px and below) */
 @media (max-width: 768px) {
+  nav {
+    flex-direction: column;
+    align-items: center;
+    padding: 12px 20px;
+    gap: 10px;
+  }
+
+  .logo {
+    font-size: 20px;
+  }
+
   ul {
     flex-wrap: wrap;
     justify-content: center;
     gap: 12px;
   }
 
-  /* ✅ Keep search bar visible, just shrink it */
   .nav-search {
     flex: 1;
     max-width: 240px;
@@ -583,9 +667,16 @@ footer p {
   }
 
   /* 💬 Modal */
+  .modal-body {
+    flex-direction: column;
+    align-items: center;
+  }
+
   .modal-content {
     width: 95%;
     padding: 18px;
+    max-height: 85vh;
+    overflow-y: auto;
   }
 
   .modal-content img {
@@ -606,7 +697,6 @@ footer p {
     align-items: center;
     gap: 8px;
     padding: 10px;
-    position: relative; /* ✅ scrolls away naturally */
   }
 
   .logo {
@@ -626,7 +716,6 @@ footer p {
     gap: 6px;
   }
 
-  /* ✅ Search bar fully visible on mobile */
   .nav-search {
     display: flex;
     width: 90%;
@@ -663,19 +752,37 @@ footer p {
   }
 
   .product-grid {
-    grid-template-columns: repeat(2, 1fr); /* ✅ 2 per row on mobile */
+    grid-template-columns: repeat(2, 1fr);
     gap: 12px;
   }
 
   /* 💬 Modal */
+
   .modal-content {
     width: 95%;
-    padding: 20px 15px;
+    padding: 15px;
+    flex-direction: column;
+    text-align: center;
   }
 
   .modal-content img {
-    width: 180px;
-    height: 180px;
+    width: 100%;
+    height: auto;
+    margin-bottom: 15px;
+  }
+
+  .modal-body {
+    display: block;
+  }
+}
+
+  .modal-details h3 {
+    font-size: 1.1rem;
+  }
+
+  .modal-section p {
+    font-size: 0.85rem;
+    line-height: 1.4;
   }
 
   .modal-buttons {
@@ -683,21 +790,27 @@ footer p {
     gap: 8px;
   }
 
-  /* Very small screens (old phones) */
-  @media (max-width: 360px) {
-    .product-grid {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-    }
-    .product-card img {
-      height: 160px;
-    }
+  .modal-buttons button {
+    width: 100%;
+    font-size: 0.9rem;
+    padding: 8px 14px;
+  }
+}
 
-    /* 💬 Modal small tweak */
-    .modal-content img {
-      width: 150px;
-      height: 150px;
-    }
+/* 📱 Very Small Screens (360px and below) */
+@media (max-width: 360px) {
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .product-card img {
+    height: 160px;
+  }
+
+  .modal-content img {
+    width: 150px;
+    height: 150px;
   }
 
   .product-card {
@@ -708,6 +821,8 @@ footer p {
     height: 180px;
   }
 }
+
+
 </style>
 </head>
 
@@ -813,12 +928,12 @@ footer p {
     </div>
   </section>
 
+
 <!-- 💬 Modal -->
 <div class="modal" id="product-modal">
   <div class="modal-content">
     <span class="close-btn" onclick="closeModal()">&times;</span>
 
-    <!-- 🌸 Layout: Left Image + Right Details -->
     <div class="modal-body">
       <img id="modal-img" src="" alt="Perfume Image">
 
@@ -838,11 +953,22 @@ footer p {
 
         <div class="modal-section">
           <strong>Shipping & Returns:</strong>
-          <p><i class="fa-solid fa-truck-fast"></i> Estimated Delivery: <b>3–5 business days</b> (depending on your location)</p>
+          <p><i class="fa-solid fa-truck-fast"></i> Estimated Delivery: <b>3–5 business days</b></p>
           <p><i class="fa-solid fa-rotate-left"></i> Returns accepted for sealed items only.</p>
         </div>
 
+        <div class="modal-section">
+          <p><i class="fa-solid fa-phone"></i> Phone: <strong>+92 325 7788989</strong></p>
+          <p><i class="fa-solid fa-envelope"></i> Email: <strong>support@areezfragrance.com</strong></p>
+        </div>
+
+        <!-- 🧩 Quantity + Buttons (Inline) -->
         <div class="modal-buttons">
+          <div class="qty-inline">
+            <button class="qty-btn" onclick="document.getElementById('modal-qty').stepDown()">−</button>
+            <input type="number" id="modal-qty" value="1" min="1">
+            <button class="qty-btn" onclick="document.getElementById('modal-qty').stepUp()">+</button>
+          </div>
           <button class="add-cart" id="modal-add-btn">Add to Cart</button>
           <button class="buy-now" id="modal-buy-btn">Buy Now</button>
         </div>
@@ -882,23 +1008,23 @@ footer p {
 <script>
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-  // ✅ Show only unique items count (not total quantity)
+  // ✅ Show only unique items count
   function updateCartCount() {
     const count = cart.length;
     document.getElementById("cart-count").textContent = count;
   }
 
-  // ✅ Store proper sale price
-  function addToCart(name, price, image, salePrice = 0) {
+  // ✅ Store product with quantity
+  function addToCart(name, price, image, salePrice = 0, quantity = 1) {
     const finalPrice = salePrice > 0 ? salePrice : price;
     const existing = cart.find(i => i.name === name);
-    if (existing) existing.quantity++;
-    else cart.push({ name, price: finalPrice, image, quantity: 1 });
+    if (existing) existing.quantity += quantity;
+    else cart.push({ name, price: finalPrice, image, quantity });
     localStorage.setItem("cart", JSON.stringify(cart));
     updateCartCount();
   }
 
-  // 🛒 Smooth flying image animation to cart
+  // 🛒 Flying animation
   function flyToCart(element) {
     const cartIcon = document.getElementById("cart-icon");
     const imgRect = element.getBoundingClientRect();
@@ -932,7 +1058,7 @@ footer p {
     addToCart(name, salePrice, image, salePrice);
   }
 
-  // 🧴 Product modal open (corrected + integrated)
+  // 🧴 Product modal open
   function openModal(name, desc, img, price, sale_price) {
     const modal = document.getElementById("product-modal");
     const modalImg = document.getElementById("modal-img");
@@ -940,12 +1066,15 @@ footer p {
     const modalDesc = document.getElementById("modal-desc");
     const modalPrice = document.getElementById("modal-price");
     const modalOldPrice = document.getElementById("modal-old-price");
+    const qtyInput = document.getElementById("modal-qty");
 
     const finalPrice = sale_price > 0 ? sale_price : price;
 
     modalImg.src = img;
     modalName.textContent = name;
     modalDesc.textContent = desc;
+
+    qtyInput.value = 1; // reset quantity every time modal opens
 
     if (sale_price > 0) {
       modalPrice.textContent = "PKR " + sale_price.toFixed(2);
@@ -956,14 +1085,17 @@ footer p {
       modalOldPrice.textContent = "";
     }
 
-    // ✅ Ensure correct price added
+    // ✅ Add to cart with selected quantity
     document.getElementById("modal-add-btn").onclick = () => {
+      const qty = parseInt(qtyInput.value);
       flyToCart(modalImg);
-      addToCart(name, price, img, sale_price);
+      addToCart(name, price, img, sale_price, qty);
     };
 
+    // ✅ Buy Now
     document.getElementById("modal-buy-btn").onclick = () => {
-      addToCart(name, price, img, sale_price);
+      const qty = parseInt(qtyInput.value);
+      addToCart(name, price, img, sale_price, qty);
       window.location.href = "/cart";
     };
 
@@ -975,7 +1107,7 @@ footer p {
     document.getElementById("product-modal").style.display = "none";
   }
 
-  // 🔍 Product search
+  // 🔍 Search
   function searchProducts() {
     const query = document.getElementById("search-input").value.toLowerCase();
     document.querySelectorAll(".product-card").forEach(card => {
@@ -994,9 +1126,7 @@ footer p {
       card.style.display = (category === "all" || cat === category) ? "block" : "none";
     });
   }
-
   updateCartCount();
 </script>
-
 </body>
 </html>

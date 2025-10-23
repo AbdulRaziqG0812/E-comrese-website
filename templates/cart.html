@@ -6,7 +6,7 @@
   <title>Your Cart - AREEZ FRAGRANCE</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
-  <style>
+<style>
     /* 🌸 Base Styling */
     body {
       margin: 0;
@@ -224,97 +224,161 @@
       text-align: center;
     }
 
-    /* 📱 Responsive Design */
-    @media (max-width: 768px) {
-      nav {
-        padding: 12px 20px;
-        position: relative;
-      }
+/* 📱 Responsive Navbar Styling */
+@media (max-width: 768px) {
+  nav {
+    padding: 12px 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 350px;
+    background: white;
+    box-shadow: 0 2px 15px #f2c8d4;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #ff4081;
+  }
 
-      .menu-toggle {
-        display: block;
-      }
+  /* 🍔 Menu Toggle (Hamburger) */
+  .menu-toggle {
+    display: block;
+    cursor: pointer;
+    font-size: 22px;
+    color: #222;
+    background: none;
+    border: none;
+    transition: transform 0.3s ease;
+  }
 
-      nav ul {
-        display: none;
-        flex-direction: column;
-        gap: 15px;
-        position: absolute;
-        top: 70px;
-        left: 0;
-        width: 100%;
-        background: rgba(255, 255, 255, 0.98);
-        padding: 20px 0;
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-        text-align: center;
-        border-radius: 0 0 15px 15px;
-      }
+  .menu-toggle:hover {
+    transform: scale(1.1);
+  }
 
-      nav ul.show {
-        display: flex;
-      }
+  /* 🔽 Dropdown Menu */
+  nav ul {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    position: absolute;
+    top: 70px;
+    left: 0;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.97);
+    backdrop-filter: blur(6px);
+    padding: 25px 0;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    border-radius: 0 0 20px 20px;
+    transition: all 0.3s ease;
+  }
 
-      nav ul li a {
-        display: block;
-        padding: 10px 0;
-      }
+  nav ul.show {
+    display: flex;
+    animation: slideDown 0.3s ease;
+  }
 
-      /* Home link always visible */
-      .home-link {
-        display: inline-block !important;
-      }
-
-      .cart-item {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .cart-item img {
-        width: 100%;
-        max-width: 140px;
-        height: auto;
-        margin-bottom: 10px;
-      }
-
-      .cart-details {
-        margin-left: 0;
-        text-align: left;
-        margin-bottom: 10px;
-      }
-
-      .cart-summary {
-        text-align: center;
-      }
-
-      .checkout-btn {
-        display: block;
-        margin: 20px auto;
-      }
-
-      footer {
-        padding: 40px 20px;
-      }
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
     }
-
-    @media (max-width: 480px) {
-      nav .logo {
-        font-size: 20px;
-      }
-
-      .cart-container {
-        padding: 20px;
-        margin: 30px 10px;
-      }
-
-      h2 {
-        font-size: 1.6rem;
-      }
-
-      .footer-container {
-        grid-template-columns: 1fr;
-      }
+    to {
+      opacity: 1;
+      transform: translateY(0);
     }
-  </style>
+  }
+
+  nav ul li {
+    width: 100%;
+  }
+
+  nav ul li a {
+    display: block;
+    width: 100%;
+    padding: 12px 0;
+    font-size: 1rem;
+    color: #222;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: color 0.2s ease;
+  }
+
+  nav ul li a:hover {
+    color: #ff4081; /* 🌸 Accent color */
+  }
+
+  /* 🏠 Home link always visible */
+  .home-link {
+    display: inline-block !important;
+    text-align: center;
+  }
+
+  /* 🛒 Cart Items (Mobile Layout) */
+  .cart-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .cart-item img {
+    width: 100%;
+    max-width: 140px;
+    height: auto;
+    margin-bottom: 10px;
+  }
+
+  .cart-details {
+    margin-left: 0;
+    text-align: left;
+    margin-bottom: 10px;
+  }
+
+  .cart-summary {
+    text-align: center;
+  }
+
+  .checkout-btn {
+    display: block;
+    margin: 20px auto;
+  }
+
+  footer {
+    padding: 40px 20px;
+  }
+}
+
+/* 📱 Smaller Phones */
+@media (max-width: 480px) {
+  nav .logo {
+    font-size: 18px;
+    letter-spacing: 1px;
+  }
+
+  .menu-toggle {
+    font-size: 20px;
+  }
+
+  .cart-container {
+    padding: 15px;
+    margin: 30px 10px;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  .footer-container {
+    grid-template-columns: 1fr;
+  }
+
+  nav ul li a {
+    font-size: 0.95rem;
+    padding: 10px 0;
+    text-align: center;
+  }
+}
+</style>
 </head>
 
 <body>

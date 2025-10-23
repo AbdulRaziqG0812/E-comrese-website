@@ -67,7 +67,7 @@ nav .logo:hover { color: #ff6ea8; transform: scale(1.05); }
 
 /* 💎 Signature */
 .signature {
-  padding: 100px 40px; background: #fff0f5; text-align: center;
+  background: #fff0f5; text-align: center;
 }
 .signature h2 {
   font-size: 30px; color: #e91e63; margin-bottom: 60px;
@@ -88,7 +88,7 @@ nav .logo:hover { color: #ff6ea8; transform: scale(1.05); }
     color: #e91e63;
     margin-bottom: 15px;
 }
-.signature-text p { font-size: 15px; color: #555; margin-bottom: 20px; }
+.signature-text p { font-size: 0.8rem; color: #555; margin-bottom: 20px; }
 .signature-text button {
   background: linear-gradient(135deg,#e91e63,#ff80ab);
   border: none; padding: 12px 35px; border-radius: 25px;
@@ -197,7 +197,7 @@ footer p { margin-top: 15px; font-size: 0.9rem; text-align: center; }
 /* 💻 Tablets (portrait) — FIXED */
 @media (max-width: 1024px) {
   nav {
-    position: relative; /* ✅ scrolls away */
+    position: fixed; /* ✅ fixed away */
     padding: 12px 18px;
     display: flex;
     justify-content: space-between;
@@ -323,7 +323,7 @@ footer p { margin-top: 15px; font-size: 0.9rem; text-align: center; }
 /* 📲 Mobile Landscape (large phones & small tablets) */
 @media (max-width: 768px) {
   nav {
-    position: relative; /* ✅ scrolls away */
+    position: fixed; /* ✅ fixed away */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -469,7 +469,7 @@ footer p { margin-top: 15px; font-size: 0.9rem; text-align: center; }
 /* 📱 Small Mobile (below 480px) */
 @media (max-width: 480px) {
   nav {
-    position: relative; /* ✅ scrolls with page */
+    position: fixed; /* ✅ fixed with page */
     flex-direction: column;
     align-items: center;
     padding: 8px 10px;
@@ -523,7 +523,7 @@ footer p { margin-top: 15px; font-size: 0.9rem; text-align: center; }
   .signature-content img,
   .mens-section img,
   .womens-section img {
-    width: 120px;
+    width: 180px;
     height: auto;
     border-radius: 10px;
   }
