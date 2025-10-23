@@ -5,15 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Privacy Policy - AREEZ FRAGRANCE</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-
   <style>
     body {
-      font-family: "Poppins", sans-serif;
       margin: 0;
       background: #fff7fa;
       color: #333;
     }
 
+    /* 🌸 Navbar */
     nav {
       background: rgba(255,255,255,0.95);
       box-shadow: 0 4px 10px rgba(0,0,0,0.05);
@@ -53,6 +52,15 @@
       color: #e91e63;
     }
 
+    /* 🍔 Toggle Button (hidden on desktop) */
+    .menu-toggle {
+      display: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: #e91e63;
+    }
+
+    /* 🌼 Policy Section */
     .policy {
       max-width: 800px;
       margin: 100px auto;
@@ -84,44 +92,90 @@
       padding: 25px;
       margin-top: 60px;
     }
-    /* 📱 Mobile Fixed Layout (desktop jaisa) */
-@media (max-width: 500px) {
-  body {
-    min-width: 800px; /* keep desktop layout width */
-    zoom: 0.55;        /* scale down to fit mobile screen */
-  }
 
-  nav .nav-links {
-    overflow-x: auto;  /* allow horizontal scroll if nav items overflow */
-  }
+    /* 📱 Responsive Design */
+    @media (max-width: 768px) {
+      nav {
+        padding: 12px 20px;
+      }
 
-  .hero img,
-  .signature-content img,
-  .product-card img {
-    max-width: 100%;
-    height: auto;
-  }
+      .menu-toggle {
+        display: block;
+      }
 
-  .product-card {
-    width: 260px; /* same as desktop */
-  }
-}
+      nav ul {
+        display: none;
+        flex-direction: column;
+        gap: 15px;
+        position: absolute;
+        top: 70px;
+        left: 0;
+        width: 100%;
+        background: white;
+        padding: 20px 0;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        text-align: center;
+      }
 
+      nav ul.show {
+        display: flex;
+      }
+
+      .policy {
+        margin: 70px 15px;
+        padding: 30px 20px;
+      }
+
+      .policy h1 {
+        font-size: 1.8rem;
+      }
+
+      .policy p {
+        font-size: 0.95rem;
+      }
+
+      footer {
+        padding: 20px;
+        font-size: 0.9rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .policy {
+        margin: 60px 10px;
+        padding: 25px 15px;
+      }
+
+      .policy h1 {
+        font-size: 1.6rem;
+      }
+
+      .policy p {
+        font-size: 0.9rem;
+      }
+
+      nav .logo {
+        font-size: 22px;
+      }
+    }
   </style>
 </head>
 
 <body>
-  <!-- Navbar -->
+  <!-- 🌸 Navbar -->
   <nav>
     <div class="logo">AREEZ FRAGRANCE</div>
-    <ul>
+    <div class="menu-toggle" id="menu-toggle">
+      <i class="fa-solid fa-bars"></i>
+    </div>
+    <ul id="nav-links">
       <li><a href="/">Home</a></li>
       <li><a href="/shop">Shop</a></li>
       <li><a href="/contact">Contact</a></li>
     </ul>
   </nav>
 
-  <!-- Privacy Policy Section -->
+  <!-- 🌿 Privacy Policy Section -->
   <div class="policy">
     <h1>Privacy Policy</h1>
     <p><i class="fa-solid fa-shield-halved" style="color:#e91e63;"></i> Your privacy is our top priority.</p>
@@ -131,9 +185,18 @@
     <p>By using our website, you consent to our privacy practices as described here.</p>
   </div>
 
-  <!-- Footer -->
+  <!-- 🌺 Footer -->
   <footer>
     © 2025 AREEZ FRAGRANCE — Crafted with elegance & love.
   </footer>
+
+  <script>
+    const toggle = document.getElementById("menu-toggle");
+    const navLinks = document.getElementById("nav-links");
+
+    toggle.addEventListener("click", () => {
+      navLinks.classList.toggle("show");
+    });
+  </script>
 </body>
 </html>

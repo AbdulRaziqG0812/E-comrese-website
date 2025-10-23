@@ -7,14 +7,15 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
   <style>
+    /* 🌸 Base Styles */
     body {
-      font-family: "Poppins", sans-serif;
       margin: 0;
       background: #fff7fa;
       color: #333;
+      line-height: 1.6;
     }
 
-    /* Navbar */
+    /* 🌸 Navbar */
     nav {
       background: rgba(255,255,255,0.95);
       box-shadow: 0 4px 10px rgba(0,0,0,0.05);
@@ -54,9 +55,14 @@
       color: #e91e63;
     }
 
-    /* Terms Section */
+    /* 🚫 Hide Toggle by Default (Desktop) */
+    .menu-toggle {
+      display: none;
+    }
+
+    /* 🌸 Terms Section */
     .policy {
-      max-width: 800px;
+      max-width: 850px;
       margin: 100px auto;
       background: white;
       padding: 50px 40px;
@@ -68,22 +74,27 @@
     .policy h1 {
       color: #e91e63;
       font-size: 2.3rem;
-      margin-bottom: 20px;
+      margin-bottom: 25px;
+      text-transform: uppercase;
+    }
+
+    .policy h2 {
+      color: #e91e63;
+      margin-top: 30px;
+      font-size: 1.3rem;
       text-transform: uppercase;
     }
 
     .policy p {
       color: #555;
-      font-size: 1rem;
-      margin: 10px 0;
+      font-size: 1.05rem;
+      margin: 12px 0;
       line-height: 1.6;
     }
 
-    .policy h2 {
+    .policy i {
       color: #e91e63;
-      margin-top: 25px;
-      font-size: 1.3rem;
-      text-transform: uppercase;
+      margin-right: 8px;
     }
 
     footer {
@@ -92,45 +103,107 @@
       text-align: center;
       padding: 25px;
       margin-top: 60px;
+      font-size: 0.95rem;
     }
-    /* 📱 Responsive */
-@media (max-width: 1024px) {
-  .hero img { width: 350px; }
-  .signature-content { gap: 40px; }
-}
 
-@media (max-width: 768px) {
-  .hero { flex-direction: column-reverse; }
-  .hero img { width: 300px; }
-  .signature-content { flex-direction: column-reverse; text-align: center; }
-  .signature-text { text-align: center; }
-}
+    /* 📱 Responsive Design */
+    @media (max-width: 1024px) {
+      nav {
+        padding: 12px 30px;
+      }
 
-@media (max-width: 480px) {
-  .hero img { width: 260px; }
-  .hero-content h1 { font-size: 2.5rem; }
-  .signature h2 { font-size: 2rem; }
-  .modal-content { width: 90%; padding: 20px; }
-  .modal-content h3 { font-size: 1.5rem; }
-}
+      .policy {
+        margin: 80px 30px;
+        padding: 40px 30px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      nav {
+        flex-wrap: wrap;
+        padding: 12px 25px;
+      }
+
+      /* ✅ Show Toggle Icon on Mobile */
+      .menu-toggle {
+        display: block;
+        cursor: pointer;
+        font-size: 24px;
+        color: #e91e63;
+      }
+
+      nav ul {
+        flex-direction: column;
+        gap: 15px;
+        width: 100%;
+        text-align: center;
+        display: none;
+        background: rgba(255,255,255,0.95);
+        padding: 15px 0;
+        margin-top: 10px;
+        border-radius: 8px;
+      }
+
+      nav ul.show {
+        display: flex;
+      }
+
+      .policy {
+        margin: 60px 20px;
+        padding: 30px 20px;
+      }
+
+      .policy h1 {
+        font-size: 1.9rem;
+      }
+
+      .policy p {
+        font-size: 0.95rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      nav {
+        padding: 10px 20px;
+      }
+
+      .policy {
+        margin: 50px 15px;
+        padding: 25px 18px;
+      }
+
+      .policy h1 {
+        font-size: 1.6rem;
+      }
+
+      .policy p {
+        font-size: 0.9rem;
+      }
+
+      footer {
+        font-size: 0.85rem;
+        padding: 20px;
+      }
+    }
   </style>
 </head>
 
 <body>
-  <!-- Navbar -->
+  <!-- 🌸 Navbar -->
   <nav>
     <div class="logo">AREEZ FRAGRANCE</div>
-    <ul>
+    <div class="menu-toggle" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></div>
+    <ul id="nav-links">
       <li><a href="/">Home</a></li>
       <li><a href="/shop">Shop</a></li>
       <li><a href="/contact">Contact</a></li>
     </ul>
   </nav>
 
-  <!-- Terms of Services -->
+  <!-- 📜 Terms of Services -->
   <div class="policy">
     <h1>Terms of Services</h1>
-    <p><i class="fa-solid fa-scale-balanced" style="color:#e91e63;"></i> Welcome to AREEZ FRAGRANCE!</p>
+    <p><i class="fa-solid fa-scale-balanced"></i> Welcome to AREEZ FRAGRANCE!</p>
     <p>By accessing or using our website, you agree to the terms and conditions described below. Please read them carefully before making a purchase.</p>
 
     <h2>1. General</h2>
@@ -143,21 +216,31 @@
     <p>All prices are listed in Pakistani Rupees (PKR). Payments are processed securely through trusted payment methods. We are not responsible for payment delays due to third-party services.</p>
 
     <h2>4. Shipping & Delivery</h2>
-    <p>Orders are shipped within 24–48 hours. Standard delivery time is 3–5 working days depending on your location. Please refer to our <a href="/shipping_policy" style="color:#e91e63; text-decoration:none;">Shipping Policy</a> for details.</p>
+    <p>Orders are shipped within 24–48 hours. Standard delivery time is 3–5 working days depending on your location. Please refer to our 
+      <a href="/shipping_policy" style="color:#e91e63; text-decoration:none;">Shipping Policy</a> for details.</p>
 
     <h2>5. Returns & Refunds</h2>
-    <p>If your order arrives damaged or incorrect, please contact us within 3 days of delivery. Read our <a href="/refund_policy" style="color:#e91e63; text-decoration:none;">Return Policy</a> for full details.</p>
+    <p>If your order arrives damaged or incorrect, please contact us within 3 days of delivery. Read our 
+      <a href="/refund_policy" style="color:#e91e63; text-decoration:none;">Return Policy</a> for full details.</p>
 
     <h2>6. Privacy & Data Protection</h2>
-    <p>Your personal information is collected only for order processing and communication purposes. For more details, please check our <a href="/privacy_policy" style="color:#e91e63; text-decoration:none;">Privacy Policy</a>.</p>
+    <p>Your personal information is collected only for order processing and communication purposes. For more details, please check our 
+      <a href="/privacy_policy" style="color:#e91e63; text-decoration:none;">Privacy Policy</a>.</p>
 
     <h2>7. Contact Information</h2>
-    <p>For any inquiries regarding our terms, products, or services, please reach out to us through the <a href="/contact" style="color:#e91e63; text-decoration:none;">Contact Page</a>.</p>
+    <p>For any inquiries regarding our terms, products, or services, please reach out to us through the 
+      <a href="/contact" style="color:#e91e63; text-decoration:none;">Contact Page</a>.</p>
   </div>
 
-  <!-- Footer -->
+  <!-- 🌸 Footer -->
   <footer>
     © 2025 AREEZ FRAGRANCE — Crafted with elegance & love.
   </footer>
+
+  <script>
+    function toggleMenu() {
+      document.getElementById("nav-links").classList.toggle("show");
+    }
+  </script>
 </body>
 </html>
