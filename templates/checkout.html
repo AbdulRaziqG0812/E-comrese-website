@@ -173,7 +173,8 @@
 
     .order-item span {
       flex: 1;
-      color: #333;
+      font-size: large;
+      color: #000000;
     }
 
     .order-total {
@@ -181,6 +182,7 @@
       font-weight: 600;
       color: #e91e63;
       margin-top: 10px;
+      font-size: large;
     }
 
     .payment-box p {
@@ -457,7 +459,7 @@
     <ul id="nav-links">
       <li><a href="/">Home</a></li>
       <li><a href="/shop">Shop</a></li>
-      <li><a href="/cart"><i class="fa-solid fa-cart-shopping"></i></a></li>
+      <li><a href="/contact">Contact</a></li>
     </ul>
   </nav>
 
@@ -583,14 +585,18 @@
   const summary = document.getElementById("orderSummary");
   const itemsInput = document.getElementById("itemsInput");
 
+  const SHIPPING = 250;
+
   if (cart.length === 0) {
     summary.innerHTML = "<p style='text-align:center;color:#777;'>Your cart is empty.</p>";
   } else {
-    let total = 0;
+    let productTotal = 0;
 
     summary.innerHTML = "<h3>Order Summary</h3>";
+
     cart.forEach(item => {
-      total += item.price * item.quantity;
+      productTotal += item.price * item.quantity;
+
       summary.innerHTML += `
         <div class='order-item'>
           <img src="${item.image}" alt="${item.name}">
@@ -600,14 +606,24 @@
       `;
     });
 
+    // 🚚 SHIPPING ROW
     summary.innerHTML += `
       <div class='order-item'>
         <span>Shipping</span>
-        <span style='color:#28a745;'>Free</span>
+        <span>₨ ${SHIPPING}</span>
       </div>
-      <div class='order-total'>Total: ₨ ${total.toFixed(2)}</div>
     `;
 
+    // 💰 TOTAL
+    const grandTotal = productTotal + SHIPPING;
+
+    summary.innerHTML += `
+      <div class='order-total'>
+        Total: ₨ ${grandTotal.toFixed(2)}
+      </div>
+    `;
+
+    // 📦 SEND TO BACKEND
     itemsInput.value = JSON.stringify(cart);
   }
 
@@ -615,29 +631,43 @@
   const modal = document.getElementById("orderModal");
   const orderIdDisplay = document.getElementById("orderIdDisplay");
   const span = document.getElementsByClassName("close")[0];
+
   span.onclick = () => modal.style.display = "none";
-  window.onclick = e => { if (e.target == modal) modal.style.display = "none"; }
+
+  window.onclick = e => {
+    if (e.target == modal) modal.style.display = "none";
+  };
 
   // ✅ Form Submit Logic
   document.getElementById("checkoutForm").addEventListener("submit", async e => {
     e.preventDefault();
-    if (cart.length === 0) return alert("🛒 Your cart is empty!");
+
+    if (cart.length === 0) {
+      return alert("🛒 Your cart is empty!");
+    }
 
     const formData = new FormData(e.target);
-    const response = await fetch("/checkout", { method: "POST", body: formData });
+
+    const response = await fetch("/checkout", {
+      method: "POST",
+      body: formData
+    });
 
     if (response.ok) {
       const data = await response.json();
-      // Show modal after successful checkout
-      orderIdDisplay.textContent = data.order_id;
+
+      // 🎉 Show modal with order ID
+      orderIdDisplay.textContent = "Order ID: " + data.order_id;
       modal.style.display = "flex";
+
+      // 🧹 Clear cart
       localStorage.removeItem("cart");
     } else {
       alert("⚠️ Something went wrong. Please try again.");
     }
   });
 
-  // ✅ Toggle Menu Logic (Mobile Navigation)
+  // 🍔 Toggle Menu Logic
   const toggle = document.getElementById("menu-toggle");
   const navLinks = document.getElementById("nav-links");
 

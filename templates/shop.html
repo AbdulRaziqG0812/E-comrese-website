@@ -124,6 +124,12 @@ ul li a:hover::after {
   transform: scale(1.05);
 }
 
+.menu-toggle{
+  display:none;
+  font-size:28px;
+  cursor:pointer;
+}
+
 /* 🛒 CART ICON */
 .cart-icon {
   position: relative;
@@ -464,6 +470,30 @@ footer p {
     align-items: center;
     padding: 12px 20px;
     gap: 10px;
+    position: relative;
+    color: #e91e63;
+  }
+
+  .menu-toggle{
+    display:block;
+    position:absolute;
+    right:20px;
+    top:15px;
+  }
+
+  /* hide menu by default */
+  .nav-links,
+  nav ul{
+    display:none;
+    flex-direction:column;
+    width:100%;
+    text-align:center;
+  }
+
+  /* show when active */
+  .nav-links.active,
+  nav ul.active{
+    display:flex;
   }
 
   .logo {
@@ -539,7 +569,7 @@ footer p {
   }
 
   .logo {
-    font-size: 18px;
+    font-size: 25px;
   }
 
   ul {
@@ -613,7 +643,6 @@ footer p {
   .modal-body {
     display: block;
   }
-}
 
   .modal-details h3 {
     font-size: 1.1rem;
@@ -667,26 +696,37 @@ footer p {
 
 <body>
   <!-- 🌸 Navbar -->
-  <nav>
-    <div class="logo">AREEZ FRAGRANCE</div>
-    <div class="nav-controls">
-      <div class="nav-search">
-        <input type="text" id="search-input" placeholder="Search perfumes..." onkeyup="searchProducts()" />
-        <button><i class="fa fa-search"></i></button>
-      </div>
+<nav>
+
+  <div class="logo">AREEZ FRAGRANCE</div>
+
+  <!-- Toggle Button -->
+  <div class="menu-toggle" id="menu-toggle">
+    ☰
+  </div>
+
+  <div class="nav-controls">
+    <div class="nav-search">
+      <input type="text" id="search-input" placeholder="Search perfumes..." onkeyup="searchProducts()" />
+      <button><i class="fa fa-search"></i></button>
     </div>
-    <ul>
-      <li><a href="/">Home</a></li>
-      <li><a href="/shop">Shop</a></li>
-      <li><a href="/contact">Contact</a></li>
-      <li>
-        <a href="/cart" class="cart-icon" id="cart-icon">
-          <i class="fa-solid fa-cart-shopping"></i>
-          <span class="cart-badge" id="cart-count">0</span>
-        </a>
-      </li>
-    </ul>
-  </nav>
+  </div>
+
+  <ul class="nav-links" id="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/shop">Shop</a></li>
+    <li><a href="/contact">Contact</a></li>
+
+    <li>
+      <a href="/cart" class="cart-icon" id="cart-icon">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span class="cart-badge" id="cart-count">0</span>
+      </a>
+    </li>
+
+  </ul>
+
+</nav>
 
   <!-- 💎 Header -->
   <section class="shop-header">
@@ -883,6 +923,13 @@ footer p {
   }
 
   updateCartCount();
+
+const toggle = document.getElementById("menu-toggle");
+const nav = document.getElementById("nav-links");
+
+toggle.addEventListener("click", () => {
+  nav.classList.toggle("active");
+});
 </script>
 
 </body>

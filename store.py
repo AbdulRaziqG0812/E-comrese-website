@@ -2,9 +2,21 @@ from flask import Flask, abort, jsonify, render_template, request, redirect, ses
 import os, time, random, string, json
 from werkzeug.utils import secure_filename
 import mysql.connector
+from flask_mail import Mail, Message
+
 
 app = Flask(__name__)
 app.secret_key = "112233"
+
+
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+
+app.config['MAIL_USERNAME'] = 'areezfragrances@gmail.com'
+app.config['MAIL_PASSWORD'] = 'vzkh wcnl hiqh xyyu'  # 👈 yahan app password paste karo
+
+mail = Mail(app)
 
 # -----------------------------
 # Config
@@ -626,7 +638,8 @@ def open_image(id):
 @app.route('/checkout', methods=['GET', 'POST'])
 def checkout():
     if request.method == 'POST':
-        # 🧾 Customer Details
+
+        # 🧾 CUSTOMER DATA
         name = request.form.get('name')
         email = request.form.get('email')
         phone = request.form.get('phone')
@@ -636,58 +649,179 @@ def checkout():
         address = request.form.get('address')
         payment_method = "Cash on Delivery"
 
-        # 🛒 Cart Items
+        # 🛒 ITEMS
         items_json = request.form.get('items')
+
         try:
             items = json.loads(items_json)
         except:
             items = []
 
-        total = sum([float(item['price']) * int(item['quantity']) for item in items]) if items else 0
+        # 💰 CALCULATIONS
+        product_total = sum(float(i['price']) * int(i['quantity']) for i in items)
+        shipping = 250
+        total = product_total + shipping
 
         conn = get_db()
         cursor = conn.cursor(dictionary=True)
 
         try:
-            # ✅ Check stock & update perfumes
+            # 🔍 STOCK CHECK + UPDATE
             for item in items:
-                cursor.execute("SELECT id, stock FROM perfumes WHERE name=%s", (item['name'],))
+                cursor.execute(
+                    "SELECT id, stock FROM perfumes WHERE name=%s",
+                    (item['name'],)
+                )
                 perfume = cursor.fetchone()
+
                 if not perfume:
                     conn.rollback()
-                    return jsonify({"error": f"Product '{item['name']}' not found."}), 400
+                    return jsonify({"error": f"{item['name']} not found"}), 400
 
                 if perfume['stock'] < int(item['quantity']):
                     conn.rollback()
-                    return jsonify({"error": f"Not enough stock for {item['name']}. Only {perfume['stock']} left."}), 400
+                    return jsonify({"error": f"Not enough stock for {item['name']}"}), 400
 
                 cursor.execute(
                     "UPDATE perfumes SET stock=%s WHERE id=%s",
                     (perfume['stock'] - int(item['quantity']), perfume['id'])
                 )
 
-            # ✅ Insert order
+            # 💾 INSERT ORDER
             cursor.execute("""
                 INSERT INTO orders 
                 (user_name, email, phone, city, country, postal, address, items, total, payment_method)
                 VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
-            """, (name, email, phone, city, country, postal, address, json.dumps(items), total, payment_method))
+            """, (
+                name, email, phone, city, country, postal, address,
+                json.dumps(items), total, payment_method
+            ))
 
             conn.commit()
-            order_id = cursor.lastrowid  # <-- get the newly generated Order ID
+            order_id = cursor.lastrowid
 
         except Exception as e:
             conn.rollback()
-            return jsonify({"error": f"Error placing order: {str(e)}"}), 500
+            return jsonify({"error": str(e)}), 500
+
         finally:
             cursor.close()
             conn.close()
 
-        # ✅ Return JSON for modal
-        return jsonify({"order_id": order_id})
+        # 📧 EMAIL (PROFESSIONAL HTML)
+        try:
 
-    # GET request
-    return render_template('checkout.html')
+            items_html = ""
+
+            for item in items:
+                item_total = float(item['price']) * int(item['quantity'])
+
+                items_html += f"""
+                <div style="display:flex;align-items:center;gap:15px;
+                            padding:12px;border-bottom:1px solid #eee;">
+
+                    <img src="{item['image']}" 
+                         style="width:65px;height:65px;border-radius:10px;
+                         object-fit:cover;border:1px solid #ddd;">
+
+                    <div style="flex:1;">
+                        <div style="font-weight:bold;color:#333;">
+                            {item['name']}
+                        </div>
+                        <div style="font-size:13px;color:#777;">
+                            Qty: {item['quantity']} | Price: PKR {item['price']}
+                        </div>
+                    </div>
+
+                    <div style="font-weight:bold;color:#e91e63;">
+                        PKR {item_total}
+                    </div>
+
+                </div>
+                """
+
+            msg = Message(
+                subject=f"Order Confirmation #{order_id} - AREEZ FRAGRANCE",
+                sender=app.config['MAIL_USERNAME'],
+                recipients=[email]
+            )
+
+            msg.html = f"""
+            <div style="font-family:Arial;background:#f7f7f7;padding:20px;">
+
+              <div style="max-width:750px;margin:auto;background:#fff;
+                          border-radius:12px;overflow:hidden;
+                          box-shadow:0 5px 20px rgba(0,0,0,0.1);">
+
+                <!-- HEADER -->
+                <div style="background:#e91e63;color:white;
+                            text-align:center;padding:20px;">
+                    <h2 style="margin:0;">AREEZ FRAGRANCE</h2>
+                    <p style="margin:5px 0;">Order Confirmation</p>
+                </div>
+
+                <!-- BODY -->
+                <div style="padding:20px;">
+
+                    <p>Hi <b>{name}</b>, your order is confirmed 🎉 ,we're getting your order ready for shipment.
+                    this order will be shipped 3–5 business days, depending on your location.
+                    All orders are processed within 24 hours and tracked until safely delivered to your doorstep.</p>
+
+                    <h3 style="color:#e91e63;">🧾 Order Summary</h3>
+
+                    {items_html}
+
+                    <!-- SUMMARY -->
+                    <div style="margin-top:20px;padding:15px;
+                                background:#fff0f5;border-radius:10px;">
+
+                        <p><b>🚚 Shipping:</b> PKR {shipping}</p>
+                        <p><b>🛍 Product Total:</b> PKR {product_total}</p>
+
+                        <hr>
+
+                        <h2 style="color:#e91e63;">
+                            Grand Total: PKR {total}
+                        </h2>
+
+                    </div>
+
+                    <!-- CUSTOMER INFO -->
+                    <div style="margin-top:20px;font-size:14px;color:#444;">
+                        <p><b>📍 Address:</b> {address}</p>
+                        <p><b>city:</b> {city}</p>
+                        <p><b>country:</b> {country}</p>
+                        <p><b>📞 Phone:</b> {phone}</p>
+                        <p><b>💳 Payment:</b> Cash on Delivery</p>
+                    </div>
+
+                    <p style="margin-top:20px;">
+                        Thank you for shopping with 
+                        <b>AREEZ FRAGRANCE ❤️</b>
+                    </p>
+
+                    <p style="margin-top:20px;">
+                        If You Have Any Questions, Reply To This Mail OR  Contact Us At Whatsapp
+                        <b>+92 302 9389451</b>
+                    </p>
+
+                </div>
+              </div>
+            </div>
+            """
+
+            mail.send(msg)
+
+        except Exception as e:
+            print("Email error:", e)
+
+        return jsonify({
+            "order_id": order_id,
+            "total": total,
+            "shipping": shipping
+        })
+
+    return render_template("checkout.html")
 
 
 # -----------------------------
