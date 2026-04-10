@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, render_template, request, redirect, session, url_for, flash
+from flask import Flask, abort, jsonify, render_template, request, redirect, session, url_for, flash
 import os, time, random, string, json
 from werkzeug.utils import secure_filename
 import mysql.connector
@@ -600,6 +600,26 @@ def shop():
 
 
 # -----------------------------
+# open image route
+# -----------------------------
+
+@app.route('/open_image/<int:id>')
+def open_image(id):
+    conn = get_db()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM perfumes WHERE id = %s", (id,))
+    perfume = cursor.fetchone()
+    cursor.close()
+    conn.close()
+
+    if not perfume:
+        abort(404)
+
+    # Agar aapke paas extra images alag table me hain, to yahan join bhi kar sakte ho
+    return render_template('open_image.html', perfume=perfume)
+
+
+# -----------------------------
 # User Checkout Route
 # -----------------------------
 
@@ -722,7 +742,7 @@ def shipping_policy():
 # -----------------------------
 
 if __name__ == '__main__':
-    app.run(host="192.168.100.23", port=5600, debug=True)
-    # app.run(debug=True)
+    # app.run(host="192.168.100.23", port=5600, debug=True)
+    app.run(debug=True)
 
 

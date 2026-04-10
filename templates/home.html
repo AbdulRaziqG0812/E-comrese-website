@@ -192,6 +192,17 @@ footer {
 .social-links a:hover { transform: scale(1.2); }
 footer hr { margin: 40px auto; border: 0.5px solid #ccc; width: 90%; }
 footer p { margin-top: 15px; font-size: 0.9rem; text-align: center; }
+
+    /* Floating WhatsApp Custom */
+    .wa-float {
+      position: fixed; bottom: 30px; right: 30px;
+      background: #25d366; color: white; width: 60px; height: 60px;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 32px; box-shadow: 0 10px 25px rgba(37, 211, 102, 0.3);
+      z-index: 999; transition: all 0.3s ease;
+    }
+    .wa-float:hover { transform: translateY(-5px) scale(1.05); }
+
 /* 📱 RESPONSIVE MEDIA QUERIES */
 
 /* 💻 Tablets (portrait) — FIXED */
@@ -596,26 +607,36 @@ footer p { margin-top: 15px; font-size: 0.9rem; text-align: center; }
   </div>
 </section>
 
-<!-- 👔 Men’s Perfume -->
 <section class="products">
   <h2>Men’s Perfumes</h2>
   <div class="product-grid">
     {% for perfume in perfumes if perfume.category == 'Men' %}
       {% if loop.index <= 4 %}
         <div class="product-card">
-          <img src="{{ url_for('static', filename=perfume.image) }}" alt="{{ perfume.name }}">
+          
+          <a href="{{ url_for('open_image', id=perfume.id) }}">
+            <img src="{{ url_for('static', filename=perfume.image) }}" 
+                 alt="{{ perfume.name }}"
+                 onerror="this.onerror=null; this.src='https://via.placeholder.com/270x240?text=Image+Not+Found';">
+          </a>
+
           <div class="product-info">
             <h3>{{ perfume.name }}</h3>
-              <div class="price-box">
-                <span class="old-price">PKR {{ perfume.sale_price + 1000 }}</span>
-                <span class="price">PKR {{ perfume.sale_price }}</span>
-              </div>
-            <a href="{{ url_for('shop') }}"><button>Shop Now</button></a>
+            <div class="price-box">
+              <span class="old-price">PKR {{ perfume.sale_price + 1000 }}</span>
+              <span class="price">PKR {{ perfume.sale_price }}</span>
+            </div>
+            
+            <a href="{{ url_for('open_image', id=perfume.id) }}">
+              <button>Shop Now</button>
+            </a>
           </div>
+
         </div>
       {% endif %}
     {% endfor %}
   </div>
+</section>
 
   <!-- 🛍️ View All Button -->
   <div style="text-align:center;">
@@ -623,56 +644,41 @@ footer p { margin-top: 15px; font-size: 0.9rem; text-align: center; }
   </div>
 </section>
 
-<!-- 🔥 Most Selling (Men) -->
-<section class="signature">
-  <h2>🔥 Most Selling (Men)</h2>
-  <div class="signature-content">
-    <img src="{{ url_for('static', filename='sauvage.jpg') }}" alt="Legend Oud">
-    <div class="signature-text">
-      <h3>Legend Oud</h3>
-      <p>Rich woody aroma crafted for men with confidence and style. A bold and timeless fragrance that defines power.</p>
-      <a href="{{ url_for('shop') }}"><button>Shop Now</button></a>
-    </div>
-  </div>
-</section>
 
-<!-- 💐 Women’s Perfume -->
 <section class="products">
   <h2>Women’s Perfumes</h2>
   <div class="product-grid">
     {% for perfume in perfumes if perfume.category == 'Women' %}
       {% if loop.index <= 4 %}
         <div class="product-card">
-          <img src="{{ url_for('static', filename=perfume.image) }}" alt="{{ perfume.name }}">
+          
+          <a href="{{ url_for('open_image', id=perfume.id) }}">
+            <img src="{{ url_for('static', filename=perfume.image) }}" 
+                 alt="{{ perfume.name }}"
+                 onerror="this.onerror=null; this.src='https://via.placeholder.com/270x240?text=Image+Not+Found';">
+          </a>
+
           <div class="product-info">
             <h3>{{ perfume.name }}</h3>
-              <div class="price-box">
-                <span class="old-price">PKR {{ perfume.sale_price + 1000 }}</span>
-                <span class="price">PKR {{ perfume.sale_price }}</span>
-              </div>
-            <a href="{{ url_for('shop') }}"><button>Shop Now</button></a>
+            <div class="price-box">
+              <span class="old-price">PKR {{ perfume.sale_price + 1000 }}</span>
+              <span class="price">PKR {{ perfume.sale_price }}</span>
+            </div>
+            
+            <a href="{{ url_for('open_image', id=perfume.id) }}">
+              <button>Shop Now</button>
+            </a>
           </div>
+
         </div>
       {% endif %}
     {% endfor %}
   </div>
+</section>
 
   <!-- 🛍️ View All Button -->
   <div style="text-align:center;">
     <a href="{{ url_for('shop') }}" class="view-all-btn">View All Women’s Perfumes →</a>
-  </div>
-</section>
-
-<!-- 💖 Most Selling (Women) -->
-<section class="signature">
-  <h2>💖 Most Selling (Women)</h2>
-  <div class="signature-content">
-    <img src="{{ url_for('static', filename='flora.webp') }}" alt="Floral Desire">
-    <div class="signature-text">
-      <h3>Floral Desire</h3>
-      <p>Soft floral blend for a charming and feminine personality. A sweet, elegant, and everlasting scent of romance.</p>
-      <a href="{{ url_for('shop') }}"><button>Shop Now</button></a>
-    </div>
   </div>
 </section>
 
@@ -704,6 +710,10 @@ footer p { margin-top: 15px; font-size: 0.9rem; text-align: center; }
   <p>© 2025 AREEZ FRAGRANCE — Crafted with elegance & love.</p>
 </footer>
 
+  <a href="https://wa.me/923029389451" target="_blank" class="wa-float">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+  
 <script>
 function openModal() {
   document.getElementById('orderModal').style.display = 'flex';

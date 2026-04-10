@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{ perfume.name }} — AREEZ FRAGRANCE</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            pink: {
+              50: '#fdf2f8',
+              100: '#fce7f3',
+              200: '#fbcfe8',
+              500: '#ec4899',
+              600: '#db2777',
+              700: '#be185d',
+            }
+          },
+          fontFamily: {
+            sans: ['Poppins', 'Inter', 'ui-sans-serif', 'system-ui'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background-color: #fffdfd; -webkit-font-smoothing: antialiased; }
+
+    /* Premium Image Hover */
+    .product-zoom-container { overflow: hidden; position: relative; border-radius: 1rem; }
+    .product-zoom { transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1); }
+    .product-zoom-container:hover .product-zoom { transform: scale(1.1); }
+
+    .thumb-active { border: 2px solid #ec4899 !important; padding: 2px; border-radius: 8px; }
+
+    /* Floating WhatsApp Custom */
+    .wa-float {
+      position: fixed; bottom: 30px; right: 30px;
+      background: #25d366; color: white; width: 60px; height: 60px;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 32px; box-shadow: 0 10px 25px rgba(37, 211, 102, 0.3);
+      z-index: 999; transition: all 0.3s ease;
+    }
+    .wa-float:hover { transform: translateY(-5px) scale(1.05); }
+
+    /* Footer Styling */
+    footer { background: #fdf2f8; border-top: 1px solid #fce7f3; }
+    .footer-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; padding: 60px 20px; max-width: 1200px; margin: 0 auto; }
+    .footer-container h3 { font-size: 18px; font-weight: 700; color: #db2777; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; }
+    .footer-container a { display: block; color: #6b7280; text-decoration: none; margin-bottom: 12px; transition: color 0.3s; font-size: 14px; }
+    .footer-container a:hover { color: #ec4899; }
+    .social-links { display: flex; gap: 15px; margin-top: 15px; }
+    .social-links a { font-size: 20px; width: 40px; height: 40px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+  </style>
+</head>
+
+<body class="font-sans text-gray-900">
+
+  <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-pink-100 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-2 group">
+        <div class="h-10 w-10 bg-gradient-to-tr from-pink-600 to-pink-400 rounded-lg flex items-center justify-center text-white font-bold shadow-pink-200 shadow-lg">A</div>
+        <span class="font-bold text-xl tracking-tighter uppercase text-gray-800">Areez <span class="text-pink-500">Fragrance</span></span>
+      </a>
+      
+      <nav class="flex items-center gap-8">
+        <a href="/" class="text-sm font-semibold hover:text-pink-500 transition hidden md:block">Home</a>
+        <a href="/shop" class="text-sm font-semibold hover:text-pink-500 transition hidden md:block">Shop</a>
+        <a href="/cart" class="relative p-2 bg-pink-50 rounded-full text-pink-600">
+          <i class="fa-solid fa-cart-shopping text-lg"></i>
+          <span id="cart-count-header" class="absolute -top-1 -right-1 bg-pink-600 text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full border-2 border-white font-bold">0</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 py-8">
+    <div class="bg-white rounded-3xl shadow-xl shadow-pink-50/50 border border-gray-100 overflow-hidden lg:flex">
+      
+      <div class="lg:w-1/2 p-4 md:p-8 bg-white flex flex-col items-center">
+        <div class="product-zoom-container bg-gray-50 w-full flex justify-center items-center h-[450px] md:h-[550px] relative">
+          <span class="absolute top-5 left-5 bg-pink-600 text-white text-xs font-bold px-4 py-1.5 rounded-full z-10 shadow-lg uppercase tracking-widest">Premium Choice</span>
+          <img id="mainImage" 
+               src="{{ url_for('static', filename=perfume.image) }}" 
+               class="product-zoom h-full object-contain p-10"
+               alt="{{ perfume.name }}">
+        </div>
+        
+        <div class="flex gap-4 mt-6">
+           <img src="{{ url_for('static', filename=perfume.image) }}" 
+                class="w-20 h-20 rounded-xl border-2 border-transparent bg-gray-50 cursor-pointer thumb-active shadow-sm" 
+                onclick="changeImage(this.src, this)">
+        </div>
+      </div>
+
+      <div class="lg:w-1/2 p-8 md:p-12 flex flex-col">
+        <div class="mb-auto">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-pink-600 font-bold text-xs uppercase tracking-widest bg-pink-50 px-3 py-1 rounded-full">{{ perfume.category or 'Luxury Collection' }}</span>
+            <div class="flex text-yellow-400 text-[10px]">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+            </div>
+          </div>
+          
+          <h1 class="text-3xl md:text-5xl font-extrabold mt-2 text-gray-900 leading-tight">{{ perfume.name }}</h1>
+          
+          <div class="mt-6 flex items-baseline gap-4">
+            <span class="text-4xl font-black text-pink-600 italic">Rs. {{ perfume.sale_price }}</span>
+            <span class="text-xl text-gray-300 line-through">Rs. {{ perfume.sale_price + 1000 }}</span>
+          </div>
+
+          <div class="mt-8">
+            <h3 class="text-sm font-bold uppercase tracking-widest text-gray-400 mb-3 underline decoration-pink-200 underline-offset-8">The Fragrance Story</h3>
+            <p class="text-gray-600 leading-relaxed text-md font-medium">
+              {{ perfume.description or 'A masterpiece designed for those who seek elegance. This fragrance opens with refreshing notes and settles into a warm, lingering embrace.' }}
+            </p>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4 mt-8">
+            <div class="flex items-center gap-3 p-3 bg-pink-50 rounded-2xl">
+                <i class="fa-solid fa-clock-rotate-left text-pink-500"></i>
+                <span class="text-xs font-bold text-pink-700 uppercase">12+ Hours Stay</span>
+            </div>
+            <div class="flex items-center gap-3 p-3 bg-pink-50 rounded-2xl">
+                <i class="fa-solid fa-leaf text-pink-500"></i>
+                <span class="text-xs font-bold text-pink-700 uppercase">Pure Essence</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-12 space-y-4">
+          <div class="flex items-center gap-4">
+            <div class="flex items-center border-2 border-pink-100 rounded-2xl overflow-hidden h-16 bg-white">
+              <button onclick="changeQty(-1)" class="px-5 hover:bg-pink-50 text-pink-600 text-xl font-bold transition">-</button>
+              <input id="qty" type="number" value="1" min="1" class="w-12 text-center border-none focus:ring-0 font-bold text-lg">
+              <button onclick="changeQty(1)" class="px-5 hover:bg-pink-50 text-pink-600 text-xl font-bold transition">+</button>
+            </div>
+            
+            <button id="addToCartBtn" class="flex-1 bg-gray-900 hover:bg-black text-white h-16 rounded-2xl font-bold uppercase tracking-widest transition-all shadow-xl active:scale-95">
+               Add to Bag
+            </button>
+          </div>
+          
+          <button id="buyNowBtn" class="w-full bg-gradient-to-r from-pink-600 to-pink-500 hover:from-pink-700 hover:to-pink-600 text-white h-16 rounded-2xl font-bold uppercase tracking-widest transition-all shadow-lg shadow-pink-200 active:scale-95">
+             Buy It Now
+          </button>
+        </div>
+
+        <div class="mt-8 flex justify-between border-t border-gray-100 pt-6">
+            <div class="text-center">
+                <i class="fa-solid fa-truck text-gray-300 mb-1"></i>
+                <p class="text-[9px] uppercase font-bold text-gray-400">Cash On Delivery Available </p>
+            </div>
+            <div class="text-center">
+                <i class="fa-solid fa-shield-check text-gray-300 mb-1"></i>
+                <p class="text-[9px] uppercase font-bold text-gray-400">Authentic</p>
+            </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-container">
+      <div>
+        <h3>Customer Support</h3>
+        <a href="/shipping_policy">Shipping Policy</a>
+        <a href="/refund_policy">Refund Policy</a>
+        <a href="/privacy_policy">Privacy Policy</a>
+        <a href="/terms_of_service">Terms of Service</a>
+        <a href="/contact">Contact Us</a>
+      </div>
+      <div>
+        <h3>About AREEZ</h3>
+        <p class="text-gray-500 text-sm leading-loose">
+          Areez Fragrance is your destination for premium, high-quality scents. 
+          We believe in purity, elegance, and luxury that is accessible to all. 
+          Experience timeless fragrances crafted for perfection.
+        </p>
+      </div>
+      <div>
+        <h3>Follow Our Journey</h3>
+        <p class="text-gray-400 text-xs mb-4">Stay updated with our latest collections.</p>
+        <div class="social-links">
+            <a href="https://www.tiktok.com/@areez.fragrances" target="_blank" style="color:#000;"><i class="fab fa-tiktok"></i></a>
+            <a href="https://www.instagram.com/areezfragrances812" target="_blank" style="color:#E1306C;"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.facebook.com/areezfragrances812" target="_blank" style="color:#1877F2;"><i class="fab fa-facebook"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="max-w-7xl mx-auto px-4">
+        <hr class="border-pink-100">
+        <div class="py-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p class="text-gray-500 text-xs">© 2026 AREEZ FRAGRANCE — Crafted with elegance & love.</p>
+            <div class="flex gap-4 opacity-50 grayscale">
+                <i class="fa-brands fa-cc-visa text-2xl"></i>
+                <i class="fa-brands fa-cc-mastercard text-2xl"></i>
+                <span class="text-[10px] font-black border border-gray-400 px-1 rounded">COD</span>
+            </div>
+        </div>
+    </div>
+  </footer>
+
+  <a href="https://wa.me/923029389451" target="_blank" class="wa-float">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+
+  <script>
+    function changeQty(val) {
+      const input = document.getElementById('qty');
+      let current = parseInt(input.value);
+      if (current + val >= 1) input.value = current + val;
+    }
+
+    function changeImage(src, el) {
+      const mainImg = document.getElementById('mainImage');
+      mainImg.style.opacity = '0';
+      setTimeout(() => {
+        mainImg.src = src;
+        mainImg.style.opacity = '1';
+      }, 200);
+      document.querySelectorAll('.thumb-active').forEach(t => t.classList.remove('thumb-active'));
+      el.classList.add('thumb-active');
+    }
+
+    function updateCount() {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const total = cart.reduce((acc, item) => acc + item.quantity, 0);
+      document.getElementById('cart-count-header').textContent = total;
+    }
+    updateCount();
+
+    const product = {
+      name: {{ perfume.name|tojson }},
+      price: {{ perfume.sale_price }},
+      image: {{ url_for('static', filename=perfume.image)|tojson }}
+    };
+
+    document.getElementById('addToCartBtn').onclick = function() {
+      const qty = parseInt(document.getElementById('qty').value);
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+      let found = cart.find(i => i.name === product.name);
+      if(found) found.quantity += qty;
+      else cart.push({...product, quantity: qty});
+      
+      localStorage.setItem('cart', JSON.stringify(cart));
+      updateCount();
+      
+      this.innerText = "ADDED TO BAG ✓";
+      this.classList.add('bg-pink-600');
+      setTimeout(() => {
+        this.innerText = "ADD TO BAG";
+        this.classList.remove('bg-pink-600');
+      }, 2000);
+    };
+
+    document.getElementById('buyNowBtn').onclick = function() {
+      document.getElementById('addToCartBtn').click();
+      window.location.href = '/cart';
+    };
+  </script>
+
+</body>
+</html>

@@ -322,6 +322,17 @@
       color: #e91e63;
       cursor: pointer;
     }
+
+        /* Floating WhatsApp Custom */
+    .wa-float {
+      position: fixed; bottom: 30px; right: 30px;
+      background: #25d366; color: white; width: 60px; height: 60px;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 32px; box-shadow: 0 10px 25px rgba(37, 211, 102, 0.3);
+      z-index: 999; transition: all 0.3s ease;
+    }
+    .wa-float:hover { transform: translateY(-5px) scale(1.05); }
+    
 /* 📱 Responsive Design */
 @media (max-width: 768px) {
   nav {
@@ -450,7 +461,7 @@
     </ul>
   </nav>
 
-  <div class="banner">🎁 Free Shipping & Cash on Delivery Available</div>
+  <div class="banner"><i class="fa-solid fa-truck text-gray-300 mb-1"></i> Cash on Delivery Available</div>
 
   <div class="checkout-container">
     <h2>Checkout</h2>
@@ -482,8 +493,7 @@
         <div class="form-group">
           <label>Country</label>
           <select name="country" id="country" required>
-            <option value="">Select Country</option>
-            <option value="Pakistan">Pakistan</option>
+            <option value="Pakistan">Pakistan </option>
           </select>
         </div>
         <div class="form-group">
@@ -562,6 +572,10 @@
     <hr>
     <p>© 2025 AREEZ FRAGRANCE — Crafted with elegance & love.</p>
   </footer>
+
+  <a href="https://wa.me/923029389451" target="_blank" class="wa-float">
+    <i class="fab fa-whatsapp"></i>
+  </a>
 
 <script>
   // ✅ Load Cart Summary
