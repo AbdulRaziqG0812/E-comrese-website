@@ -627,9 +627,7 @@ footer p { margin-top: 15px; font-size: 0.9rem; text-align: center; }
               <span class="price">PKR {{ perfume.sale_price }}</span>
             </div>
             
-            <a href="{{ url_for('open_image', id=perfume.id) }}">
-              <button>Shop Now</button>
-            </a>
+            <a href="{{ url_for('shop') }}"><button>Shop Now</button></a>
           </div>
 
         </div>
@@ -665,11 +663,8 @@ footer p { margin-top: 15px; font-size: 0.9rem; text-align: center; }
               <span class="price">PKR {{ perfume.sale_price }}</span>
             </div>
             
-            <a href="{{ url_for('open_image', id=perfume.id) }}">
-              <button>Shop Now</button>
-            </a>
+            <a href="{{ url_for('shop') }}"><button>Shop Now</button></a>
           </div>
-
         </div>
       {% endif %}
     {% endfor %}

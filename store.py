@@ -55,7 +55,7 @@ def home():
     perfumes = cursor.fetchall()
     cursor.close()
     conn.close()
-    return render_template('home.html', perfumes=perfumes)
+    return render_template('index.html', perfumes=perfumes)
 
 
 # -----------------------------
