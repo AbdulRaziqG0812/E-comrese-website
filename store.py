@@ -3,7 +3,9 @@ import os, time, random, string, json
 from werkzeug.utils import secure_filename
 import mysql.connector
 from flask_mail import Mail, Message
-
+from dotenv import load_dotenv
+import os
+load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = "112233"
@@ -29,10 +31,10 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
 DB_CONFIG = {
     'host': 'mysql-3faadde-abdul-5d9a.l.aivencloud.com',
     'user': 'avnadmin',
-    'password': 'AVNS_IIPCeuzy-mR7H169Vk_', # Aiven console se password copy karke yahan lagayein
+    'password': os.getenv('AIVEN_DB_PASSWORD'),  # Yeh automatic .env file se password utha lega
     'database': 'defaultdb',
     'port': 20379,
-    'ssl_disabled': False  # Yeh mysql.connector ko batata hai ke secure connection use karna hai
+    'ssl_disabled': False
 }
 
 DEFAULT_IMAGE = 'uploads/default.jpg'
