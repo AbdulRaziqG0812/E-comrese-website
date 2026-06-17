@@ -739,6 +739,7 @@ footer p {
     <button class="active" onclick="filterCategory('all', this)">All</button>
     <button onclick="filterCategory('Men', this)">Men</button>
     <button onclick="filterCategory('Women', this)">Women</button>
+    <button onclick="filterCategory('Unisex', this)">Unisex</button>
   </div>
 
 <!-- 🧴 MEN Section -->
@@ -816,6 +817,43 @@ footer p {
     {% endfor %}
   </div>
 </section>
+
+<section class="product-section">
+  <h2>Unisex Collection</h2>
+  <div class="product-grid">
+    {% for perfume in perfumes if perfume.category == 'Unisex' %}
+    <div class="product-card" data-category="Unisex">
+      {% if perfume.stock > 0 %}
+        <span class="badge">SALE</span>
+      {% else %}
+        <span class="badge soldout">SOLD OUT</span>
+      {% endif %}
+      <div class="stock">
+        <i class="fa-solid fa-box"></i> {{ perfume.stock }}
+      </div>
+
+      <a href="{{ url_for('open_image', id=perfume.id) }}">
+        <img src="{{ url_for('static', filename=perfume.image) }}"
+             alt="{{ perfume.name }}"
+             onerror="this.onerror=null; this.src='https://via.placeholder.com/270x240?text=Image+Not+Found';">
+      </a>
+
+      <div class="product-info">
+        <h3>{{ perfume.name }}</h3>
+        <div>
+          <span class="old-price">PKR {{ perfume.sale_price + 1000 }}</span>
+          <span class="price">PKR {{ perfume.sale_price }}</span>
+        </div>
+        <button onclick="addToCartWithAnim(this, '{{ perfume.name }}', {{ perfume.sale_price }}, '{{ url_for('static', filename=perfume.image) }}')"
+          {% if perfume.stock == 0 %}disabled{% endif %}>
+          {% if perfume.stock == 0 %}Sold Out{% else %}Add to Cart{% endif %}
+        </button>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
 
   <!-- 🌷 Footer -->
 <footer>

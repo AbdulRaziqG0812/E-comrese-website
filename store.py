@@ -27,10 +27,12 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
 
 DB_CONFIG = {
-    'host': 'localhost',
-    'user': 'root',
-    'password': 'raziq12@',
-    'database': 'e_comrece'
+    'host': 'mysql-3faadde-abdul-5d9a.l.aivencloud.com',
+    'user': 'avnadmin',
+    'password': 'AVNS_IIPCeuzy-mR7H169Vk_', # Aiven console se password copy karke yahan lagayein
+    'database': 'defaultdb',
+    'port': 20379,
+    'ssl_disabled': False  # Yeh mysql.connector ko batata hai ke secure connection use karna hai
 }
 
 DEFAULT_IMAGE = 'uploads/default.jpg'
@@ -876,7 +878,7 @@ def shipping_policy():
 # -----------------------------
 
 if __name__ == '__main__':
-    # app.run(host="192.168.100.23", port=5600, debug=True)
-    app.run(debug=True)
+    app.run(host="192.168.0.103", port=5600, debug=True)
+    # app.run(debug=True)
 
 

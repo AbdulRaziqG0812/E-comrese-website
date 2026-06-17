@@ -202,6 +202,7 @@
         <select name="category" id="category" required>
           <option value="Men" {% if perfume.category == 'Men' %}selected{% endif %}>Men</option>
           <option value="Women" {% if perfume.category == 'Women' %}selected{% endif %}>Women</option>
+          <option value="Women" {% if perfume.category == 'Unisex' %}selected{% endif %}>Unisex</option>
         </select>
       </div>
 

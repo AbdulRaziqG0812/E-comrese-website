@@ -1,15 +1,16 @@
-CREATE DATABASE e_comrece;
-USE e_comrece;
+-- Tell the system to use the pre-created live database
+USE defaultdb;
 
-
-CREATE TABLE  login (
+-- 1. Create login table
+CREATE TABLE IF NOT EXISTS login (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     role VARCHAR(20) DEFAULT 'user'
 );
 
-CREATE TABLE  register (
+-- 2. Create register table
+CREATE TABLE IF NOT EXISTS register (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
     email VARCHAR(100) NOT NULL,
@@ -17,7 +18,8 @@ CREATE TABLE  register (
     confirm_password VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE perfumes (
+-- 3. Create perfumes table
+CREATE TABLE IF NOT EXISTS perfumes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     image VARCHAR(200) DEFAULT 'default.jpg',
@@ -28,7 +30,9 @@ CREATE TABLE perfumes (
     category VARCHAR(20) DEFAULT 'Unisex', 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-CREATE TABLE orders (
+
+-- 4. Create orders table
+CREATE TABLE IF NOT EXISTS orders (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_name VARCHAR(255),
     email VARCHAR(255),
@@ -43,5 +47,3 @@ CREATE TABLE orders (
     status VARCHAR(50) DEFAULT 'Pending',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
-

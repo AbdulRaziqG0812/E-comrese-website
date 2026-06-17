@@ -696,6 +696,39 @@ footer p { margin-top: 15px; font-size: 0.9rem; text-align: center; }
   </div>
 </section>
 
+<section class="products">
+  <h2>Unisex Perfumes</h2>
+  <div class="product-grid">
+    {% for perfume in perfumes if perfume.category == 'Unisex' %}
+      {% if loop.index <= 4 %}
+        <div class="product-card">
+          
+          <a href="{{ url_for('open_image', id=perfume.id) }}">
+            <img src="{{ url_for('static', filename=perfume.image) }}" 
+                 alt="{{ perfume.name }}"
+                 onerror="this.onerror=null; this.src='https://via.placeholder.com/270x240?text=Image+Not+Found';">
+          </a>
+
+          <div class="product-info">
+            <h3>{{ perfume.name }}</h3>
+            <div class="price-box">
+              <span class="old-price">PKR {{ perfume.sale_price + 1000 }}</span>
+              <span class="price">PKR {{ perfume.sale_price }}</span>
+            </div>
+            
+            <a href="{{ url_for('shop') }}"><button>Shop Now</button></a>
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+  <div style="text-align:center; margin-top: 20px;">
+    <a href="{{ url_for('shop') }}" class="view-all-btn">View All Unisex Perfumes →</a>
+  </div>
+</section>
+
+
 <!-- 🌷 Footer -->
 <footer>
   <div class="footer-container">
